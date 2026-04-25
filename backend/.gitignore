@@ -1,4 +1,33 @@
+# Dependencies
 node_modules/
-.env
+
+# Environment variables (all variants)
+.env*
+!.env.example
+
+# Build output
 dist/
+build/
+
+# Logs
 *.log
+npm-debug.log*
+
+# OS artefacts
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Upload storage
+uploads/
+
+# Prisma generated
+node_modules/.prisma/
