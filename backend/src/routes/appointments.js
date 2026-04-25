@@ -1,3 +1,113 @@
 const router = require('express').Router();
-// appointments routes — implemented in later tasks
+const prisma = require('../config/database');
+const { v4: uuidv4 } = require('uuid');
+const { lisboaTimeToUTC } = require('../services/availability.service');
+const { publicLimiter } = require('../middleware/rateLimit');
+const { addMinutes } = require('date-fns');
+
+router.post('/', publicLimiter, async (req, res) => {
+  try {
+    const { clientName, clientEmail, clientPhone, employeeId, serviceId, date, time, notes } = req.body;
+
+    if (!clientName || !clientEmail || !clientPhone || !employeeId || !serviceId || !date || !time) {
+      return res.status(400).json({
+        error: 'Required fields: clientName, clientEmail, clientPhone, employeeId, serviceId, date, time',
+      });
+    }
+
+    const service = await prisma.service.findUnique({ where: { id: parseInt(serviceId) } });
+    if (!service) return res.status(404).json({ error: 'Service not found' });
+
+    const employee = await prisma.employee.findUnique({ where: { id: parseInt(employeeId) } });
+    if (!employee || !employee.isActive) return res.status(404).json({ error: 'Employee not found' });
+
+    const startDatetime = lisboaTimeToUTC(date, time);
+    const endDatetime = addMinutes(startDatetime, service.durationMin);
+
+    // Check for conflicts
+    const conflict = await prisma.appointment.findFirst({
+      where: {
+        employeeId: parseInt(employeeId),
+        status: { not: 'cancelled' },
+        startDatetime: { lt: endDatetime },
+        endDatetime: { gt: startDatetime },
+      },
+    });
+
+    if (conflict) {
+      return res.status(409).json({ error: 'Time slot is no longer available' });
+    }
+
+    const appointment = await prisma.appointment.create({
+      data: {
+        clientName,
+        clientEmail,
+        clientPhone,
+        employeeId: parseInt(employeeId),
+        serviceId: parseInt(serviceId),
+        startDatetime,
+        endDatetime,
+        status: 'confirmed',
+        notes: notes || null,
+        cancelToken: uuidv4(),
+      },
+      include: { employee: { select: { id: true, name: true } }, service: true },
+    });
+
+    res.status(201).json(appointment);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
+
+    const appointment = await prisma.appointment.findUnique({
+      where: { id },
+      include: {
+        employee: { select: { id: true, name: true } },
+        service: true,
+      },
+    });
+
+    if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
+
+    // Never expose cancelToken in GET
+    const { cancelToken, ...safe } = appointment;
+    res.json(safe);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { cancelToken } = req.body;
+
+    const appointment = await prisma.appointment.findUnique({ where: { id } });
+    if (!appointment) return res.status(404).json({ error: 'Appointment not found' });
+    if (appointment.cancelToken !== cancelToken) {
+      return res.status(403).json({ error: 'Invalid cancel token' });
+    }
+    if (appointment.status === 'cancelled') {
+      return res.status(400).json({ error: 'Appointment is already cancelled' });
+    }
+
+    const updated = await prisma.appointment.update({
+      where: { id },
+      data: { status: 'cancelled' },
+    });
+
+    const { cancelToken: _, ...safe } = updated;
+    res.json(safe);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
