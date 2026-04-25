@@ -31,3 +31,4 @@ uploads/
 
 # Prisma generated
 node_modules/.prisma/
+prisma/.env

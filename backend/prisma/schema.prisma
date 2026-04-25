@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  employee
+}
+
+enum ServiceCategory {
+  barbershop
+  tattoo
+  piercing
+  nails
+}
+
+enum TimeBlockType {
+  vacation
+  break
+  custom
+}
+
+enum AppointmentStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+}
+
+enum ConsultationStatus {
+  pending
+  approved
+  rejected
+  scheduled
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  role      Role       @default(employee)
+  createdAt DateTime   @default(now()) @map("created_at")
+  employee  Employee?
+  blogPosts BlogPost[]
+
+  @@map("users")
+}
+
+model Employee {
+  id            Int                   @id @default(autoincrement())
+  userId        Int                   @unique @map("user_id")
+  name          String
+  bio           String?               @db.Text
+  photoUrl      String?               @map("photo_url")
+  isActive      Boolean               @default(true) @map("is_active")
+  createdAt     DateTime              @default(now()) @map("created_at")
+  user          User                  @relation(fields: [userId], references: [id])
+  services      EmployeeService[]
+  workSchedules WorkSchedule[]
+  timeBlocks    TimeBlock[]
+  appointments  Appointment[]
+  consultations ConsultationRequest[]
+
+  @@map("employees")
+}
+
+model Service {
+  id                   Int                   @id @default(autoincrement())
+  name                 String
+  category             ServiceCategory
+  description          String?               @db.Text
+  durationMin          Int                   @map("duration_min")
+  price                Decimal               @db.Decimal(8, 2)
+  requiresConsultation Boolean               @default(false) @map("requires_consultation")
+  isActive             Boolean               @default(true) @map("is_active")
+  employees            EmployeeService[]
+  appointments         Appointment[]
+  consultations        ConsultationRequest[]
+
+  @@map("services")
+}
+
+model EmployeeService {
+  employeeId Int      @map("employee_id")
+  serviceId  Int      @map("service_id")
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  service    Service  @relation(fields: [serviceId], references: [id])
+
+  @@id([employeeId, serviceId])
+  @@map("employee_services")
+}
+
+model WorkSchedule {
+  id         Int      @id @default(autoincrement())
+  employeeId Int      @map("employee_id")
+  dayOfWeek  Int      @map("day_of_week")
+  startTime  String   @map("start_time")
+  endTime    String   @map("end_time")
+  isActive   Boolean  @default(true) @map("is_active")
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("work_schedules")
+}
+
+model TimeBlock {
+  id            Int           @id @default(autoincrement())
+  employeeId    Int           @map("employee_id")
+  startDatetime DateTime      @map("start_datetime")
+  endDatetime   DateTime      @map("end_datetime")
+  type          TimeBlockType
+  reason        String?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  employee      Employee      @relation(fields: [employeeId], references: [id])
+
+  @@map("time_blocks")
+}
+
+model Appointment {
+  id            Int                  @id @default(autoincrement())
+  clientName    String               @map("client_name")
+  clientEmail   String               @map("client_email")
+  clientPhone   String               @map("client_phone")
+  employeeId    Int                  @map("employee_id")
+  serviceId     Int                  @map("service_id")
+  startDatetime DateTime             @map("start_datetime")
+  endDatetime   DateTime             @map("end_datetime")
+  status        AppointmentStatus    @default(confirmed)
+  notes         String?              @db.Text
+  cancelToken   String?              @unique @map("cancel_token")
+  createdAt     DateTime             @default(now()) @map("created_at")
+  employee      Employee             @relation(fields: [employeeId], references: [id])
+  service       Service              @relation(fields: [serviceId], references: [id])
+  consultation  ConsultationRequest?
+
+  @@map("appointments")
+}
+
+model ConsultationRequest {
+  id                     Int                @id @default(autoincrement())
+  clientName             String             @map("client_name")
+  clientEmail            String             @map("client_email")
+  clientPhone            String             @map("client_phone")
+  serviceId              Int                @map("service_id")
+  employeeId             Int?               @map("employee_id")
+  description            String             @db.Text
+  referenceImages        Json?              @map("reference_images")
+  status                 ConsultationStatus @default(pending)
+  scheduledAppointmentId Int?               @unique @map("scheduled_appointment_id")
+  createdAt              DateTime           @default(now()) @map("created_at")
+  service                Service            @relation(fields: [serviceId], references: [id])
+  employee               Employee?          @relation(fields: [employeeId], references: [id])
+  scheduledAppointment   Appointment?       @relation(fields: [scheduledAppointmentId], references: [id])
+
+  @@map("consultation_requests")
+}
+
+model BlogPost {
+  id             Int       @id @default(autoincrement())
+  title          String
+  slug           String    @unique
+  content        String    @db.LongText
+  excerpt        String?   @db.Text
+  coverImageUrl  String?   @map("cover_image_url")
+  authorId       Int       @map("author_id")
+  publishedAt    DateTime? @map("published_at")
+  seoTitle       String?   @map("seo_title")
+  seoDescription String?   @map("seo_description")
+  isPublished    Boolean   @default(false) @map("is_published")
+  author         User      @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+}
