@@ -32,10 +32,5 @@
     "nodemon": "^3.1.0",
     "prisma": "^5.22.0",
     "supertest": "^7.0.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": ["./tests/setup.js"],
-    "testTimeout": 15000
   }
 }
