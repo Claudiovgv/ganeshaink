@@ -1,12 +1,9 @@
 ---
 deployment:
   tasks:
-    # Backend
+    # Backend (Prisma client pre-generated locally — do not run prisma generate on server)
     - export DEPLOYPATH=$HOME/ganeshaink/backend
     - cd $DEPLOYPATH && npm ci
-    - cd $DEPLOYPATH && npx prisma generate
-    - cd $DEPLOYPATH && npx prisma migrate deploy
-    - cd $DEPLOYPATH && npx prisma db seed
     # Frontend
     - export DEPLOYPATH=$HOME/ganeshaink/frontend
     - cd $DEPLOYPATH && npm ci && npm run build
