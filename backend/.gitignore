@@ -31,6 +31,5 @@ uploads/
 
 # Prisma
 node_modules/.prisma/
+src/generated/
 prisma/.env
-# Keep generated client (pre-built for server)
-!src/generated/
