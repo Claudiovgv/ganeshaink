@@ -2,13 +2,14 @@
 deployment:
   tasks:
     # Backend
-    - export DEPLOYPATH=$HOME/repositories/ganeshaink/backend
-    - cd $DEPLOYPATH && npm install --production
+    - export DEPLOYPATH=$HOME/ganeshaink/backend
+    - cd $DEPLOYPATH && npm install
+    - cd $DEPLOYPATH && npx prisma generate
     - cd $DEPLOYPATH && npx prisma migrate deploy
     - cd $DEPLOYPATH && npx prisma db seed
     # Frontend
-    - export DEPLOYPATH=$HOME/repositories/ganeshaink/frontend
+    - export DEPLOYPATH=$HOME/ganeshaink/frontend
     - cd $DEPLOYPATH && npm install && npm run build
     # Backoffice
-    - export DEPLOYPATH=$HOME/repositories/ganeshaink/backoffice
+    - export DEPLOYPATH=$HOME/ganeshaink/backoffice
     - cd $DEPLOYPATH && npm install && npm run build
