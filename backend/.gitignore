@@ -31,5 +31,6 @@ uploads/
 
 # Prisma
 node_modules/.prisma/
-src/generated/
 prisma/.env
+# Keep generated client committed (pre-built — server cannot run prisma generate)
+!src/generated/

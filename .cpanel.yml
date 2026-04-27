@@ -1,4 +1,6 @@
 ---
 deployment:
   tasks:
-    - echo "Deploy via VPS — see scripts/deploy.sh"
+    # Backend — Prisma client is pre-generated locally, NEVER run prisma generate on server
+    - export DEPLOYPATH=$HOME/ganeshaink/backend
+    - cd $DEPLOYPATH && npm ci --ignore-scripts
