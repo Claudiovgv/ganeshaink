@@ -1,9 +1,22 @@
 'use client';
-import { useActionState } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { loginAction } from '@/lib/actions';
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full bg-gold text-bg-primary font-semibold py-3 rounded hover:bg-gold-light transition-colors disabled:opacity-60"
+    >
+      {pending ? 'A entrar…' : 'Entrar'}
+    </button>
+  );
+}
+
 export default function LoginForm() {
-  const [state, formAction, pending] = useActionState(loginAction, null);
+  const [state, formAction] = useFormState(loginAction, null);
 
   return (
     <form action={formAction} className="space-y-4">
@@ -39,13 +52,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full bg-gold text-bg-primary font-semibold py-3 rounded hover:bg-gold-light transition-colors disabled:opacity-60"
-      >
-        {pending ? 'A entrar…' : 'Entrar'}
-      </button>
+      <SubmitButton />
     </form>
   );
 }
