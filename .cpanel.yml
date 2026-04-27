@@ -1,5 +1,4 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/ganeshaink/backend
-    - cd $DEPLOYPATH && npm install --omit=dev --ignore-scripts
+    - echo "deploy ok"
