@@ -21,6 +21,7 @@ const employeeAppointmentsRoutes = require('./routes/employee/appointments');
 const employeeScheduleRoutes = require('./routes/employee/schedule');
 const employeeTimeBlocksRoutes = require('./routes/employee/timeBlocks');
 const employeeProfileRoutes = require('./routes/employee/profile');
+const employeeServicesRoutes = require('./routes/employee/services');
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use('/v1/employee/appointments', employeeAppointmentsRoutes);
 app.use('/v1/employee/schedule', employeeScheduleRoutes);
 app.use('/v1/employee/time-blocks', employeeTimeBlocksRoutes);
 app.use('/v1/employee/profile', employeeProfileRoutes);
+app.use('/v1/employee/services', employeeServicesRoutes);
 
 // Health check
 app.get('/v1/health', (req, res) => res.json({ status: 'ok' }));
