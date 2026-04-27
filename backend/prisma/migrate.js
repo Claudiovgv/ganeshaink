@@ -1,16 +1,28 @@
-// Runs migrations without the Prisma CLI (avoids WebAssembly OOM on CloudLinux)
+// Runs SQL migrations directly via mysql2 — no Prisma CLI, no WebAssembly
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { PrismaClient } = require('../src/generated/client');
+const mysql = require('mysql2/promise');
 
-const prisma = new PrismaClient();
+function parseDbUrl(url) {
+  const u = new URL(url);
+  return {
+    host: u.hostname,
+    port: parseInt(u.port) || 3306,
+    user: decodeURIComponent(u.username),
+    password: decodeURIComponent(u.password),
+    database: u.pathname.slice(1),
+    multipleStatements: true,
+  };
+}
 
 async function runMigrations() {
-  const migrationsDir = path.join(__dirname, 'migrations');
+  const conn = await mysql.createConnection(parseDbUrl(process.env.DATABASE_URL));
 
+  const migrationsDir = path.join(__dirname, 'migrations');
   if (!fs.existsSync(migrationsDir)) {
     console.log('No migrations directory found.');
+    await conn.end();
     return;
   }
 
@@ -23,20 +35,13 @@ async function runMigrations() {
     if (!fs.existsSync(sqlFile)) continue;
 
     const sql = fs.readFileSync(sqlFile, 'utf8');
-    const statements = sql
-      .split(';')
-      .map(s => s.replace(/--[^\n]*/g, '').trim())
-      .filter(s => s.length > 0);
-
     console.log(`Running: ${dir}`);
-    for (const stmt of statements) {
-      await prisma.$executeRawUnsafe(stmt);
-    }
-    console.log(`✓ Done`);
+    await conn.query(sql);
+    console.log('✓ Done');
   }
 
   console.log('All migrations applied!');
-  await prisma.$disconnect();
+  await conn.end();
 }
 
 runMigrations().catch(err => {
