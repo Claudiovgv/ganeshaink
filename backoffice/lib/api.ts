@@ -36,7 +36,9 @@ export const api = {
   },
   appointments: {
     list: (params?: { date?: string; employeeId?: number; status?: string }) => {
-      const q = new URLSearchParams(params as Record<string, string>).toString();
+      const q = new URLSearchParams(
+        Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
+      ).toString();
       return apiFetch<Appointment[]>(`/admin/appointments${q ? `?${q}` : ''}`);
     },
     create: (data: object) =>
@@ -44,7 +46,9 @@ export const api = {
     updateStatus: (id: number, status: string) =>
       apiFetch<Appointment>(`/admin/appointments/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
     myList: (params?: { date?: string }) => {
-      const q = new URLSearchParams(params as Record<string, string>).toString();
+      const q = new URLSearchParams(
+        Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
+      ).toString();
       return apiFetch<Appointment[]>(`/employee/appointments${q ? `?${q}` : ''}`);
     },
   },
