@@ -29,6 +29,8 @@ coverage/
 # Upload storage
 uploads/
 
-# Prisma generated
+# Prisma
 node_modules/.prisma/
 prisma/.env
+# Keep generated client (pre-built for server)
+!src/generated/
