@@ -71,10 +71,8 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
-if (require.main === module) {
-  app.listen(PORT, () => console.log(`API running on port ${PORT}`));
-}
+app.listen(PORT, () => console.log(`API running on port ${PORT}`));
 
 module.exports = app;
