@@ -4,6 +4,8 @@ deployment:
     # Backend
     - export DEPLOYPATH=$HOME/repositories/ganeshaink/backend
     - cd $DEPLOYPATH && npm install --production
+    - cd $DEPLOYPATH && npx prisma migrate deploy
+    - cd $DEPLOYPATH && npx prisma db seed
     # Frontend
     - export DEPLOYPATH=$HOME/repositories/ganeshaink/frontend
     - cd $DEPLOYPATH && npm install && npm run build
