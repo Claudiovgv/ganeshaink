@@ -1,4 +1,5 @@
 ---
 deployment:
   tasks:
-    - echo "deploy ok"
+    - export DEPLOYPATH=$HOME/ganeshaink/backend
+    - cd $DEPLOYPATH && npm ci
