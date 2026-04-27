@@ -1,0 +1,12 @@
+---
+deployment:
+  tasks:
+    # Backend
+    - export DEPLOYPATH=$HOME/ganeshaink/backend
+    - cd $DEPLOYPATH && npm install --production
+    # Frontend
+    - export DEPLOYPATH=$HOME/ganeshaink/frontend
+    - cd $DEPLOYPATH && npm install && npm run build
+    # Backoffice
+    - export DEPLOYPATH=$HOME/ganeshaink/backoffice
+    - cd $DEPLOYPATH && npm install && npm run build

@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
   description:
     'Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Lisboa. Marcações online disponíveis.',
+  icons: {
+    icon: '/images/logo/ganesha-icon.png',
+    apple: '/images/logo/ganesha-icon.png',
+  },
   openGraph: {
     siteName: 'Ganesha Ink',
     locale: 'pt_PT',

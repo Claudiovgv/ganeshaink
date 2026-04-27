@@ -23,14 +23,17 @@ export default async function HomePage() {
           className="object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/60 via-transparent to-bg-primary" />
-        <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
+        {/* Logo grande com opacidade — atrás do texto, ligeiramente subido */}
+        <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
           <Image
             src="/images/logo/ganesha-logo-gold-white.png"
-            alt="Ganesha Ink"
-            width={120}
-            height={120}
-            className="mx-auto mb-8 object-contain"
+            alt=""
+            width={2100}
+            height={2100}
+            className="object-contain opacity-[0.13] select-none"
           />
+        </div>
+        <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
             Arte na <span className="text-gold-gradient">Pele</span>
           </h1>
@@ -72,17 +75,16 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { label: 'Barbearia', icon: '✂️', href: '/servicos?categoria=barbershop', desc: 'Cortes, barba e tratamentos premium' },
-              { label: 'Tatuagem', icon: '🎨', href: '/consulta', desc: 'Arte personalizada por artistas especializados' },
-              { label: 'Piercing', icon: '💎', href: '/consulta', desc: 'Body piercing profissional e seguro' },
-              { label: 'Unhas', icon: '✨', href: '/servicos?categoria=nails', desc: 'Manicure, gel e nail art' },
-            ].map(({ label, icon, href, desc }) => (
+              { label: 'Barbearia', href: '/servicos?categoria=barbershop', desc: 'Cortes, barba e tratamentos premium' },
+              { label: 'Tatuagem', href: '/consulta', desc: 'Arte personalizada por artistas especializados' },
+              { label: 'Piercing', href: '/consulta', desc: 'Body piercing profissional e seguro' },
+              { label: 'Unhas', href: '/servicos?categoria=nails', desc: 'Manicure, gel e nail art' },
+            ].map(({ label, href, desc }) => (
               <Link
                 key={label}
                 href={href}
                 className="bg-bg-card border border-gold-border rounded-lg p-6 hover:border-gold transition-colors group"
               >
-                <div className="text-3xl mb-4">{icon}</div>
                 <h3 className="font-display text-xl font-semibold text-gold mb-2 group-hover:text-gold-light transition-colors">
                   {label}
                 </h3>
