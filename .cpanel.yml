@@ -1,6 +1,5 @@
 ---
 deployment:
   tasks:
-    # Backend — Prisma client is pre-generated locally, NEVER run prisma generate on server
     - export DEPLOYPATH=$HOME/ganeshaink/backend
-    - cd $DEPLOYPATH && npm ci --ignore-scripts
+    - cd $DEPLOYPATH && npm install --omit=dev --ignore-scripts
