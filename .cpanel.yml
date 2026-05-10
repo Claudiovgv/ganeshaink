@@ -1,14 +1,9 @@
 ---
 deployment:
   tasks:
-    # Backend — instalar deps + correr migrações
-    - export DEPLOYPATH=$HOME/ganeshaink/backend
-    - cd $DEPLOYPATH && npm install --omit=dev
-    - cd $DEPLOYPATH && node prisma/migrate.js
-    # Frontend — instalar deps + compilar
-    - export DEPLOYPATH=$HOME/ganeshaink/frontend
-    - cd $DEPLOYPATH && npm install
-    - cd $DEPLOYPATH && npm run build
-    # Reiniciar apps (Passenger)
-    - mkdir -p $HOME/ganeshaink/backend/tmp && touch $HOME/ganeshaink/backend/tmp/restart.txt
-    - mkdir -p $HOME/ganeshaink/frontend/tmp && touch $HOME/ganeshaink/frontend/tmp/restart.txt
+    - /bin/sh -c "cd $HOME/ganeshaink/backend && npm install --omit=dev"
+    - /bin/sh -c "cd $HOME/ganeshaink/backend && node prisma/migrate.js"
+    - /bin/sh -c "cd $HOME/ganeshaink/frontend && npm install"
+    - /bin/sh -c "cd $HOME/ganeshaink/frontend && npm run build"
+    - /bin/sh -c "mkdir -p $HOME/ganeshaink/backend/tmp && touch $HOME/ganeshaink/backend/tmp/restart.txt"
+    - /bin/sh -c "mkdir -p $HOME/ganeshaink/frontend/tmp && touch $HOME/ganeshaink/frontend/tmp/restart.txt"
