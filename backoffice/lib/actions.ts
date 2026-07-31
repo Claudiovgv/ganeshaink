@@ -19,8 +19,8 @@ export async function loginAction(_prevState: ActionState, formData: FormData): 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  // DEV MOCK — bypassa o backend para visualização local
-  if (email === 'admin@ganeshaink.pt' && password === 'admin123') {
+  // DEV MOCK — bypassa o backend para visualização local (nunca em produção)
+  if (process.env.NODE_ENV !== 'production' && email === 'admin@ganeshaink.pt' && password === 'admin123') {
     const cookieStore = await cookies();
     setSessionCookie(cookieStore, 'dev-mock-token');
     redirect('/');
