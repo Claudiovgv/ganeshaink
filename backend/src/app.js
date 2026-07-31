@@ -33,6 +33,12 @@ const employeeServicesRoutes = require('./routes/employee/services');
 
 const app = express();
 
+// Permite montar a API sob um subpath (ex: /api) quando não há subdomínio
+// próprio disponível (domínio temporário do cPanel, onde o Passenger não
+// remove o prefixo do URL). Em produção com subdomínio dedicado
+// (api.ganeshaink.pt), deixar API_BASE_PATH vazio.
+const API_BASE = process.env.API_BASE_PATH || '';
+
 app.set('trust proxy', 1);
 app.use(helmet());
 app.use(cors({
@@ -47,36 +53,36 @@ app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(apiLimiter);
 
 // Public routes
-app.use('/v1/auth', authRoutes);
-app.use('/v1/employees', employeesRoutes);
-app.use('/v1/services', servicesRoutes);
-app.use('/v1/availability', availabilityRoutes);
-app.use('/v1/appointments', appointmentsRoutes);
-app.use('/v1/consultations', consultationsRoutes);
-app.use('/v1/blog', blogRoutes);
+app.use(`${API_BASE}/v1/auth`, authRoutes);
+app.use(`${API_BASE}/v1/employees`, employeesRoutes);
+app.use(`${API_BASE}/v1/services`, servicesRoutes);
+app.use(`${API_BASE}/v1/availability`, availabilityRoutes);
+app.use(`${API_BASE}/v1/appointments`, appointmentsRoutes);
+app.use(`${API_BASE}/v1/consultations`, consultationsRoutes);
+app.use(`${API_BASE}/v1/blog`, blogRoutes);
 
 // Admin routes
-app.use('/v1/admin/appointments', adminAppointmentsRoutes);
-app.use('/v1/admin/consultations', adminConsultationsRoutes);
-app.use('/v1/admin/employees', adminEmployeesRoutes);
-app.use('/v1/admin/services', adminServicesRoutes);
-app.use('/v1/admin/blog', adminBlogRoutes);
-app.use('/v1/admin/clients', adminClientsRoutes);
-app.use('/v1/admin/settings', adminSettingsRoutes);
-app.use('/v1/admin/logs', adminLogsRoutes);
-app.use('/v1/admin/users', adminUsersRoutes);
-app.use('/v1/admin/roles', adminRolesRoutes);
-app.use('/v1/admin/stats', adminStatsRoutes);
+app.use(`${API_BASE}/v1/admin/appointments`, adminAppointmentsRoutes);
+app.use(`${API_BASE}/v1/admin/consultations`, adminConsultationsRoutes);
+app.use(`${API_BASE}/v1/admin/employees`, adminEmployeesRoutes);
+app.use(`${API_BASE}/v1/admin/services`, adminServicesRoutes);
+app.use(`${API_BASE}/v1/admin/blog`, adminBlogRoutes);
+app.use(`${API_BASE}/v1/admin/clients`, adminClientsRoutes);
+app.use(`${API_BASE}/v1/admin/settings`, adminSettingsRoutes);
+app.use(`${API_BASE}/v1/admin/logs`, adminLogsRoutes);
+app.use(`${API_BASE}/v1/admin/users`, adminUsersRoutes);
+app.use(`${API_BASE}/v1/admin/roles`, adminRolesRoutes);
+app.use(`${API_BASE}/v1/admin/stats`, adminStatsRoutes);
 
 // Employee routes
-app.use('/v1/employee/appointments', employeeAppointmentsRoutes);
-app.use('/v1/employee/schedule', employeeScheduleRoutes);
-app.use('/v1/employee/time-blocks', employeeTimeBlocksRoutes);
-app.use('/v1/employee/profile', employeeProfileRoutes);
-app.use('/v1/employee/services', employeeServicesRoutes);
+app.use(`${API_BASE}/v1/employee/appointments`, employeeAppointmentsRoutes);
+app.use(`${API_BASE}/v1/employee/schedule`, employeeScheduleRoutes);
+app.use(`${API_BASE}/v1/employee/time-blocks`, employeeTimeBlocksRoutes);
+app.use(`${API_BASE}/v1/employee/profile`, employeeProfileRoutes);
+app.use(`${API_BASE}/v1/employee/services`, employeeServicesRoutes);
 
 // Health check
-app.get('/v1/health', (req, res) => res.json({ status: 'ok' }));
+app.get(`${API_BASE}/v1/health`, (req, res) => res.json({ status: 'ok' }));
 
 // 404
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
