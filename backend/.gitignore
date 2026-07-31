@@ -29,8 +29,9 @@ coverage/
 # Upload storage
 uploads/
 
-# Local-only seed script with real personal credentials — never commit
+# Local-only seed scripts with real personal data (credentials, client PII) — never commit
 prisma/seed-team.js
+prisma/import-wp-bookings.js
 
 # Prisma
 node_modules/.prisma/
