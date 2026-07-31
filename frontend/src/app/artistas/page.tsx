@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { api, Employee } from '@/lib/api';
 import { SERVICE_CATEGORIES } from '@/lib/utils';
+import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
 
 export const metadata: Metadata = {
   title: 'Artistas',
@@ -52,7 +53,8 @@ function ArtistCard({ employee }: { employee: Employee }) {
 }
 
 export default async function ArtistasPage() {
-  const employees = await api.employees.list().catch(() => [] as Employee[]);
+  const fetched = await api.employees.list().catch(() => [] as Employee[]);
+  const employees = fetched.length > 0 ? fetched : MOCK_EMPLOYEES;
 
   return (
     <div className="pt-20">

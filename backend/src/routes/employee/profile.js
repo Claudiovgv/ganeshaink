@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
 const bcrypt = require('bcryptjs');
-const { authenticate, requireEmployee } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
 
-router.use(authenticate, requireEmployee);
+router.use(authenticate, requirePermission('edit_profile'));
 
 router.get('/', async (req, res) => {
   try {

@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
-const { authenticate, requireAdmin } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
 
-router.use(authenticate, requireAdmin);
+router.use(authenticate, requirePermission('manage_blog'));
 
 function generateSlug(title) {
   return title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();

@@ -4,6 +4,8 @@ const { v4: uuidv4 } = require('uuid');
 const { lisboaTimeToUTC } = require('../services/availability.service');
 const { publicLimiter } = require('../middleware/rateLimit');
 const { addMinutes } = require('date-fns');
+const { sendMail } = require('../lib/mailer');
+const { appointmentConfirmedEmail, appointmentStatusChangedEmail } = require('../lib/emailTemplates');
 
 router.post('/', publicLimiter, async (req, res) => {
   try {
@@ -54,6 +56,9 @@ router.post('/', publicLimiter, async (req, res) => {
       include: { employee: { select: { id: true, name: true } }, service: true },
     });
 
+    const { subject, html } = appointmentConfirmedEmail(appointment);
+    sendMail({ to: appointment.clientEmail, subject, html });
+
     res.status(201).json(appointment);
   } catch (err) {
     console.error(err);
@@ -101,7 +106,11 @@ router.delete('/:id', async (req, res) => {
     const updated = await prisma.appointment.update({
       where: { id },
       data: { status: 'cancelled' },
+      include: { employee: { select: { id: true, name: true } }, service: true },
     });
+
+    const { subject, html } = appointmentStatusChangedEmail(updated);
+    sendMail({ to: updated.clientEmail, subject, html });
 
     const { cancelToken: _, ...safe } = updated;
     res.json(safe);

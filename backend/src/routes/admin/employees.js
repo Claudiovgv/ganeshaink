@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
 const bcrypt = require('bcryptjs');
-const { authenticate, requireAdmin } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
+const { logEvent } = require('../../lib/logger');
 
-router.use(authenticate, requireAdmin);
+router.use(authenticate, requirePermission('manage_employees'));
 
 router.get('/', async (req, res) => {
   try {
@@ -73,6 +74,36 @@ router.put('/:id', async (req, res) => {
     }
     res.json(employee);
   } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const employee = await prisma.employee.findUnique({ where: { id } });
+    if (!employee) return res.status(404).json({ error: 'Funcionário não encontrado' });
+
+    const appointmentCount = await prisma.appointment.count({ where: { employeeId: id } });
+    if (appointmentCount > 0) {
+      return res.status(409).json({
+        error: `Este funcionário tem ${appointmentCount} marcação(ões) associada(s) e não pode ser apagado. Desative-o em vez disso.`,
+      });
+    }
+
+    await prisma.$transaction([
+      prisma.employeeService.deleteMany({ where: { employeeId: id } }),
+      prisma.workSchedule.deleteMany({ where: { employeeId: id } }),
+      prisma.timeBlock.deleteMany({ where: { employeeId: id } }),
+      prisma.consultationRequest.updateMany({ where: { employeeId: id }, data: { employeeId: null } }),
+      prisma.employee.delete({ where: { id } }),
+      prisma.user.delete({ where: { id: employee.userId } }),
+    ]);
+
+    logEvent('info', 'employees', `Funcionário apagado: ${employee.name}`, { userId: req.user.id, ip: req.ip });
+    res.json({ message: 'Funcionário apagado com sucesso' });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

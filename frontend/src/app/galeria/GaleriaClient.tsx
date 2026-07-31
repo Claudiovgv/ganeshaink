@@ -58,9 +58,6 @@ export default function GaleriaClient({
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center text-text-secondary text-sm">
-                {item.alt}
-              </div>
             </div>
           ))}
         </div>

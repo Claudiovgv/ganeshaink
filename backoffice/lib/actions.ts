@@ -3,27 +3,63 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { api } from './api';
 
-type ActionState = { error: string } | null;
+type ActionState = { error: string } | { requires2FA: true; needsSetup: boolean; pendingToken: string } | null;
 
-export async function loginAction(_prevState: ActionState, formData: FormData): Promise<ActionState> {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
-  let result: { token: string; user: { role: string } };
-  try {
-    result = await api.auth.login(email, password);
-  } catch (err) {
-    return { error: (err as Error).message };
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set('ganesha_token', result.token, {
+function setSessionCookie(cookieStore: Awaited<ReturnType<typeof cookies>>, token: string) {
+  cookieStore.set('ganesha_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/',
   });
+}
+
+export async function loginAction(_prevState: ActionState, formData: FormData): Promise<ActionState> {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+
+  // DEV MOCK — bypassa o backend para visualização local
+  if (email === 'admin@ganeshaink.pt' && password === 'admin123') {
+    const cookieStore = await cookies();
+    setSessionCookie(cookieStore, 'dev-mock-token');
+    redirect('/');
+  }
+
+  let result: { token: string; user: { role: string } } | { requires2FA: true; needsSetup: boolean; pendingToken: string };
+  try {
+    result = await api.auth.login(email, password);
+  } catch (err) {
+    return { error: (err as Error).message };
+  }
+
+  if ('requires2FA' in result) {
+    return { requires2FA: true, needsSetup: result.needsSetup, pendingToken: result.pendingToken };
+  }
+
+  const cookieStore = await cookies();
+  setSessionCookie(cookieStore, result.token);
+
+  redirect('/');
+}
+
+export async function setupPendingLogin2FAAction(pendingToken: string) {
+  return api.auth.setupPendingLogin2FA(pendingToken);
+}
+
+export async function verify2FAAction(_prevState: ActionState, formData: FormData): Promise<ActionState> {
+  const pendingToken = formData.get('pendingToken') as string;
+  const code = formData.get('code') as string;
+
+  let result: { token: string; user: { role: string } };
+  try {
+    result = await api.auth.verify2FA(pendingToken, code);
+  } catch (err) {
+    return { error: (err as Error).message };
+  }
+
+  const cookieStore = await cookies();
+  setSessionCookie(cookieStore, result.token);
 
   redirect('/');
 }
@@ -36,6 +72,13 @@ export async function logoutAction() {
 
 export async function updateAppointmentStatusAction(id: number, status: string) {
   await api.appointments.updateStatus(id, status);
+}
+
+export async function createAppointmentAction(data: {
+  clientName: string; clientEmail: string; clientPhone: string;
+  employeeId: number; serviceId: number; date: string; time: string; notes?: string;
+}) {
+  return api.appointments.create(data);
 }
 
 export async function scheduleConsultationAction(id: number, data: { employeeId: number; date: string; time: string }) {
@@ -54,13 +97,17 @@ export async function updateEmployeeAction(id: number, data: object) {
   return api.employees.update(id, data);
 }
 
-export async function createServiceAction(role: 'admin' | 'employee', data: object) {
-  if (role === 'admin') return api.services.adminCreate(data);
+export async function deleteEmployeeAction(id: number) {
+  return api.employees.remove(id);
+}
+
+export async function createServiceAction(role: 'superadmin' | 'admin' | 'employee', data: object) {
+  if (role === 'admin' || role === 'superadmin') return api.services.adminCreate(data);
   return api.services.employeeCreate(data);
 }
 
-export async function updateServiceAction(role: 'admin' | 'employee', id: number, data: object) {
-  if (role === 'admin') return api.services.adminUpdate(id, data);
+export async function updateServiceAction(role: 'superadmin' | 'admin' | 'employee', id: number, data: object) {
+  if (role === 'admin' || role === 'superadmin') return api.services.adminUpdate(id, data);
   return api.services.employeeUpdate(id, data);
 }
 
@@ -90,4 +137,44 @@ export async function deleteTimeBlockAction(id: number) {
 
 export async function updateProfileAction(data: object) {
   return api.profile.update(data);
+}
+
+export async function setup2FAAction() {
+  return api.auth.setup2FA();
+}
+
+export async function enable2FAAction(code: string) {
+  return api.auth.enable2FA(code);
+}
+
+export async function disable2FAAction(password: string) {
+  return api.auth.disable2FA(password);
+}
+
+export async function updateSmtpSettingsAction(data: import('./types').SmtpSettings) {
+  return api.settings.updateSmtp(data);
+}
+
+export async function fetchLogsAction(params: { level?: string; page?: number }) {
+  return api.logs.list(params);
+}
+
+export async function createUserAction(data: { name: string; email: string; password: string; role: string }) {
+  return api.users.create(data);
+}
+
+export async function updateUserAction(id: number, data: { name?: string; role?: string }) {
+  return api.users.update(id, data);
+}
+
+export async function deleteUserAction(id: number) {
+  return api.users.remove(id);
+}
+
+export async function updateRolePermissionsAction(role: import('./types').ConfigurableRole, permissions: Record<string, boolean>) {
+  return api.roles.update(role, permissions);
+}
+
+export async function fetchStatsAction(period: import('./types').StatsPeriod, offset: number) {
+  return api.stats.get(period, offset);
 }

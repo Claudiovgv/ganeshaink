@@ -5,15 +5,15 @@ import ServicosClient from './ServicosClient';
 export const metadata = { title: 'Serviços' };
 
 export default async function ServicosPage() {
-  let role: 'admin' | 'employee' = 'employee';
+  let role: 'superadmin' | 'admin' | 'employee' = 'employee';
   try {
     const user = await api.auth.me();
-    role = user.role as 'admin' | 'employee';
+    role = user.role as 'superadmin' | 'admin' | 'employee';
   } catch {
     // fallback
   }
 
-  const services = role === 'admin'
+  const services = role === 'admin' || role === 'superadmin'
     ? await api.services.adminList().catch(() => [])
     : await api.services.employeeList().catch(() => []);
 

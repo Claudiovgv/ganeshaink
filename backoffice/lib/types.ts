@@ -1,8 +1,16 @@
+export type AdminPermissionKey = 'manage_appointments' | 'manage_employees' | 'manage_services' | 'manage_clients' | 'manage_blog' | 'manage_settings' | 'view_stats';
+export type EmployeePermissionKey = 'view_services' | 'manage_schedule' | 'manage_blocks' | 'edit_profile';
+export type ConfigurableRole = 'admin' | 'employee';
+
 export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'admin' | 'employee';
+  role: 'superadmin' | 'admin' | 'employee';
+  twoFactorEnabled?: boolean;
+  permissions?: Partial<Record<AdminPermissionKey | EmployeePermissionKey, boolean>>;
+  createdAt?: string;
+  employee?: { id: number; isActive: boolean } | null;
 }
 
 export interface Employee {
@@ -84,10 +92,60 @@ export interface TimeBlock {
   endDatetime: string;
 }
 
+export interface SmtpSettings {
+  smtpHost: string;
+  smtpPort: string;
+  smtpUser: string;
+  smtpPass: string;
+  smtpFrom: string;
+  source: 'database' | 'env';
+}
+
+export type LogLevel = 'info' | 'warning' | 'error' | 'security';
+
+export interface SystemLogEntry {
+  id: number;
+  level: LogLevel;
+  category: string;
+  message: string;
+  ip: string | null;
+  userId: number | null;
+  meta: unknown;
+  createdAt: string;
+}
+
 export interface Client {
   id: number;
   name: string;
   email: string;
   phone: string;
   appointmentCount: number;
+}
+
+export type StatsPeriod = 'week' | 'month' | 'year';
+
+export interface StatsByCategory {
+  category: ServiceCategory;
+  revenue: number;
+  count: number;
+}
+
+export interface StatsByService {
+  serviceId: number;
+  name: string;
+  category: ServiceCategory;
+  revenue: number;
+  count: number;
+}
+
+export interface StatsResponse {
+  period: StatsPeriod;
+  offset: number;
+  range: { start: string; end: string };
+  totalRevenue: number;
+  totalAppointments: number;
+  averageTicket: number;
+  byCategory: StatsByCategory[];
+  byService: StatsByService[];
+  mostRequested: StatsByService | null;
 }

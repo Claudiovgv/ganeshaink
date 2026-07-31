@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import type {
-  Appointment, BlogPost, Client, ConsultationRequest,
-  Employee, Service, TimeBlock, User, WeeklyScheduleDay,
+  AdminPermissionKey, Appointment, BlogPost, Client, ConfigurableRole, ConsultationRequest,
+  Employee, EmployeePermissionKey, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry, TimeBlock, User, WeeklyScheduleDay,
 } from './types';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002/v1';
@@ -27,12 +27,28 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   auth: {
-    me: () => apiFetch<User>('/me'),
+    me: () => apiFetch<User>('/auth/me'),
     login: (email: string, password: string) =>
-      apiFetch<{ token: string; user: User }>('/login', {
+      apiFetch<{ token: string; user: User } | { requires2FA: true; needsSetup: boolean; pendingToken: string }>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       }),
+    setupPendingLogin2FA: (pendingToken: string) =>
+      apiFetch<{ secret: string; qrCodeDataUrl: string }>('/auth/login/setup-2fa', {
+        method: 'POST',
+        body: JSON.stringify({ pendingToken }),
+      }),
+    verify2FA: (pendingToken: string, code: string) =>
+      apiFetch<{ token: string; user: User }>('/auth/login/verify-2fa', {
+        method: 'POST',
+        body: JSON.stringify({ pendingToken, code }),
+      }),
+    setup2FA: () =>
+      apiFetch<{ secret: string; qrCodeDataUrl: string }>('/auth/2fa/setup', { method: 'POST' }),
+    enable2FA: (code: string) =>
+      apiFetch<{ message: string }>('/auth/2fa/enable', { method: 'POST', body: JSON.stringify({ code }) }),
+    disable2FA: (password: string) =>
+      apiFetch<{ message: string }>('/auth/2fa/disable', { method: 'POST', body: JSON.stringify({ password }) }),
   },
   appointments: {
     list: (params?: { date?: string; employeeId?: number; status?: string }) => {
@@ -44,7 +60,7 @@ export const api = {
     create: (data: object) =>
       apiFetch<Appointment>('/admin/appointments', { method: 'POST', body: JSON.stringify(data) }),
     updateStatus: (id: number, status: string) =>
-      apiFetch<Appointment>(`/admin/appointments/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+      apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }),
     myList: (params?: { date?: string }) => {
       const q = new URLSearchParams(
         Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
@@ -66,6 +82,8 @@ export const api = {
       apiFetch<Employee>('/admin/employees', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: number, data: object) =>
       apiFetch<Employee>(`/admin/employees/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/employees/${id}`, { method: 'DELETE' }),
   },
   services: {
     adminList: () => apiFetch<Service[]>('/admin/services'),
@@ -107,5 +125,44 @@ export const api = {
     get: () => apiFetch<Employee>('/employee/profile'),
     update: (data: object) =>
       apiFetch<Employee>('/employee/profile', { method: 'PUT', body: JSON.stringify(data) }),
+  },
+  settings: {
+    getSmtp: () => apiFetch<SmtpSettings>('/admin/settings/smtp'),
+    updateSmtp: (data: Partial<SmtpSettings>) =>
+      apiFetch<{ message: string }>('/admin/settings/smtp', { method: 'PUT', body: JSON.stringify(data) }),
+  },
+  logs: {
+    list: (params?: { level?: string; page?: number }) => {
+      const q = new URLSearchParams(
+        Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
+      ).toString();
+      return apiFetch<{ logs: SystemLogEntry[]; total: number; page: number; pageSize: number }>(
+        `/admin/logs${q ? `?${q}` : ''}`
+      );
+    },
+  },
+  users: {
+    list: () => apiFetch<User[]>('/admin/users'),
+    create: (data: { name: string; email: string; password: string; role: string }) =>
+      apiFetch<User>('/admin/users', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: number, data: { name?: string; role?: string }) =>
+      apiFetch<User>(`/admin/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/users/${id}`, { method: 'DELETE' }),
+  },
+  roles: {
+    get: () => apiFetch<{
+      keys: { admin: AdminPermissionKey[]; employee: EmployeePermissionKey[] };
+      permissions: { admin: Record<AdminPermissionKey, boolean>; employee: Record<EmployeePermissionKey, boolean> };
+    }>('/admin/roles'),
+    update: (role: ConfigurableRole, permissions: Record<string, boolean>) =>
+      apiFetch<{ role: ConfigurableRole; permissions: Record<string, boolean> }>('/admin/roles', {
+        method: 'PUT',
+        body: JSON.stringify({ role, permissions }),
+      }),
+  },
+  stats: {
+    get: (period: StatsPeriod, offset: number) =>
+      apiFetch<StatsResponse>(`/admin/stats?period=${period}&offset=${offset}`),
   },
 };

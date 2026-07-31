@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Env files — NUNCA commitar com credenciais reais
+.env
+**/.env
+!**/.env.example
+
+# Logs locais
+logs/
+*.log
+npm-debug.log*
+
+# Scripts de arranque locais (só para Mac dev)
+start-*.command
+macbook.pub
+
+# Ferramentas locais de desenvolvimento (não vão para o servidor)
+.superpowers/
+.claude/

@@ -5,12 +5,15 @@ import FuncionariosClient from './FuncionariosClient';
 export const metadata = { title: 'Funcionários' };
 
 export default async function FuncionariosPage() {
-  const employees = await api.employees.list().catch(() => []);
+  const [employees, services] = await Promise.all([
+    api.employees.list().catch(() => []),
+    api.services.adminList().catch(() => []),
+  ]);
   return (
     <div>
       <TopBar title="Funcionários" />
       <div className="p-6">
-        <FuncionariosClient initial={employees} />
+        <FuncionariosClient initial={employees} services={services} />
       </div>
     </div>
   );

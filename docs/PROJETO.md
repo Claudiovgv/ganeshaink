@@ -128,22 +128,27 @@ O backoffice é uma aplicação separada para uso **interno** (funcionários e a
 ### Problema com este servidor
 O cPanel desta conta não tem SSH nem Terminal, o que torna o deploy complicado porque não é possível correr comandos como `npm run build` directamente no servidor.
 
-### Solução recomendada para o próximo deploy
-Ver `docs/DEPLOY.md` (a criar quando retomarmos).
+### Solução implementada — Git Autodeploy via .cpanel.yml
+O `.cpanel.yml` contém todas as tarefas de build e restart. O processo é:
+1. Push para GitHub
+2. No cPanel → Git Version Control → Pull
+3. O cPanel executa automaticamente as tarefas do `.cpanel.yml`
+
+Ver `docs/DEPLOY.md` para o guia passo a passo completo.
 
 ---
 
-## Estado actual do projecto (2026-05-10)
+## Estado actual do projecto (2026-06-04)
 
 | Parte | Estado |
 |---|---|
-| Backend API | ✅ Completo (código + testes) |
+| Backend API | ✅ Completo (código + 28 testes) |
 | Base de dados (schema) | ✅ Completo |
 | Frontend público | ✅ Páginas criadas (design final) |
-| Backoffice | 🔲 Por construir |
-| Deploy no servidor | ⚠️ Em curso (backend a arrancar, frontend por compilar) |
+| Backoffice | ✅ Construído (marcações, clientes, funcionários, serviços, blog, consultas, perfil) |
+| Deploy automático (.cpanel.yml) | ✅ Configurado (backend + frontend + backoffice) |
 | Emails | 🔲 Por implementar |
-| Domínio apontado | 🔲 Aguarda tudo estar funcional |
+| Domínio apontado | 🔲 Aguarda tudo estar funcional no servidor |
 
 ---
 

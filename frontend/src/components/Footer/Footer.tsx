@@ -4,58 +4,82 @@ import Image from 'next/image';
 export default function Footer() {
   return (
     <footer className="bg-bg-card border-t border-gold-border mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div>
-          <Link href="/" className="flex items-center gap-3 mb-4">
-            <Image src="/images/logo/ganesha-icon.png" alt="Ganesha Ink" width={32} height={32} />
-            <span className="font-display text-gold text-lg">Ganesha Ink</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+
+        {/* Sobre */}
+        <div className="md:col-span-2">
+          <Link href="/" className="inline-block mb-4">
+            <Image
+              src="/images/logo/ganesha-logo-gold.png"
+              alt="Ganesha Ink"
+              width={140}
+              height={50}
+              className="object-contain"
+            />
           </Link>
-          <p className="text-text-secondary text-sm leading-relaxed">
-            Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Lisboa.
+          <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
+            14 anos a transformar estilo em expressão. Na Ganesha Ink, tatuagens, barbearia e unhas convivem com arte e atitude.
           </p>
         </div>
 
+        {/* Links Rápidos */}
         <div>
           <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">
-            Navegação
+            Links Rápidos
           </h3>
           <ul className="space-y-2 text-sm text-text-secondary">
-            {[
-              ['/servicos', 'Serviços'],
-              ['/artistas', 'Artistas'],
-              ['/galeria', 'Galeria'],
-              ['/blog', 'Blog'],
-              ['/marcar', 'Marcar'],
-              ['/consulta', 'Pedido de Consulta'],
-              ['/contacto', 'Contacto'],
-            ].map(([href, label]) => (
-              <li key={href}>
-                <Link href={href} className="hover:text-gold transition-colors">
-                  {label}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link href="/politica-de-privacidade" className="hover:text-gold transition-colors">
+                Política de Privacidade
+              </Link>
+            </li>
+            <li>
+              <Link href="/politica-de-cookies" className="hover:text-gold transition-colors">
+                Política de Cookies
+              </Link>
+            </li>
+            <li>
+              <a
+                href="https://www.livroreclamacoes.pt/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold transition-colors"
+              >
+                Livro de Reclamações
+              </a>
+            </li>
           </ul>
         </div>
 
+        {/* Contacto */}
         <div>
           <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">
             Contacto
           </h3>
-          <address className="not-italic text-sm text-text-secondary space-y-2">
-            <p>Lisboa, Portugal</p>
-            <p>
-              <a href="tel:+351910000000" className="hover:text-gold transition-colors">
-                +351 910 000 000
+          <address className="not-italic text-sm text-text-secondary space-y-3">
+            <a
+              href="https://maps.google.com/?q=R.+Eng.+Duarte+Pacheco+33,+3730-254+Vale+de+Cambra"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gold transition-colors block"
+            >
+              R. Eng. Duarte Pacheco n.º 33<br />
+              3730-254 Vale de Cambra
+            </a>
+            <div>
+              <a href="tel:+351913570454" className="hover:text-gold transition-colors block">
+                +351 913 570 454
               </a>
-            </p>
-            <p>
-              <a href="mailto:geral@ganeshaink.pt" className="hover:text-gold transition-colors">
-                geral@ganeshaink.pt
-              </a>
-            </p>
+              <p className="text-xs text-text-muted mt-0.5">
+                Custo de uma chamada para a rede fixa nacional.
+              </p>
+            </div>
+            <a href="mailto:ricardo.vieira@ganeshaink.pt" className="hover:text-gold transition-colors block">
+              ricardo.vieira@ganeshaink.pt
+            </a>
           </address>
-          <div className="flex gap-4 mt-4">
+
+          <div className="flex gap-4 mt-5">
             <a
               href="https://www.instagram.com/ganeshaink"
               target="_blank"

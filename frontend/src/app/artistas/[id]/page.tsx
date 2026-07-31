@@ -4,13 +4,19 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import { formatPrice, formatDuration, SERVICE_CATEGORIES } from '@/lib/utils';
+import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
 
 interface Props {
   params: { id: string };
 }
 
+async function getEmployee(id: number) {
+  const emp = await api.employees.get(id).catch(() => null);
+  return emp ?? MOCK_EMPLOYEES.find((e) => e.id === id) ?? null;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const emp = await api.employees.get(Number(params.id)).catch(() => null);
+  const emp = await getEmployee(Number(params.id));
   if (!emp) return { title: 'Artista não encontrado' };
   return {
     title: emp.name,
@@ -19,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArtistProfilePage({ params }: Props) {
-  const employee = await api.employees.get(Number(params.id)).catch(() => null);
+  const employee = await getEmployee(Number(params.id));
   if (!employee) notFound();
 
   const categories = Array.from(new Set(employee.services.map((s) => s.category)));

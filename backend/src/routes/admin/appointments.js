@@ -1,20 +1,40 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
-const { authenticate, requireAdmin } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
 const { lisboaTimeToUTC } = require('../../services/availability.service');
-const { addMinutes } = require('date-fns');
+const { addMinutes, addDays, format } = require('date-fns');
 const { v4: uuidv4 } = require('uuid');
+const { sendMail } = require('../../lib/mailer');
+const { appointmentStatusChangedEmail } = require('../../lib/emailTemplates');
 
-router.use(authenticate, requireAdmin);
+router.use(authenticate, requirePermission('manage_appointments'));
+
+const TIMEZONE = 'Europe/Lisbon';
+
+// Impede duas marcações do mesmo artista em horários que se sobrepõem.
+async function hasConflict(employeeId, startDatetime, endDatetime, excludeId) {
+  const conflict = await prisma.appointment.findFirst({
+    where: {
+      employeeId,
+      status: { not: 'cancelled' },
+      ...(excludeId ? { id: { not: excludeId } } : {}),
+      startDatetime: { lt: endDatetime },
+      endDatetime: { gt: startDatetime },
+    },
+  });
+  return Boolean(conflict);
+}
 
 router.get('/', async (req, res) => {
   try {
     const { date, employeeId, status } = req.query;
     const where = {};
     if (date) {
+      // O dia é sempre o dia em Lisboa, independentemente do fuso do servidor.
+      const nextDate = format(addDays(new Date(`${date}T12:00:00`), 1), 'yyyy-MM-dd');
       where.startDatetime = {
-        gte: new Date(`${date}T00:00:00.000Z`),
-        lt: new Date(`${date}T23:59:59.999Z`),
+        gte: lisboaTimeToUTC(date, '00:00'),
+        lt: lisboaTimeToUTC(nextDate, '00:00'),
       };
     }
     if (employeeId) where.employeeId = parseInt(employeeId);
@@ -42,6 +62,10 @@ router.post('/', async (req, res) => {
 
     const startDatetime = lisboaTimeToUTC(date, time);
     const endDatetime = addMinutes(startDatetime, service.durationMin);
+
+    if (await hasConflict(parseInt(employeeId), startDatetime, endDatetime)) {
+      return res.status(409).json({ error: 'Este artista já tem uma marcação nesse horário' });
+    }
 
     const appointment = await prisma.appointment.create({
       data: {
@@ -75,6 +99,10 @@ router.put('/:id', async (req, res) => {
     if (date && time) {
       updateData.startDatetime = lisboaTimeToUTC(date, time);
       updateData.endDatetime = addMinutes(updateData.startDatetime, existing.service.durationMin);
+
+      if (await hasConflict(existing.employeeId, updateData.startDatetime, updateData.endDatetime, id)) {
+        return res.status(409).json({ error: 'Este artista já tem uma marcação nesse horário' });
+      }
     }
 
     const updated = await prisma.appointment.update({
@@ -82,6 +110,12 @@ router.put('/:id', async (req, res) => {
       data: updateData,
       include: { employee: { select: { id: true, name: true } }, service: true },
     });
+
+    if (status && status !== existing.status) {
+      const { subject, html } = appointmentStatusChangedEmail(updated);
+      sendMail({ to: updated.clientEmail, subject, html });
+    }
+
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });

@@ -27,6 +27,15 @@ const config: Config = {
         display: ['var(--font-playfair)', 'Georgia', 'serif'],
         body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
+      keyframes: {
+        'slide-up': {
+          from: { transform: 'translateY(100%)' },
+          to: { transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'slide-up': 'slide-up 0.2s ease-out',
+      },
     },
   },
   plugins: [],

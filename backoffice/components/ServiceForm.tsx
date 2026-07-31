@@ -12,15 +12,16 @@ const CATEGORIES: { value: ServiceCategory; label: string }[] = [
 
 interface Props {
   initial?: Partial<Service>;
+  defaultCategory?: ServiceCategory;
   onSave: (data: Partial<Service>) => void;
   onClose: () => void;
   loading?: boolean;
 }
 
-export default function ServiceForm({ initial, onSave, onClose, loading }: Props) {
+export default function ServiceForm({ initial, defaultCategory, onSave, onClose, loading }: Props) {
   const [form, setForm] = useState({
     name: initial?.name ?? '',
-    category: initial?.category ?? ('barbershop' as ServiceCategory),
+    category: initial?.category ?? defaultCategory ?? ('barbershop' as ServiceCategory),
     description: initial?.description ?? '',
     durationMin: initial?.durationMin ?? 30,
     price: initial?.price ?? 0,

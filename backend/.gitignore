@@ -29,8 +29,13 @@ coverage/
 # Upload storage
 uploads/
 
+# Local-only seed script with real personal credentials — never commit
+prisma/seed-team.js
+
 # Prisma
 node_modules/.prisma/
 prisma/.env
 # Keep generated client committed (pre-built — server cannot run prisma generate)
 !src/generated/
+# ...except the macOS dev engine binary — the server is Linux and only needs the debian-* ones
+src/generated/client/query-engine-darwin*

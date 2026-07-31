@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
-const { authenticate, requireEmployee } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
 const { fromZonedTime } = require('date-fns-tz');
 
-router.use(authenticate, requireEmployee);
+router.use(authenticate, requirePermission('manage_blocks'));
 const TIMEZONE = 'Europe/Lisbon';
 
 async function getEmployee(userId) {

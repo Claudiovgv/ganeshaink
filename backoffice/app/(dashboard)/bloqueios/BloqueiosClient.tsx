@@ -3,6 +3,7 @@ import { useState, useTransition } from 'react';
 import type { TimeBlock } from '@/lib/types';
 import Button from '@/components/Button';
 import { createTimeBlockAction, deleteTimeBlockAction } from '@/lib/actions';
+import { formatLisbon } from '@/lib/timezone';
 
 const emptyForm = { type: 'holiday' as 'holiday' | 'unavailable', reason: '', startDatetime: '', endDatetime: '' };
 
@@ -43,9 +44,9 @@ export default function BloqueiosClient({ initial }: { initial: TimeBlock[] }) {
               <div>
                 <p className="text-sm font-medium text-text-primary">{b.reason ?? (b.type === 'holiday' ? 'Férias' : 'Indisponível')}</p>
                 <p className="text-xs text-text-secondary">
-                  {new Date(b.startDatetime).toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  {formatLisbon(b.startDatetime, 'dd/MM/yy HH:mm')}
                   {' — '}
-                  {new Date(b.endDatetime).toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  {formatLisbon(b.endDatetime, 'dd/MM/yy HH:mm')}
                 </p>
               </div>
               <Button size="sm" variant="danger" onClick={() => handleDelete(b.id)} disabled={isPending}>Eliminar</Button>

@@ -7,12 +7,21 @@ export const metadata: Metadata = {
 };
 
 const GALLERY_ITEMS = [
-  { category: 'Tatuagem', src: '/images/gallery/tattoo-1.jpg', alt: 'Tatuagem blackwork' },
-  { category: 'Tatuagem', src: '/images/gallery/tattoo-2.jpg', alt: 'Tatuagem a cores' },
-  { category: 'Barbearia', src: '/images/gallery/barber-1.jpg', alt: 'Corte de cabelo' },
-  { category: 'Barbearia', src: '/images/gallery/barber-2.jpg', alt: 'Acabamento de barba' },
-  { category: 'Piercing', src: '/images/gallery/piercing-1.jpg', alt: 'Body piercing' },
-  { category: 'Unhas', src: '/images/gallery/nails-1.jpg', alt: 'Nail art' },
+  { category: 'Tatuagem', src: '/images/gallery/tattoo-1.jpg', alt: 'Trabalho de tatuagem Ganesha Ink' },
+  { category: 'Tatuagem', src: '/images/gallery/tattoo-2.jpg', alt: 'Trabalho de tatuagem Ganesha Ink' },
+  { category: 'Tatuagem', src: '/images/gallery/tattoo-3.jpg', alt: 'Trabalho de tatuagem Ganesha Ink' },
+  { category: 'Tatuagem', src: '/images/gallery/tattoo-4.jpg', alt: 'Trabalho de tatuagem Ganesha Ink' },
+  { category: 'Tatuagem', src: '/images/gallery/tattoo-5.jpg', alt: 'Trabalho de tatuagem Ganesha Ink' },
+  { category: 'Tatuagem', src: '/images/gallery/tattoo-6.jpg', alt: 'Trabalho de tatuagem Ganesha Ink' },
+  { category: 'Barbearia', src: '/images/gallery/barber-1.jpg', alt: 'Corte de cabelo Ganesha Ink' },
+  { category: 'Barbearia', src: '/images/gallery/barber-2.jpg', alt: 'Corte de cabelo Ganesha Ink' },
+  { category: 'Barbearia', src: '/images/gallery/barber-3.jpg', alt: 'Corte de cabelo Ganesha Ink' },
+  { category: 'Barbearia', src: '/images/gallery/barber-4.jpg', alt: 'Corte de cabelo Ganesha Ink' },
+  { category: 'Barbearia', src: '/images/gallery/barber-5.jpg', alt: 'Corte de cabelo Ganesha Ink' },
+  { category: 'Unhas', src: '/images/gallery/nails-1.jpg', alt: 'Trabalho de unhas Ganesha Ink' },
+  { category: 'Unhas', src: '/images/gallery/nails-2.jpg', alt: 'Trabalho de unhas Ganesha Ink' },
+  { category: 'Unhas', src: '/images/gallery/nails-3.jpg', alt: 'Trabalho de unhas Ganesha Ink' },
+  { category: 'Unhas', src: '/images/gallery/nails-4.jpg', alt: 'Trabalho de unhas Ganesha Ink' },
 ];
 
 const CATEGORIES = ['Todos', 'Tatuagem', 'Barbearia', 'Piercing', 'Unhas'];

@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
 const { publicLimiter } = require('../middleware/rateLimit');
+const { sendMail } = require('../lib/mailer');
+const { consultationReceivedEmail } = require('../lib/emailTemplates');
 
 router.post('/', publicLimiter, async (req, res) => {
   try {
@@ -31,6 +33,9 @@ router.post('/', publicLimiter, async (req, res) => {
         employee: { select: { id: true, name: true } },
       },
     });
+
+    const { subject, html } = consultationReceivedEmail(consultation);
+    sendMail({ to: consultation.clientEmail, subject, html });
 
     res.status(201).json(consultation);
   } catch (err) {

@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
-const { authenticate, requireAdmin } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
 const { lisboaTimeToUTC } = require('../../services/availability.service');
 const { addMinutes } = require('date-fns');
 const { v4: uuidv4 } = require('uuid');
 
-router.use(authenticate, requireAdmin);
+router.use(authenticate, requirePermission('manage_appointments'));
 
 router.get('/', async (req, res) => {
   try {

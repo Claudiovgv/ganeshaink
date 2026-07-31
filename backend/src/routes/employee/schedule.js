@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
-const { authenticate, requireEmployee } = require('../../middleware/auth');
+const { authenticate, requirePermission } = require('../../middleware/auth');
 
-router.use(authenticate, requireEmployee);
+router.use(authenticate, requirePermission('manage_schedule'));
 
 async function getEmployee(userId) {
   return prisma.employee.findUnique({ where: { userId } });

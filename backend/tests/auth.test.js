@@ -1,5 +1,6 @@
 const request = require('supertest');
-const app = require('../src/index');
+const { authenticator } = require('otplib');
+const app = require('../src/app');
 const prisma = require('../src/config/database');
 const bcrypt = require('bcryptjs');
 
@@ -22,16 +23,52 @@ describe('POST /v1/auth/login', () => {
     await prisma.user.deleteMany({ where: { email: 'admin@test.com' } });
   });
 
-  it('returns 200 and token with valid credentials', async () => {
+  it('requires 2FA setup on first login with valid credentials', async () => {
     const res = await request(app)
       .post('/v1/auth/login')
       .send({ email: 'admin@test.com', password: 'password123' });
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('token');
-    expect(res.body.user.email).toBe('admin@test.com');
-    expect(res.body.user.role).toBe('admin');
-    expect(res.body.user).not.toHaveProperty('password');
+    expect(res.body.requires2FA).toBe(true);
+    expect(res.body.needsSetup).toBe(true);
+    expect(res.body).toHaveProperty('pendingToken');
+  });
+
+  it('completes 2FA setup and returns a token with a valid code', async () => {
+    const loginRes = await request(app)
+      .post('/v1/auth/login')
+      .send({ email: 'admin@test.com', password: 'password123' });
+    const { pendingToken } = loginRes.body;
+
+    const setupRes = await request(app)
+      .post('/v1/auth/login/setup-2fa')
+      .send({ pendingToken });
+    expect(setupRes.status).toBe(200);
+    expect(setupRes.body).toHaveProperty('secret');
+    expect(setupRes.body).toHaveProperty('qrCodeDataUrl');
+
+    const code = authenticator.generate(setupRes.body.secret);
+    const verifyRes = await request(app)
+      .post('/v1/auth/login/verify-2fa')
+      .send({ pendingToken, code });
+
+    expect(verifyRes.status).toBe(200);
+    expect(verifyRes.body).toHaveProperty('token');
+    expect(verifyRes.body.user.email).toBe('admin@test.com');
+    expect(verifyRes.body.user.role).toBe('admin');
+    expect(verifyRes.body.user.twoFactorEnabled).toBe(true);
+    expect(verifyRes.body.user).not.toHaveProperty('password');
+  });
+
+  it('only asks for the code (no setup) once 2FA is already configured', async () => {
+    // Reuses the account enrolled in the previous test.
+    const res = await request(app)
+      .post('/v1/auth/login')
+      .send({ email: 'admin@test.com', password: 'password123' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.requires2FA).toBe(true);
+    expect(res.body.needsSetup).toBe(false);
   });
 
   it('returns 401 with wrong password', async () => {
@@ -51,11 +88,10 @@ describe('POST /v1/auth/login', () => {
 
 describe('GET /v1/auth/me', () => {
   let token;
-  let user;
 
   beforeAll(async () => {
     await prisma.user.deleteMany({ where: { email: 'me@test.com' } });
-    user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name: 'Me Test',
         email: 'me@test.com',
@@ -63,10 +99,16 @@ describe('GET /v1/auth/me', () => {
         role: 'employee',
       },
     });
-    const res = await request(app)
+
+    const loginRes = await request(app)
       .post('/v1/auth/login')
       .send({ email: 'me@test.com', password: 'password123' });
-    token = res.body.token;
+    const { pendingToken } = loginRes.body;
+
+    const setupRes = await request(app).post('/v1/auth/login/setup-2fa').send({ pendingToken });
+    const code = authenticator.generate(setupRes.body.secret);
+    const verifyRes = await request(app).post('/v1/auth/login/verify-2fa').send({ pendingToken, code });
+    token = verifyRes.body.token;
   });
 
   afterAll(async () => {

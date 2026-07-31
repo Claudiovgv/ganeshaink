@@ -13,6 +13,7 @@ export function formatPrice(price: number | string | null): string {
   if (price === null || price === undefined) return 'Sob consulta';
   const n = typeof price === 'string' ? parseFloat(price) : price;
   if (isNaN(n)) return 'Sob consulta';
+  if (n === 0) return '\u2014';
   return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(n).replace('\u00a0', ' ');
 }
 

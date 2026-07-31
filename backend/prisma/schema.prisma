@@ -11,6 +11,7 @@ datasource db {
 }
 
 enum Role {
+  superadmin
   admin
   employee
 }
@@ -42,15 +43,24 @@ enum ConsultationStatus {
   scheduled
 }
 
+enum LogLevel {
+  info
+  warning
+  error
+  security
+}
+
 model User {
-  id        Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  password  String
-  role      Role       @default(employee)
-  createdAt DateTime   @default(now()) @map("created_at")
-  employee  Employee?
-  blogPosts BlogPost[]
+  id                  Int        @id @default(autoincrement())
+  name                String
+  email               String     @unique
+  password            String
+  role                Role       @default(employee)
+  twoFactorSecret     String?    @map("two_factor_secret")
+  twoFactorEnabled    Boolean    @default(false) @map("two_factor_enabled")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  employee            Employee?
+  blogPosts           BlogPost[]
 
   @@map("users")
 }
@@ -178,4 +188,27 @@ model BlogPost {
   author         User      @relation(fields: [authorId], references: [id])
 
   @@map("blog_posts")
+}
+
+model Setting {
+  key       String   @id
+  value     String?  @db.Text
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model SystemLog {
+  id        Int      @id @default(autoincrement())
+  level     LogLevel @default(info)
+  category  String
+  message   String   @db.Text
+  ip        String?
+  userId    Int?     @map("user_id")
+  meta      Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([level])
+  @@map("system_logs")
 }

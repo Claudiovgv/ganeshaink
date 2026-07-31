@@ -128,6 +128,8 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   role: 'role',
+  twoFactorSecret: 'twoFactorSecret',
+  twoFactorEnabled: 'twoFactorEnabled',
   createdAt: 'createdAt'
 };
 
@@ -219,6 +221,23 @@ exports.Prisma.BlogPostScalarFieldEnum = {
   isPublished: 'isPublished'
 };
 
+exports.Prisma.SettingScalarFieldEnum = {
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SystemLogScalarFieldEnum = {
+  id: 'id',
+  level: 'level',
+  category: 'category',
+  message: 'message',
+  ip: 'ip',
+  userId: 'userId',
+  meta: 'meta',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -240,6 +259,7 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
+  superadmin: 'superadmin',
   admin: 'admin',
   employee: 'employee'
 };
@@ -271,6 +291,13 @@ exports.ConsultationStatus = exports.$Enums.ConsultationStatus = {
   scheduled: 'scheduled'
 };
 
+exports.LogLevel = exports.$Enums.LogLevel = {
+  info: 'info',
+  warning: 'warning',
+  error: 'error',
+  security: 'security'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Employee: 'Employee',
@@ -280,7 +307,9 @@ exports.Prisma.ModelName = {
   TimeBlock: 'TimeBlock',
   Appointment: 'Appointment',
   ConsultationRequest: 'ConsultationRequest',
-  BlogPost: 'BlogPost'
+  BlogPost: 'BlogPost',
+  Setting: 'Setting',
+  SystemLog: 'SystemLog'
 };
 
 /**

@@ -4,6 +4,7 @@ import type { BlogPost } from '@/lib/types';
 import DataTable from '@/components/DataTable';
 import Button from '@/components/Button';
 import { createBlogPostAction, updateBlogPostAction, deleteBlogPostAction } from '@/lib/actions';
+import { formatLisbon } from '@/lib/timezone';
 
 const emptyPost = { title: '', slug: '', excerpt: '', content: '', coverImage: '', published: false };
 
@@ -45,7 +46,7 @@ export default function BlogClient({ initial }: { initial: BlogPost[] }) {
   const columns = [
     { key: 'title', label: 'Título', render: (p: BlogPost) => <span className="font-medium">{p.title}</span> },
     { key: 'status', label: 'Estado', render: (p: BlogPost) => <span className={`text-xs font-medium ${p.published ? 'text-emerald-400' : 'text-text-muted'}`}>{p.published ? 'Publicado' : 'Rascunho'}</span> },
-    { key: 'date', label: 'Data', render: (p: BlogPost) => <span className="text-text-secondary text-xs">{p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('pt-PT') : '—'}</span> },
+    { key: 'date', label: 'Data', render: (p: BlogPost) => <span className="text-text-secondary text-xs">{p.publishedAt ? formatLisbon(p.publishedAt, 'dd/MM/yyyy') : '—'}</span> },
     { key: 'author', label: 'Autor', render: (p: BlogPost) => <span className="text-text-secondary text-xs">{p.author?.name ?? '—'}</span> },
     {
       key: 'actions', label: 'Acções',

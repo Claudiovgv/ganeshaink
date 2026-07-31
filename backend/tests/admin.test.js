@@ -1,5 +1,6 @@
 const request = require('supertest');
-const app = require('../src/index');
+const jwt = require('jsonwebtoken');
+const app = require('../src/app');
 const prisma = require('../src/config/database');
 const bcrypt = require('bcryptjs');
 
@@ -12,8 +13,9 @@ beforeAll(async () => {
     data: { name: 'Admin Route Test', email: 'admin-rt@test.com', password: await bcrypt.hash('admin123', 10), role: 'admin' },
   });
 
-  const loginRes = await request(app).post('/v1/auth/login').send({ email: 'admin-rt@test.com', password: 'admin123' });
-  adminToken = loginRes.body.token;
+  // 2FA is mandatory at login now, so route tests that aren't about auth itself
+  // sign a token directly instead of driving the full login + 2FA-setup flow.
+  adminToken = jwt.sign({ id: adminUser.id, email: adminUser.email, role: adminUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
   empUser = await prisma.user.create({
     data: {
