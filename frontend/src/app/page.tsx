@@ -38,7 +38,7 @@ export default async function HomePage() {
             Arte na <span className="text-gold-gradient">Pele</span>
           </h1>
           <p className="text-text-secondary text-lg md:text-xl mb-10 max-w-xl mx-auto leading-relaxed">
-            Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Lisboa.
+            Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Vale de Cambra.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

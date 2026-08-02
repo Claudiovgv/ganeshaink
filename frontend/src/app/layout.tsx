@@ -19,10 +19,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     template: '%s | Ganesha Ink',
-    default: 'Ganesha Ink — Tatuagem, Barbearia & Piercing em Lisboa',
+    default: 'Ganesha Ink — Tatuagem, Barbearia & Piercing em Vale de Cambra',
   },
   description:
-    'Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Lisboa. Marcações online disponíveis.',
+    'Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Vale de Cambra. Marcações online disponíveis.',
   icons: {
     icon: '/images/logo/ganesha-icon.png',
     apple: '/images/logo/ganesha-icon.png',

@@ -21,7 +21,7 @@ export default function PoliticaPrivacidadePage() {
           <section>
             <h2 className="font-display text-xl font-semibold text-text-primary mb-3">1. Responsável pelo Tratamento</h2>
             <p>
-              Ganesha Ink, com sede em Lisboa, Portugal, é o responsável pelo tratamento dos dados pessoais recolhidos
+              Ganesha Ink, com sede em Vale de Cambra, Portugal, é o responsável pelo tratamento dos dados pessoais recolhidos
               através do website <strong className="text-text-primary">ganeshaink.pt</strong> e dos serviços associados.
             </p>
             <p className="mt-2">
