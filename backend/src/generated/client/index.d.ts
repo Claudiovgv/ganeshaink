@@ -29,6 +29,11 @@ export type Employee = $Result.DefaultSelection<Prisma.$EmployeePayload>
  */
 export type Service = $Result.DefaultSelection<Prisma.$ServicePayload>
 /**
+ * Model Category
+ * 
+ */
+export type Category = $Result.DefaultSelection<Prisma.$CategoryPayload>
+/**
  * Model EmployeeService
  * 
  */
@@ -82,16 +87,6 @@ export namespace $Enums {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
-export const ServiceCategory: {
-  barbershop: 'barbershop',
-  tattoo: 'tattoo',
-  piercing: 'piercing',
-  nails: 'nails'
-};
-
-export type ServiceCategory = (typeof ServiceCategory)[keyof typeof ServiceCategory]
-
-
 export const TimeBlockType: {
   vacation: 'vacation',
   break: 'break',
@@ -135,10 +130,6 @@ export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel]
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
-
-export type ServiceCategory = $Enums.ServiceCategory
-
-export const ServiceCategory: typeof $Enums.ServiceCategory
 
 export type TimeBlockType = $Enums.TimeBlockType
 
@@ -308,6 +299,16 @@ export class PrismaClient<
     * ```
     */
   get service(): Prisma.ServiceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.category`: Exposes CRUD operations for the **Category** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Categories
+    * const categories = await prisma.category.findMany()
+    * ```
+    */
+  get category(): Prisma.CategoryDelegate<ExtArgs>;
 
   /**
    * `prisma.employeeService`: Exposes CRUD operations for the **EmployeeService** model.
@@ -832,6 +833,7 @@ export namespace Prisma {
     User: 'User',
     Employee: 'Employee',
     Service: 'Service',
+    Category: 'Category',
     EmployeeService: 'EmployeeService',
     WorkSchedule: 'WorkSchedule',
     TimeBlock: 'TimeBlock',
@@ -855,7 +857,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "employee" | "service" | "employeeService" | "workSchedule" | "timeBlock" | "appointment" | "consultationRequest" | "blogPost" | "setting" | "systemLog"
+      modelProps: "user" | "employee" | "service" | "category" | "employeeService" | "workSchedule" | "timeBlock" | "appointment" | "consultationRequest" | "blogPost" | "setting" | "systemLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1054,6 +1056,72 @@ export namespace Prisma {
           count: {
             args: Prisma.ServiceCountArgs<ExtArgs>
             result: $Utils.Optional<ServiceCountAggregateOutputType> | number
+          }
+        }
+      }
+      Category: {
+        payload: Prisma.$CategoryPayload<ExtArgs>
+        fields: Prisma.CategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.CategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>
+          }
+          findMany: {
+            args: Prisma.CategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>[]
+          }
+          create: {
+            args: Prisma.CategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>
+          }
+          createMany: {
+            args: Prisma.CategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>
+          }
+          update: {
+            args: Prisma.CategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.CategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.CategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCategory>
+          }
+          groupBy: {
+            args: Prisma.CategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<CategoryCountAggregateOutputType> | number
           }
         }
       }
@@ -1885,6 +1953,46 @@ export namespace Prisma {
    */
   export type ServiceCountOutputTypeCountConsultationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConsultationRequestWhereInput
+  }
+
+
+  /**
+   * Count Type CategoryCountOutputType
+   */
+
+  export type CategoryCountOutputType = {
+    services: number
+    children: number
+  }
+
+  export type CategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    services?: boolean | CategoryCountOutputTypeCountServicesArgs
+    children?: boolean | CategoryCountOutputTypeCountChildrenArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CategoryCountOutputType without action
+   */
+  export type CategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CategoryCountOutputType
+     */
+    select?: CategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CategoryCountOutputType without action
+   */
+  export type CategoryCountOutputTypeCountServicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * CategoryCountOutputType without action
+   */
+  export type CategoryCountOutputTypeCountChildrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CategoryWhereInput
   }
 
 
@@ -2894,11 +3002,13 @@ export namespace Prisma {
   export type EmployeeAvgAggregateOutputType = {
     id: number | null
     userId: number | null
+    sortOrder: number | null
   }
 
   export type EmployeeSumAggregateOutputType = {
     id: number | null
     userId: number | null
+    sortOrder: number | null
   }
 
   export type EmployeeMinAggregateOutputType = {
@@ -2908,6 +3018,7 @@ export namespace Prisma {
     bio: string | null
     photoUrl: string | null
     isActive: boolean | null
+    sortOrder: number | null
     createdAt: Date | null
   }
 
@@ -2918,6 +3029,7 @@ export namespace Prisma {
     bio: string | null
     photoUrl: string | null
     isActive: boolean | null
+    sortOrder: number | null
     createdAt: Date | null
   }
 
@@ -2928,6 +3040,7 @@ export namespace Prisma {
     bio: number
     photoUrl: number
     isActive: number
+    sortOrder: number
     createdAt: number
     _all: number
   }
@@ -2936,11 +3049,13 @@ export namespace Prisma {
   export type EmployeeAvgAggregateInputType = {
     id?: true
     userId?: true
+    sortOrder?: true
   }
 
   export type EmployeeSumAggregateInputType = {
     id?: true
     userId?: true
+    sortOrder?: true
   }
 
   export type EmployeeMinAggregateInputType = {
@@ -2950,6 +3065,7 @@ export namespace Prisma {
     bio?: true
     photoUrl?: true
     isActive?: true
+    sortOrder?: true
     createdAt?: true
   }
 
@@ -2960,6 +3076,7 @@ export namespace Prisma {
     bio?: true
     photoUrl?: true
     isActive?: true
+    sortOrder?: true
     createdAt?: true
   }
 
@@ -2970,6 +3087,7 @@ export namespace Prisma {
     bio?: true
     photoUrl?: true
     isActive?: true
+    sortOrder?: true
     createdAt?: true
     _all?: true
   }
@@ -3067,6 +3185,7 @@ export namespace Prisma {
     bio: string | null
     photoUrl: string | null
     isActive: boolean
+    sortOrder: number
     createdAt: Date
     _count: EmployeeCountAggregateOutputType | null
     _avg: EmployeeAvgAggregateOutputType | null
@@ -3096,6 +3215,7 @@ export namespace Prisma {
     bio?: boolean
     photoUrl?: boolean
     isActive?: boolean
+    sortOrder?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     services?: boolean | Employee$servicesArgs<ExtArgs>
@@ -3114,6 +3234,7 @@ export namespace Prisma {
     bio?: boolean
     photoUrl?: boolean
     isActive?: boolean
+    sortOrder?: boolean
     createdAt?: boolean
   }
 
@@ -3144,6 +3265,7 @@ export namespace Prisma {
       bio: string | null
       photoUrl: string | null
       isActive: boolean
+      sortOrder: number
       createdAt: Date
     }, ExtArgs["result"]["employee"]>
     composites: {}
@@ -3526,6 +3648,7 @@ export namespace Prisma {
     readonly bio: FieldRef<"Employee", 'String'>
     readonly photoUrl: FieldRef<"Employee", 'String'>
     readonly isActive: FieldRef<"Employee", 'Boolean'>
+    readonly sortOrder: FieldRef<"Employee", 'Int'>
     readonly createdAt: FieldRef<"Employee", 'DateTime'>
   }
     
@@ -3954,94 +4077,108 @@ export namespace Prisma {
 
   export type ServiceAvgAggregateOutputType = {
     id: number | null
+    categoryId: number | null
     durationMin: number | null
     price: Decimal | null
+    sortOrder: number | null
   }
 
   export type ServiceSumAggregateOutputType = {
     id: number | null
+    categoryId: number | null
     durationMin: number | null
     price: Decimal | null
+    sortOrder: number | null
   }
 
   export type ServiceMinAggregateOutputType = {
     id: number | null
     name: string | null
-    category: $Enums.ServiceCategory | null
+    categoryId: number | null
     description: string | null
     durationMin: number | null
     price: Decimal | null
     requiresConsultation: boolean | null
     isActive: boolean | null
+    sortOrder: number | null
   }
 
   export type ServiceMaxAggregateOutputType = {
     id: number | null
     name: string | null
-    category: $Enums.ServiceCategory | null
+    categoryId: number | null
     description: string | null
     durationMin: number | null
     price: Decimal | null
     requiresConsultation: boolean | null
     isActive: boolean | null
+    sortOrder: number | null
   }
 
   export type ServiceCountAggregateOutputType = {
     id: number
     name: number
-    category: number
+    categoryId: number
     description: number
     durationMin: number
     price: number
     requiresConsultation: number
     isActive: number
+    sortOrder: number
     _all: number
   }
 
 
   export type ServiceAvgAggregateInputType = {
     id?: true
+    categoryId?: true
     durationMin?: true
     price?: true
+    sortOrder?: true
   }
 
   export type ServiceSumAggregateInputType = {
     id?: true
+    categoryId?: true
     durationMin?: true
     price?: true
+    sortOrder?: true
   }
 
   export type ServiceMinAggregateInputType = {
     id?: true
     name?: true
-    category?: true
+    categoryId?: true
     description?: true
     durationMin?: true
     price?: true
     requiresConsultation?: true
     isActive?: true
+    sortOrder?: true
   }
 
   export type ServiceMaxAggregateInputType = {
     id?: true
     name?: true
-    category?: true
+    categoryId?: true
     description?: true
     durationMin?: true
     price?: true
     requiresConsultation?: true
     isActive?: true
+    sortOrder?: true
   }
 
   export type ServiceCountAggregateInputType = {
     id?: true
     name?: true
-    category?: true
+    categoryId?: true
     description?: true
     durationMin?: true
     price?: true
     requiresConsultation?: true
     isActive?: true
+    sortOrder?: true
     _all?: true
   }
 
@@ -4134,12 +4271,13 @@ export namespace Prisma {
   export type ServiceGroupByOutputType = {
     id: number
     name: string
-    category: $Enums.ServiceCategory
+    categoryId: number
     description: string | null
     durationMin: number
     price: Decimal
     requiresConsultation: boolean
     isActive: boolean
+    sortOrder: number
     _count: ServiceCountAggregateOutputType | null
     _avg: ServiceAvgAggregateOutputType | null
     _sum: ServiceSumAggregateOutputType | null
@@ -4164,12 +4302,14 @@ export namespace Prisma {
   export type ServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    category?: boolean
+    categoryId?: boolean
     description?: boolean
     durationMin?: boolean
     price?: boolean
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: boolean
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
     employees?: boolean | Service$employeesArgs<ExtArgs>
     appointments?: boolean | Service$appointmentsArgs<ExtArgs>
     consultations?: boolean | Service$consultationsArgs<ExtArgs>
@@ -4180,15 +4320,17 @@ export namespace Prisma {
   export type ServiceSelectScalar = {
     id?: boolean
     name?: boolean
-    category?: boolean
+    categoryId?: boolean
     description?: boolean
     durationMin?: boolean
     price?: boolean
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: boolean
   }
 
   export type ServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
     employees?: boolean | Service$employeesArgs<ExtArgs>
     appointments?: boolean | Service$appointmentsArgs<ExtArgs>
     consultations?: boolean | Service$consultationsArgs<ExtArgs>
@@ -4198,6 +4340,7 @@ export namespace Prisma {
   export type $ServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Service"
     objects: {
+      category: Prisma.$CategoryPayload<ExtArgs>
       employees: Prisma.$EmployeeServicePayload<ExtArgs>[]
       appointments: Prisma.$AppointmentPayload<ExtArgs>[]
       consultations: Prisma.$ConsultationRequestPayload<ExtArgs>[]
@@ -4205,12 +4348,13 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-      category: $Enums.ServiceCategory
+      categoryId: number
       description: string | null
       durationMin: number
       price: Prisma.Decimal
       requiresConsultation: boolean
       isActive: boolean
+      sortOrder: number
     }, ExtArgs["result"]["service"]>
     composites: {}
   }
@@ -4551,6 +4695,7 @@ export namespace Prisma {
    */
   export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     employees<T extends Service$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Service$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeeServicePayload<ExtArgs>, T, "findMany"> | Null>
     appointments<T extends Service$appointmentsArgs<ExtArgs> = {}>(args?: Subset<T, Service$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany"> | Null>
     consultations<T extends Service$consultationsArgs<ExtArgs> = {}>(args?: Subset<T, Service$consultationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConsultationRequestPayload<ExtArgs>, T, "findMany"> | Null>
@@ -4585,12 +4730,13 @@ export namespace Prisma {
   interface ServiceFieldRefs {
     readonly id: FieldRef<"Service", 'Int'>
     readonly name: FieldRef<"Service", 'String'>
-    readonly category: FieldRef<"Service", 'ServiceCategory'>
+    readonly categoryId: FieldRef<"Service", 'Int'>
     readonly description: FieldRef<"Service", 'String'>
     readonly durationMin: FieldRef<"Service", 'Int'>
     readonly price: FieldRef<"Service", 'Decimal'>
     readonly requiresConsultation: FieldRef<"Service", 'Boolean'>
     readonly isActive: FieldRef<"Service", 'Boolean'>
+    readonly sortOrder: FieldRef<"Service", 'Int'>
   }
     
 
@@ -4965,6 +5111,1014 @@ export namespace Prisma {
 
 
   /**
+   * Model Category
+   */
+
+  export type AggregateCategory = {
+    _count: CategoryCountAggregateOutputType | null
+    _avg: CategoryAvgAggregateOutputType | null
+    _sum: CategorySumAggregateOutputType | null
+    _min: CategoryMinAggregateOutputType | null
+    _max: CategoryMaxAggregateOutputType | null
+  }
+
+  export type CategoryAvgAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+    parentId: number | null
+  }
+
+  export type CategorySumAggregateOutputType = {
+    id: number | null
+    sortOrder: number | null
+    parentId: number | null
+  }
+
+  export type CategoryMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    slug: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    parentId: number | null
+  }
+
+  export type CategoryMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    slug: string | null
+    sortOrder: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    parentId: number | null
+  }
+
+  export type CategoryCountAggregateOutputType = {
+    id: number
+    name: number
+    slug: number
+    sortOrder: number
+    isActive: number
+    createdAt: number
+    parentId: number
+    _all: number
+  }
+
+
+  export type CategoryAvgAggregateInputType = {
+    id?: true
+    sortOrder?: true
+    parentId?: true
+  }
+
+  export type CategorySumAggregateInputType = {
+    id?: true
+    sortOrder?: true
+    parentId?: true
+  }
+
+  export type CategoryMinAggregateInputType = {
+    id?: true
+    name?: true
+    slug?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    parentId?: true
+  }
+
+  export type CategoryMaxAggregateInputType = {
+    id?: true
+    name?: true
+    slug?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    parentId?: true
+  }
+
+  export type CategoryCountAggregateInputType = {
+    id?: true
+    name?: true
+    slug?: true
+    sortOrder?: true
+    isActive?: true
+    createdAt?: true
+    parentId?: true
+    _all?: true
+  }
+
+  export type CategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Category to aggregate.
+     */
+    where?: CategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Categories to fetch.
+     */
+    orderBy?: CategoryOrderByWithRelationInput | CategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Categories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Categories
+    **/
+    _count?: true | CategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CategoryMaxAggregateInputType
+  }
+
+  export type GetCategoryAggregateType<T extends CategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCategory[P]>
+      : GetScalarType<T[P], AggregateCategory[P]>
+  }
+
+
+
+
+  export type CategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CategoryWhereInput
+    orderBy?: CategoryOrderByWithAggregationInput | CategoryOrderByWithAggregationInput[]
+    by: CategoryScalarFieldEnum[] | CategoryScalarFieldEnum
+    having?: CategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CategoryCountAggregateInputType | true
+    _avg?: CategoryAvgAggregateInputType
+    _sum?: CategorySumAggregateInputType
+    _min?: CategoryMinAggregateInputType
+    _max?: CategoryMaxAggregateInputType
+  }
+
+  export type CategoryGroupByOutputType = {
+    id: number
+    name: string
+    slug: string
+    sortOrder: number
+    isActive: boolean
+    createdAt: Date
+    parentId: number | null
+    _count: CategoryCountAggregateOutputType | null
+    _avg: CategoryAvgAggregateOutputType | null
+    _sum: CategorySumAggregateOutputType | null
+    _min: CategoryMinAggregateOutputType | null
+    _max: CategoryMaxAggregateOutputType | null
+  }
+
+  type GetCategoryGroupByPayload<T extends CategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], CategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    slug?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    parentId?: boolean
+    services?: boolean | Category$servicesArgs<ExtArgs>
+    parent?: boolean | Category$parentArgs<ExtArgs>
+    children?: boolean | Category$childrenArgs<ExtArgs>
+    _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["category"]>
+
+
+  export type CategorySelectScalar = {
+    id?: boolean
+    name?: boolean
+    slug?: boolean
+    sortOrder?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    parentId?: boolean
+  }
+
+  export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    services?: boolean | Category$servicesArgs<ExtArgs>
+    parent?: boolean | Category$parentArgs<ExtArgs>
+    children?: boolean | Category$childrenArgs<ExtArgs>
+    _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $CategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Category"
+    objects: {
+      services: Prisma.$ServicePayload<ExtArgs>[]
+      parent: Prisma.$CategoryPayload<ExtArgs> | null
+      children: Prisma.$CategoryPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      slug: string
+      sortOrder: number
+      isActive: boolean
+      createdAt: Date
+      parentId: number | null
+    }, ExtArgs["result"]["category"]>
+    composites: {}
+  }
+
+  type CategoryGetPayload<S extends boolean | null | undefined | CategoryDefaultArgs> = $Result.GetResult<Prisma.$CategoryPayload, S>
+
+  type CategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CategoryFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CategoryCountAggregateInputType | true
+    }
+
+  export interface CategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Category'], meta: { name: 'Category' } }
+    /**
+     * Find zero or one Category that matches the filter.
+     * @param {CategoryFindUniqueArgs} args - Arguments to find a Category
+     * @example
+     * // Get one Category
+     * const category = await prisma.category.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CategoryFindUniqueArgs>(args: SelectSubset<T, CategoryFindUniqueArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Category that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CategoryFindUniqueOrThrowArgs} args - Arguments to find a Category
+     * @example
+     * // Get one Category
+     * const category = await prisma.category.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, CategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Category that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryFindFirstArgs} args - Arguments to find a Category
+     * @example
+     * // Get one Category
+     * const category = await prisma.category.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CategoryFindFirstArgs>(args?: SelectSubset<T, CategoryFindFirstArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Category that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryFindFirstOrThrowArgs} args - Arguments to find a Category
+     * @example
+     * // Get one Category
+     * const category = await prisma.category.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, CategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Categories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Categories
+     * const categories = await prisma.category.findMany()
+     * 
+     * // Get first 10 Categories
+     * const categories = await prisma.category.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const categoryWithIdOnly = await prisma.category.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CategoryFindManyArgs>(args?: SelectSubset<T, CategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Category.
+     * @param {CategoryCreateArgs} args - Arguments to create a Category.
+     * @example
+     * // Create one Category
+     * const Category = await prisma.category.create({
+     *   data: {
+     *     // ... data to create a Category
+     *   }
+     * })
+     * 
+     */
+    create<T extends CategoryCreateArgs>(args: SelectSubset<T, CategoryCreateArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Categories.
+     * @param {CategoryCreateManyArgs} args - Arguments to create many Categories.
+     * @example
+     * // Create many Categories
+     * const category = await prisma.category.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CategoryCreateManyArgs>(args?: SelectSubset<T, CategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Category.
+     * @param {CategoryDeleteArgs} args - Arguments to delete one Category.
+     * @example
+     * // Delete one Category
+     * const Category = await prisma.category.delete({
+     *   where: {
+     *     // ... filter to delete one Category
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CategoryDeleteArgs>(args: SelectSubset<T, CategoryDeleteArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Category.
+     * @param {CategoryUpdateArgs} args - Arguments to update one Category.
+     * @example
+     * // Update one Category
+     * const category = await prisma.category.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CategoryUpdateArgs>(args: SelectSubset<T, CategoryUpdateArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Categories.
+     * @param {CategoryDeleteManyArgs} args - Arguments to filter Categories to delete.
+     * @example
+     * // Delete a few Categories
+     * const { count } = await prisma.category.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CategoryDeleteManyArgs>(args?: SelectSubset<T, CategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Categories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Categories
+     * const category = await prisma.category.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CategoryUpdateManyArgs>(args: SelectSubset<T, CategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Category.
+     * @param {CategoryUpsertArgs} args - Arguments to update or create a Category.
+     * @example
+     * // Update or create a Category
+     * const category = await prisma.category.upsert({
+     *   create: {
+     *     // ... data to create a Category
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Category we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CategoryUpsertArgs>(args: SelectSubset<T, CategoryUpsertArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Categories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryCountArgs} args - Arguments to filter Categories to count.
+     * @example
+     * // Count the number of Categories
+     * const count = await prisma.category.count({
+     *   where: {
+     *     // ... the filter for the Categories we want to count
+     *   }
+     * })
+    **/
+    count<T extends CategoryCountArgs>(
+      args?: Subset<T, CategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Category.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CategoryAggregateArgs>(args: Subset<T, CategoryAggregateArgs>): Prisma.PrismaPromise<GetCategoryAggregateType<T>>
+
+    /**
+     * Group by Category.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CategoryGroupByArgs['orderBy'] }
+        : { orderBy?: CategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Category model
+   */
+  readonly fields: CategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Category.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    services<T extends Category$servicesArgs<ExtArgs> = {}>(args?: Subset<T, Category$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany"> | Null>
+    parent<T extends Category$parentArgs<ExtArgs> = {}>(args?: Subset<T, Category$parentArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    children<T extends Category$childrenArgs<ExtArgs> = {}>(args?: Subset<T, Category$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Category model
+   */ 
+  interface CategoryFieldRefs {
+    readonly id: FieldRef<"Category", 'Int'>
+    readonly name: FieldRef<"Category", 'String'>
+    readonly slug: FieldRef<"Category", 'String'>
+    readonly sortOrder: FieldRef<"Category", 'Int'>
+    readonly isActive: FieldRef<"Category", 'Boolean'>
+    readonly createdAt: FieldRef<"Category", 'DateTime'>
+    readonly parentId: FieldRef<"Category", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Category findUnique
+   */
+  export type CategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which Category to fetch.
+     */
+    where: CategoryWhereUniqueInput
+  }
+
+  /**
+   * Category findUniqueOrThrow
+   */
+  export type CategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which Category to fetch.
+     */
+    where: CategoryWhereUniqueInput
+  }
+
+  /**
+   * Category findFirst
+   */
+  export type CategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which Category to fetch.
+     */
+    where?: CategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Categories to fetch.
+     */
+    orderBy?: CategoryOrderByWithRelationInput | CategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Categories.
+     */
+    cursor?: CategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Categories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Categories.
+     */
+    distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
+  }
+
+  /**
+   * Category findFirstOrThrow
+   */
+  export type CategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which Category to fetch.
+     */
+    where?: CategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Categories to fetch.
+     */
+    orderBy?: CategoryOrderByWithRelationInput | CategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Categories.
+     */
+    cursor?: CategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Categories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Categories.
+     */
+    distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
+  }
+
+  /**
+   * Category findMany
+   */
+  export type CategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which Categories to fetch.
+     */
+    where?: CategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Categories to fetch.
+     */
+    orderBy?: CategoryOrderByWithRelationInput | CategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Categories.
+     */
+    cursor?: CategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Categories.
+     */
+    skip?: number
+    distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
+  }
+
+  /**
+   * Category create
+   */
+  export type CategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Category.
+     */
+    data: XOR<CategoryCreateInput, CategoryUncheckedCreateInput>
+  }
+
+  /**
+   * Category createMany
+   */
+  export type CategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Categories.
+     */
+    data: CategoryCreateManyInput | CategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Category update
+   */
+  export type CategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Category.
+     */
+    data: XOR<CategoryUpdateInput, CategoryUncheckedUpdateInput>
+    /**
+     * Choose, which Category to update.
+     */
+    where: CategoryWhereUniqueInput
+  }
+
+  /**
+   * Category updateMany
+   */
+  export type CategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Categories.
+     */
+    data: XOR<CategoryUpdateManyMutationInput, CategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which Categories to update
+     */
+    where?: CategoryWhereInput
+  }
+
+  /**
+   * Category upsert
+   */
+  export type CategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Category to update in case it exists.
+     */
+    where: CategoryWhereUniqueInput
+    /**
+     * In case the Category found by the `where` argument doesn't exist, create a new Category with this data.
+     */
+    create: XOR<CategoryCreateInput, CategoryUncheckedCreateInput>
+    /**
+     * In case the Category was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CategoryUpdateInput, CategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * Category delete
+   */
+  export type CategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    /**
+     * Filter which Category to delete.
+     */
+    where: CategoryWhereUniqueInput
+  }
+
+  /**
+   * Category deleteMany
+   */
+  export type CategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Categories to delete
+     */
+    where?: CategoryWhereInput
+  }
+
+  /**
+   * Category.services
+   */
+  export type Category$servicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    where?: ServiceWhereInput
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    cursor?: ServiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Category.parent
+   */
+  export type Category$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    where?: CategoryWhereInput
+  }
+
+  /**
+   * Category.children
+   */
+  export type Category$childrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    where?: CategoryWhereInput
+    orderBy?: CategoryOrderByWithRelationInput | CategoryOrderByWithRelationInput[]
+    cursor?: CategoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
+  }
+
+  /**
+   * Category without action
+   */
+  export type CategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model EmployeeService
    */
 
@@ -4979,26 +6133,31 @@ export namespace Prisma {
   export type EmployeeServiceAvgAggregateOutputType = {
     employeeId: number | null
     serviceId: number | null
+    sortOrder: number | null
   }
 
   export type EmployeeServiceSumAggregateOutputType = {
     employeeId: number | null
     serviceId: number | null
+    sortOrder: number | null
   }
 
   export type EmployeeServiceMinAggregateOutputType = {
     employeeId: number | null
     serviceId: number | null
+    sortOrder: number | null
   }
 
   export type EmployeeServiceMaxAggregateOutputType = {
     employeeId: number | null
     serviceId: number | null
+    sortOrder: number | null
   }
 
   export type EmployeeServiceCountAggregateOutputType = {
     employeeId: number
     serviceId: number
+    sortOrder: number
     _all: number
   }
 
@@ -5006,26 +6165,31 @@ export namespace Prisma {
   export type EmployeeServiceAvgAggregateInputType = {
     employeeId?: true
     serviceId?: true
+    sortOrder?: true
   }
 
   export type EmployeeServiceSumAggregateInputType = {
     employeeId?: true
     serviceId?: true
+    sortOrder?: true
   }
 
   export type EmployeeServiceMinAggregateInputType = {
     employeeId?: true
     serviceId?: true
+    sortOrder?: true
   }
 
   export type EmployeeServiceMaxAggregateInputType = {
     employeeId?: true
     serviceId?: true
+    sortOrder?: true
   }
 
   export type EmployeeServiceCountAggregateInputType = {
     employeeId?: true
     serviceId?: true
+    sortOrder?: true
     _all?: true
   }
 
@@ -5118,6 +6282,7 @@ export namespace Prisma {
   export type EmployeeServiceGroupByOutputType = {
     employeeId: number
     serviceId: number
+    sortOrder: number
     _count: EmployeeServiceCountAggregateOutputType | null
     _avg: EmployeeServiceAvgAggregateOutputType | null
     _sum: EmployeeServiceSumAggregateOutputType | null
@@ -5142,6 +6307,7 @@ export namespace Prisma {
   export type EmployeeServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     employeeId?: boolean
     serviceId?: boolean
+    sortOrder?: boolean
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["employeeService"]>
@@ -5150,6 +6316,7 @@ export namespace Prisma {
   export type EmployeeServiceSelectScalar = {
     employeeId?: boolean
     serviceId?: boolean
+    sortOrder?: boolean
   }
 
   export type EmployeeServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5166,6 +6333,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       employeeId: number
       serviceId: number
+      sortOrder: number
     }, ExtArgs["result"]["employeeService"]>
     composites: {}
   }
@@ -5539,6 +6707,7 @@ export namespace Prisma {
   interface EmployeeServiceFieldRefs {
     readonly employeeId: FieldRef<"EmployeeService", 'Int'>
     readonly serviceId: FieldRef<"EmployeeService", 'Int'>
+    readonly sortOrder: FieldRef<"EmployeeService", 'Int'>
   }
     
 
@@ -12496,6 +13665,7 @@ export namespace Prisma {
     bio: 'bio',
     photoUrl: 'photoUrl',
     isActive: 'isActive',
+    sortOrder: 'sortOrder',
     createdAt: 'createdAt'
   };
 
@@ -12505,20 +13675,35 @@ export namespace Prisma {
   export const ServiceScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    category: 'category',
+    categoryId: 'categoryId',
     description: 'description',
     durationMin: 'durationMin',
     price: 'price',
     requiresConsultation: 'requiresConsultation',
-    isActive: 'isActive'
+    isActive: 'isActive',
+    sortOrder: 'sortOrder'
   };
 
   export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
 
 
+  export const CategoryScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    slug: 'slug',
+    sortOrder: 'sortOrder',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    parentId: 'parentId'
+  };
+
+  export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
   export const EmployeeServiceScalarFieldEnum: {
     employeeId: 'employeeId',
-    serviceId: 'serviceId'
+    serviceId: 'serviceId',
+    sortOrder: 'sortOrder'
   };
 
   export type EmployeeServiceScalarFieldEnum = (typeof EmployeeServiceScalarFieldEnum)[keyof typeof EmployeeServiceScalarFieldEnum]
@@ -12698,13 +13883,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ServiceCategory'
-   */
-  export type EnumServiceCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ServiceCategory'>
-    
-
-
-  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -12841,6 +14019,7 @@ export namespace Prisma {
     bio?: StringNullableFilter<"Employee"> | string | null
     photoUrl?: StringNullableFilter<"Employee"> | string | null
     isActive?: BoolFilter<"Employee"> | boolean
+    sortOrder?: IntFilter<"Employee"> | number
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     services?: EmployeeServiceListRelationFilter
@@ -12857,6 +14036,7 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     photoUrl?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     services?: EmployeeServiceOrderByRelationAggregateInput
@@ -12876,6 +14056,7 @@ export namespace Prisma {
     bio?: StringNullableFilter<"Employee"> | string | null
     photoUrl?: StringNullableFilter<"Employee"> | string | null
     isActive?: BoolFilter<"Employee"> | boolean
+    sortOrder?: IntFilter<"Employee"> | number
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     services?: EmployeeServiceListRelationFilter
@@ -12892,6 +14073,7 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     photoUrl?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
     createdAt?: SortOrder
     _count?: EmployeeCountOrderByAggregateInput
     _avg?: EmployeeAvgOrderByAggregateInput
@@ -12910,6 +14092,7 @@ export namespace Prisma {
     bio?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     photoUrl?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     isActive?: BoolWithAggregatesFilter<"Employee"> | boolean
+    sortOrder?: IntWithAggregatesFilter<"Employee"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
   }
 
@@ -12919,12 +14102,14 @@ export namespace Prisma {
     NOT?: ServiceWhereInput | ServiceWhereInput[]
     id?: IntFilter<"Service"> | number
     name?: StringFilter<"Service"> | string
-    category?: EnumServiceCategoryFilter<"Service"> | $Enums.ServiceCategory
+    categoryId?: IntFilter<"Service"> | number
     description?: StringNullableFilter<"Service"> | string | null
     durationMin?: IntFilter<"Service"> | number
     price?: DecimalFilter<"Service"> | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFilter<"Service"> | boolean
     isActive?: BoolFilter<"Service"> | boolean
+    sortOrder?: IntFilter<"Service"> | number
+    category?: XOR<CategoryRelationFilter, CategoryWhereInput>
     employees?: EmployeeServiceListRelationFilter
     appointments?: AppointmentListRelationFilter
     consultations?: ConsultationRequestListRelationFilter
@@ -12933,12 +14118,14 @@ export namespace Prisma {
   export type ServiceOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    category?: SortOrder
+    categoryId?: SortOrder
     description?: SortOrderInput | SortOrder
     durationMin?: SortOrder
     price?: SortOrder
     requiresConsultation?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
+    category?: CategoryOrderByWithRelationInput
     employees?: EmployeeServiceOrderByRelationAggregateInput
     appointments?: AppointmentOrderByRelationAggregateInput
     consultations?: ConsultationRequestOrderByRelationAggregateInput
@@ -12950,12 +14137,14 @@ export namespace Prisma {
     OR?: ServiceWhereInput[]
     NOT?: ServiceWhereInput | ServiceWhereInput[]
     name?: StringFilter<"Service"> | string
-    category?: EnumServiceCategoryFilter<"Service"> | $Enums.ServiceCategory
+    categoryId?: IntFilter<"Service"> | number
     description?: StringNullableFilter<"Service"> | string | null
     durationMin?: IntFilter<"Service"> | number
     price?: DecimalFilter<"Service"> | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFilter<"Service"> | boolean
     isActive?: BoolFilter<"Service"> | boolean
+    sortOrder?: IntFilter<"Service"> | number
+    category?: XOR<CategoryRelationFilter, CategoryWhereInput>
     employees?: EmployeeServiceListRelationFilter
     appointments?: AppointmentListRelationFilter
     consultations?: ConsultationRequestListRelationFilter
@@ -12964,12 +14153,13 @@ export namespace Prisma {
   export type ServiceOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    category?: SortOrder
+    categoryId?: SortOrder
     description?: SortOrderInput | SortOrder
     durationMin?: SortOrder
     price?: SortOrder
     requiresConsultation?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
     _count?: ServiceCountOrderByAggregateInput
     _avg?: ServiceAvgOrderByAggregateInput
     _max?: ServiceMaxOrderByAggregateInput
@@ -12983,12 +14173,86 @@ export namespace Prisma {
     NOT?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Service"> | number
     name?: StringWithAggregatesFilter<"Service"> | string
-    category?: EnumServiceCategoryWithAggregatesFilter<"Service"> | $Enums.ServiceCategory
+    categoryId?: IntWithAggregatesFilter<"Service"> | number
     description?: StringNullableWithAggregatesFilter<"Service"> | string | null
     durationMin?: IntWithAggregatesFilter<"Service"> | number
     price?: DecimalWithAggregatesFilter<"Service"> | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolWithAggregatesFilter<"Service"> | boolean
     isActive?: BoolWithAggregatesFilter<"Service"> | boolean
+    sortOrder?: IntWithAggregatesFilter<"Service"> | number
+  }
+
+  export type CategoryWhereInput = {
+    AND?: CategoryWhereInput | CategoryWhereInput[]
+    OR?: CategoryWhereInput[]
+    NOT?: CategoryWhereInput | CategoryWhereInput[]
+    id?: IntFilter<"Category"> | number
+    name?: StringFilter<"Category"> | string
+    slug?: StringFilter<"Category"> | string
+    sortOrder?: IntFilter<"Category"> | number
+    isActive?: BoolFilter<"Category"> | boolean
+    createdAt?: DateTimeFilter<"Category"> | Date | string
+    parentId?: IntNullableFilter<"Category"> | number | null
+    services?: ServiceListRelationFilter
+    parent?: XOR<CategoryNullableRelationFilter, CategoryWhereInput> | null
+    children?: CategoryListRelationFilter
+  }
+
+  export type CategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    parentId?: SortOrderInput | SortOrder
+    services?: ServiceOrderByRelationAggregateInput
+    parent?: CategoryOrderByWithRelationInput
+    children?: CategoryOrderByRelationAggregateInput
+  }
+
+  export type CategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    slug?: string
+    AND?: CategoryWhereInput | CategoryWhereInput[]
+    OR?: CategoryWhereInput[]
+    NOT?: CategoryWhereInput | CategoryWhereInput[]
+    name?: StringFilter<"Category"> | string
+    sortOrder?: IntFilter<"Category"> | number
+    isActive?: BoolFilter<"Category"> | boolean
+    createdAt?: DateTimeFilter<"Category"> | Date | string
+    parentId?: IntNullableFilter<"Category"> | number | null
+    services?: ServiceListRelationFilter
+    parent?: XOR<CategoryNullableRelationFilter, CategoryWhereInput> | null
+    children?: CategoryListRelationFilter
+  }, "id" | "slug">
+
+  export type CategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    parentId?: SortOrderInput | SortOrder
+    _count?: CategoryCountOrderByAggregateInput
+    _avg?: CategoryAvgOrderByAggregateInput
+    _max?: CategoryMaxOrderByAggregateInput
+    _min?: CategoryMinOrderByAggregateInput
+    _sum?: CategorySumOrderByAggregateInput
+  }
+
+  export type CategoryScalarWhereWithAggregatesInput = {
+    AND?: CategoryScalarWhereWithAggregatesInput | CategoryScalarWhereWithAggregatesInput[]
+    OR?: CategoryScalarWhereWithAggregatesInput[]
+    NOT?: CategoryScalarWhereWithAggregatesInput | CategoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Category"> | number
+    name?: StringWithAggregatesFilter<"Category"> | string
+    slug?: StringWithAggregatesFilter<"Category"> | string
+    sortOrder?: IntWithAggregatesFilter<"Category"> | number
+    isActive?: BoolWithAggregatesFilter<"Category"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
+    parentId?: IntNullableWithAggregatesFilter<"Category"> | number | null
   }
 
   export type EmployeeServiceWhereInput = {
@@ -12997,6 +14261,7 @@ export namespace Prisma {
     NOT?: EmployeeServiceWhereInput | EmployeeServiceWhereInput[]
     employeeId?: IntFilter<"EmployeeService"> | number
     serviceId?: IntFilter<"EmployeeService"> | number
+    sortOrder?: IntFilter<"EmployeeService"> | number
     employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
     service?: XOR<ServiceRelationFilter, ServiceWhereInput>
   }
@@ -13004,6 +14269,7 @@ export namespace Prisma {
   export type EmployeeServiceOrderByWithRelationInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
     employee?: EmployeeOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
   }
@@ -13015,6 +14281,7 @@ export namespace Prisma {
     NOT?: EmployeeServiceWhereInput | EmployeeServiceWhereInput[]
     employeeId?: IntFilter<"EmployeeService"> | number
     serviceId?: IntFilter<"EmployeeService"> | number
+    sortOrder?: IntFilter<"EmployeeService"> | number
     employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
     service?: XOR<ServiceRelationFilter, ServiceWhereInput>
   }, "employeeId_serviceId">
@@ -13022,6 +14289,7 @@ export namespace Prisma {
   export type EmployeeServiceOrderByWithAggregationInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
     _count?: EmployeeServiceCountOrderByAggregateInput
     _avg?: EmployeeServiceAvgOrderByAggregateInput
     _max?: EmployeeServiceMaxOrderByAggregateInput
@@ -13035,6 +14303,7 @@ export namespace Prisma {
     NOT?: EmployeeServiceScalarWhereWithAggregatesInput | EmployeeServiceScalarWhereWithAggregatesInput[]
     employeeId?: IntWithAggregatesFilter<"EmployeeService"> | number
     serviceId?: IntWithAggregatesFilter<"EmployeeService"> | number
+    sortOrder?: IntWithAggregatesFilter<"EmployeeService"> | number
   }
 
   export type WorkScheduleWhereInput = {
@@ -13642,6 +14911,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -13658,6 +14928,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -13671,6 +14942,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -13687,6 +14959,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -13702,6 +14975,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
   }
 
@@ -13710,6 +14984,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -13720,17 +14995,19 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ServiceCreateInput = {
     name: string
-    category: $Enums.ServiceCategory
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
+    category: CategoryCreateNestedOneWithoutServicesInput
     employees?: EmployeeServiceCreateNestedManyWithoutServiceInput
     appointments?: AppointmentCreateNestedManyWithoutServiceInput
     consultations?: ConsultationRequestCreateNestedManyWithoutServiceInput
@@ -13739,12 +15016,13 @@ export namespace Prisma {
   export type ServiceUncheckedCreateInput = {
     id?: number
     name: string
-    category: $Enums.ServiceCategory
+    categoryId: number
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
     employees?: EmployeeServiceUncheckedCreateNestedManyWithoutServiceInput
     appointments?: AppointmentUncheckedCreateNestedManyWithoutServiceInput
     consultations?: ConsultationRequestUncheckedCreateNestedManyWithoutServiceInput
@@ -13752,12 +15030,13 @@ export namespace Prisma {
 
   export type ServiceUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    category?: CategoryUpdateOneRequiredWithoutServicesNestedInput
     employees?: EmployeeServiceUpdateManyWithoutServiceNestedInput
     appointments?: AppointmentUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUpdateManyWithoutServiceNestedInput
@@ -13766,12 +15045,13 @@ export namespace Prisma {
   export type ServiceUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
+    categoryId?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     employees?: EmployeeServiceUncheckedUpdateManyWithoutServiceNestedInput
     appointments?: AppointmentUncheckedUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUncheckedUpdateManyWithoutServiceNestedInput
@@ -13780,36 +15060,113 @@ export namespace Prisma {
   export type ServiceCreateManyInput = {
     id?: number
     name: string
-    category: $Enums.ServiceCategory
+    categoryId: number
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
   }
 
   export type ServiceUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ServiceUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
+    categoryId?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CategoryCreateInput = {
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    services?: ServiceCreateNestedManyWithoutCategoryInput
+    parent?: CategoryCreateNestedOneWithoutChildrenInput
+    children?: CategoryCreateNestedManyWithoutParentInput
+  }
+
+  export type CategoryUncheckedCreateInput = {
+    id?: number
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    parentId?: number | null
+    services?: ServiceUncheckedCreateNestedManyWithoutCategoryInput
+    children?: CategoryUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CategoryUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    services?: ServiceUpdateManyWithoutCategoryNestedInput
+    parent?: CategoryUpdateOneWithoutChildrenNestedInput
+    children?: CategoryUpdateManyWithoutParentNestedInput
+  }
+
+  export type CategoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    services?: ServiceUncheckedUpdateManyWithoutCategoryNestedInput
+    children?: CategoryUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type CategoryCreateManyInput = {
+    id?: number
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    parentId?: number | null
+  }
+
+  export type CategoryUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CategoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type EmployeeServiceCreateInput = {
+    sortOrder?: number
     employee: EmployeeCreateNestedOneWithoutServicesInput
     service: ServiceCreateNestedOneWithoutEmployeesInput
   }
@@ -13817,9 +15174,11 @@ export namespace Prisma {
   export type EmployeeServiceUncheckedCreateInput = {
     employeeId: number
     serviceId: number
+    sortOrder?: number
   }
 
   export type EmployeeServiceUpdateInput = {
+    sortOrder?: IntFieldUpdateOperationsInput | number
     employee?: EmployeeUpdateOneRequiredWithoutServicesNestedInput
     service?: ServiceUpdateOneRequiredWithoutEmployeesNestedInput
   }
@@ -13827,20 +15186,23 @@ export namespace Prisma {
   export type EmployeeServiceUncheckedUpdateInput = {
     employeeId?: IntFieldUpdateOperationsInput | number
     serviceId?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type EmployeeServiceCreateManyInput = {
     employeeId: number
     serviceId: number
+    sortOrder?: number
   }
 
   export type EmployeeServiceUpdateManyMutationInput = {
-
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type EmployeeServiceUncheckedUpdateManyInput = {
     employeeId?: IntFieldUpdateOperationsInput | number
     serviceId?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type WorkScheduleCreateInput = {
@@ -14641,12 +16003,14 @@ export namespace Prisma {
     bio?: SortOrder
     photoUrl?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
     createdAt?: SortOrder
   }
 
   export type EmployeeAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EmployeeMaxOrderByAggregateInput = {
@@ -14656,6 +16020,7 @@ export namespace Prisma {
     bio?: SortOrder
     photoUrl?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -14666,19 +16031,14 @@ export namespace Prisma {
     bio?: SortOrder
     photoUrl?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
     createdAt?: SortOrder
   }
 
   export type EmployeeSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-  }
-
-  export type EnumServiceCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.ServiceCategory | EnumServiceCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.ServiceCategory[]
-    notIn?: $Enums.ServiceCategory[]
-    not?: NestedEnumServiceCategoryFilter<$PrismaModel> | $Enums.ServiceCategory
+    sortOrder?: SortOrder
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -14692,59 +16052,61 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type CategoryRelationFilter = {
+    is?: CategoryWhereInput
+    isNot?: CategoryWhereInput
+  }
+
   export type ServiceCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    category?: SortOrder
+    categoryId?: SortOrder
     description?: SortOrder
     durationMin?: SortOrder
     price?: SortOrder
     requiresConsultation?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type ServiceAvgOrderByAggregateInput = {
     id?: SortOrder
+    categoryId?: SortOrder
     durationMin?: SortOrder
     price?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type ServiceMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    category?: SortOrder
+    categoryId?: SortOrder
     description?: SortOrder
     durationMin?: SortOrder
     price?: SortOrder
     requiresConsultation?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type ServiceMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    category?: SortOrder
+    categoryId?: SortOrder
     description?: SortOrder
     durationMin?: SortOrder
     price?: SortOrder
     requiresConsultation?: SortOrder
     isActive?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type ServiceSumOrderByAggregateInput = {
     id?: SortOrder
+    categoryId?: SortOrder
     durationMin?: SortOrder
     price?: SortOrder
-  }
-
-  export type EnumServiceCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ServiceCategory | EnumServiceCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.ServiceCategory[]
-    notIn?: $Enums.ServiceCategory[]
-    not?: NestedEnumServiceCategoryWithAggregatesFilter<$PrismaModel> | $Enums.ServiceCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumServiceCategoryFilter<$PrismaModel>
-    _max?: NestedEnumServiceCategoryFilter<$PrismaModel>
+    sortOrder?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -14761,6 +16123,100 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type ServiceListRelationFilter = {
+    every?: ServiceWhereInput
+    some?: ServiceWhereInput
+    none?: ServiceWhereInput
+  }
+
+  export type CategoryNullableRelationFilter = {
+    is?: CategoryWhereInput | null
+    isNot?: CategoryWhereInput | null
+  }
+
+  export type CategoryListRelationFilter = {
+    every?: CategoryWhereInput
+    some?: CategoryWhereInput
+    none?: CategoryWhereInput
+  }
+
+  export type ServiceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CategoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type CategoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type CategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type CategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    sortOrder?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type CategorySumOrderByAggregateInput = {
+    id?: SortOrder
+    sortOrder?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EmployeeRelationFilter = {
@@ -14781,26 +16237,31 @@ export namespace Prisma {
   export type EmployeeServiceCountOrderByAggregateInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EmployeeServiceAvgOrderByAggregateInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EmployeeServiceMaxOrderByAggregateInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EmployeeServiceMinOrderByAggregateInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type EmployeeServiceSumOrderByAggregateInput = {
     employeeId?: SortOrder
     serviceId?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type WorkScheduleCountOrderByAggregateInput = {
@@ -14977,17 +16438,6 @@ export namespace Prisma {
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
   }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -15075,22 +16525,6 @@ export namespace Prisma {
     serviceId?: SortOrder
     employeeId?: SortOrder
     scheduledAppointmentId?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -15607,6 +17041,12 @@ export namespace Prisma {
     deleteMany?: ConsultationRequestScalarWhereInput | ConsultationRequestScalarWhereInput[]
   }
 
+  export type CategoryCreateNestedOneWithoutServicesInput = {
+    create?: XOR<CategoryCreateWithoutServicesInput, CategoryUncheckedCreateWithoutServicesInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutServicesInput
+    connect?: CategoryWhereUniqueInput
+  }
+
   export type EmployeeServiceCreateNestedManyWithoutServiceInput = {
     create?: XOR<EmployeeServiceCreateWithoutServiceInput, EmployeeServiceUncheckedCreateWithoutServiceInput> | EmployeeServiceCreateWithoutServiceInput[] | EmployeeServiceUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: EmployeeServiceCreateOrConnectWithoutServiceInput | EmployeeServiceCreateOrConnectWithoutServiceInput[]
@@ -15649,16 +17089,20 @@ export namespace Prisma {
     connect?: ConsultationRequestWhereUniqueInput | ConsultationRequestWhereUniqueInput[]
   }
 
-  export type EnumServiceCategoryFieldUpdateOperationsInput = {
-    set?: $Enums.ServiceCategory
-  }
-
   export type DecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type CategoryUpdateOneRequiredWithoutServicesNestedInput = {
+    create?: XOR<CategoryCreateWithoutServicesInput, CategoryUncheckedCreateWithoutServicesInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutServicesInput
+    upsert?: CategoryUpsertWithoutServicesInput
+    connect?: CategoryWhereUniqueInput
+    update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutServicesInput, CategoryUpdateWithoutServicesInput>, CategoryUncheckedUpdateWithoutServicesInput>
   }
 
   export type EmployeeServiceUpdateManyWithoutServiceNestedInput = {
@@ -15743,6 +17187,114 @@ export namespace Prisma {
     update?: ConsultationRequestUpdateWithWhereUniqueWithoutServiceInput | ConsultationRequestUpdateWithWhereUniqueWithoutServiceInput[]
     updateMany?: ConsultationRequestUpdateManyWithWhereWithoutServiceInput | ConsultationRequestUpdateManyWithWhereWithoutServiceInput[]
     deleteMany?: ConsultationRequestScalarWhereInput | ConsultationRequestScalarWhereInput[]
+  }
+
+  export type ServiceCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<ServiceCreateWithoutCategoryInput, ServiceUncheckedCreateWithoutCategoryInput> | ServiceCreateWithoutCategoryInput[] | ServiceUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: ServiceCreateOrConnectWithoutCategoryInput | ServiceCreateOrConnectWithoutCategoryInput[]
+    createMany?: ServiceCreateManyCategoryInputEnvelope
+    connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+  }
+
+  export type CategoryCreateNestedOneWithoutChildrenInput = {
+    create?: XOR<CategoryCreateWithoutChildrenInput, CategoryUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutChildrenInput
+    connect?: CategoryWhereUniqueInput
+  }
+
+  export type CategoryCreateNestedManyWithoutParentInput = {
+    create?: XOR<CategoryCreateWithoutParentInput, CategoryUncheckedCreateWithoutParentInput> | CategoryCreateWithoutParentInput[] | CategoryUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CategoryCreateOrConnectWithoutParentInput | CategoryCreateOrConnectWithoutParentInput[]
+    createMany?: CategoryCreateManyParentInputEnvelope
+    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+  }
+
+  export type ServiceUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<ServiceCreateWithoutCategoryInput, ServiceUncheckedCreateWithoutCategoryInput> | ServiceCreateWithoutCategoryInput[] | ServiceUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: ServiceCreateOrConnectWithoutCategoryInput | ServiceCreateOrConnectWithoutCategoryInput[]
+    createMany?: ServiceCreateManyCategoryInputEnvelope
+    connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+  }
+
+  export type CategoryUncheckedCreateNestedManyWithoutParentInput = {
+    create?: XOR<CategoryCreateWithoutParentInput, CategoryUncheckedCreateWithoutParentInput> | CategoryCreateWithoutParentInput[] | CategoryUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CategoryCreateOrConnectWithoutParentInput | CategoryCreateOrConnectWithoutParentInput[]
+    createMany?: CategoryCreateManyParentInputEnvelope
+    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+  }
+
+  export type ServiceUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<ServiceCreateWithoutCategoryInput, ServiceUncheckedCreateWithoutCategoryInput> | ServiceCreateWithoutCategoryInput[] | ServiceUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: ServiceCreateOrConnectWithoutCategoryInput | ServiceCreateOrConnectWithoutCategoryInput[]
+    upsert?: ServiceUpsertWithWhereUniqueWithoutCategoryInput | ServiceUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: ServiceCreateManyCategoryInputEnvelope
+    set?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    disconnect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    delete?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    update?: ServiceUpdateWithWhereUniqueWithoutCategoryInput | ServiceUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: ServiceUpdateManyWithWhereWithoutCategoryInput | ServiceUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
+  }
+
+  export type CategoryUpdateOneWithoutChildrenNestedInput = {
+    create?: XOR<CategoryCreateWithoutChildrenInput, CategoryUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutChildrenInput
+    upsert?: CategoryUpsertWithoutChildrenInput
+    disconnect?: CategoryWhereInput | boolean
+    delete?: CategoryWhereInput | boolean
+    connect?: CategoryWhereUniqueInput
+    update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutChildrenInput, CategoryUpdateWithoutChildrenInput>, CategoryUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type CategoryUpdateManyWithoutParentNestedInput = {
+    create?: XOR<CategoryCreateWithoutParentInput, CategoryUncheckedCreateWithoutParentInput> | CategoryCreateWithoutParentInput[] | CategoryUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CategoryCreateOrConnectWithoutParentInput | CategoryCreateOrConnectWithoutParentInput[]
+    upsert?: CategoryUpsertWithWhereUniqueWithoutParentInput | CategoryUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: CategoryCreateManyParentInputEnvelope
+    set?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    disconnect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    delete?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    update?: CategoryUpdateWithWhereUniqueWithoutParentInput | CategoryUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: CategoryUpdateManyWithWhereWithoutParentInput | CategoryUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ServiceUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<ServiceCreateWithoutCategoryInput, ServiceUncheckedCreateWithoutCategoryInput> | ServiceCreateWithoutCategoryInput[] | ServiceUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: ServiceCreateOrConnectWithoutCategoryInput | ServiceCreateOrConnectWithoutCategoryInput[]
+    upsert?: ServiceUpsertWithWhereUniqueWithoutCategoryInput | ServiceUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: ServiceCreateManyCategoryInputEnvelope
+    set?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    disconnect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    delete?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+    update?: ServiceUpdateWithWhereUniqueWithoutCategoryInput | ServiceUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: ServiceUpdateManyWithWhereWithoutCategoryInput | ServiceUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
+  }
+
+  export type CategoryUncheckedUpdateManyWithoutParentNestedInput = {
+    create?: XOR<CategoryCreateWithoutParentInput, CategoryUncheckedCreateWithoutParentInput> | CategoryCreateWithoutParentInput[] | CategoryUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CategoryCreateOrConnectWithoutParentInput | CategoryCreateOrConnectWithoutParentInput[]
+    upsert?: CategoryUpsertWithWhereUniqueWithoutParentInput | CategoryUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: CategoryCreateManyParentInputEnvelope
+    set?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    disconnect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    delete?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
+    update?: CategoryUpdateWithWhereUniqueWithoutParentInput | CategoryUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: CategoryUpdateManyWithWhereWithoutParentInput | CategoryUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
   }
 
   export type EmployeeCreateNestedOneWithoutServicesInput = {
@@ -15917,14 +17469,6 @@ export namespace Prisma {
     delete?: AppointmentWhereInput | boolean
     connect?: AppointmentWhereUniqueInput
     update?: XOR<XOR<AppointmentUpdateToOneWithWhereWithoutConsultationInput, AppointmentUpdateWithoutConsultationInput>, AppointmentUncheckedUpdateWithoutConsultationInput>
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserCreateNestedOneWithoutBlogPostsInput = {
@@ -16115,13 +17659,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumServiceCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.ServiceCategory | EnumServiceCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.ServiceCategory[]
-    notIn?: $Enums.ServiceCategory[]
-    not?: NestedEnumServiceCategoryFilter<$PrismaModel> | $Enums.ServiceCategory
-  }
-
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[]
@@ -16131,16 +17668,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedEnumServiceCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ServiceCategory | EnumServiceCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.ServiceCategory[]
-    notIn?: $Enums.ServiceCategory[]
-    not?: NestedEnumServiceCategoryWithAggregatesFilter<$PrismaModel> | $Enums.ServiceCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumServiceCategoryFilter<$PrismaModel>
-    _max?: NestedEnumServiceCategoryFilter<$PrismaModel>
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -16157,6 +17684,33 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumTimeBlockTypeFilter<$PrismaModel = never> = {
@@ -16198,33 +17752,6 @@ export namespace Prisma {
     in?: $Enums.ConsultationStatus[]
     notIn?: $Enums.ConsultationStatus[]
     not?: NestedEnumConsultationStatusFilter<$PrismaModel> | $Enums.ConsultationStatus
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -16306,6 +17833,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleCreateNestedManyWithoutEmployeeInput
@@ -16320,6 +17848,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -16384,6 +17913,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUpdateManyWithoutEmployeeNestedInput
@@ -16398,6 +17928,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -16468,11 +17999,13 @@ export namespace Prisma {
   }
 
   export type EmployeeServiceCreateWithoutEmployeeInput = {
+    sortOrder?: number
     service: ServiceCreateNestedOneWithoutEmployeesInput
   }
 
   export type EmployeeServiceUncheckedCreateWithoutEmployeeInput = {
     serviceId: number
+    sortOrder?: number
   }
 
   export type EmployeeServiceCreateOrConnectWithoutEmployeeInput = {
@@ -16667,6 +18200,7 @@ export namespace Prisma {
     NOT?: EmployeeServiceScalarWhereInput | EmployeeServiceScalarWhereInput[]
     employeeId?: IntFilter<"EmployeeService"> | number
     serviceId?: IntFilter<"EmployeeService"> | number
+    sortOrder?: IntFilter<"EmployeeService"> | number
   }
 
   export type WorkScheduleUpsertWithWhereUniqueWithoutEmployeeInput = {
@@ -16793,12 +18327,40 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ConsultationRequest"> | Date | string
   }
 
+  export type CategoryCreateWithoutServicesInput = {
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    parent?: CategoryCreateNestedOneWithoutChildrenInput
+    children?: CategoryCreateNestedManyWithoutParentInput
+  }
+
+  export type CategoryUncheckedCreateWithoutServicesInput = {
+    id?: number
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    parentId?: number | null
+    children?: CategoryUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CategoryCreateOrConnectWithoutServicesInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutServicesInput, CategoryUncheckedCreateWithoutServicesInput>
+  }
+
   export type EmployeeServiceCreateWithoutServiceInput = {
+    sortOrder?: number
     employee: EmployeeCreateNestedOneWithoutServicesInput
   }
 
   export type EmployeeServiceUncheckedCreateWithoutServiceInput = {
     employeeId: number
+    sortOrder?: number
   }
 
   export type EmployeeServiceCreateOrConnectWithoutServiceInput = {
@@ -16885,6 +18447,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CategoryUpsertWithoutServicesInput = {
+    update: XOR<CategoryUpdateWithoutServicesInput, CategoryUncheckedUpdateWithoutServicesInput>
+    create: XOR<CategoryCreateWithoutServicesInput, CategoryUncheckedCreateWithoutServicesInput>
+    where?: CategoryWhereInput
+  }
+
+  export type CategoryUpdateToOneWithWhereWithoutServicesInput = {
+    where?: CategoryWhereInput
+    data: XOR<CategoryUpdateWithoutServicesInput, CategoryUncheckedUpdateWithoutServicesInput>
+  }
+
+  export type CategoryUpdateWithoutServicesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: CategoryUpdateOneWithoutChildrenNestedInput
+    children?: CategoryUpdateManyWithoutParentNestedInput
+  }
+
+  export type CategoryUncheckedUpdateWithoutServicesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    children?: CategoryUncheckedUpdateManyWithoutParentNestedInput
+  }
+
   export type EmployeeServiceUpsertWithWhereUniqueWithoutServiceInput = {
     where: EmployeeServiceWhereUniqueInput
     update: XOR<EmployeeServiceUpdateWithoutServiceInput, EmployeeServiceUncheckedUpdateWithoutServiceInput>
@@ -16933,11 +18527,198 @@ export namespace Prisma {
     data: XOR<ConsultationRequestUpdateManyMutationInput, ConsultationRequestUncheckedUpdateManyWithoutServiceInput>
   }
 
+  export type ServiceCreateWithoutCategoryInput = {
+    name: string
+    description?: string | null
+    durationMin: number
+    price: Decimal | DecimalJsLike | number | string
+    requiresConsultation?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    employees?: EmployeeServiceCreateNestedManyWithoutServiceInput
+    appointments?: AppointmentCreateNestedManyWithoutServiceInput
+    consultations?: ConsultationRequestCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceUncheckedCreateWithoutCategoryInput = {
+    id?: number
+    name: string
+    description?: string | null
+    durationMin: number
+    price: Decimal | DecimalJsLike | number | string
+    requiresConsultation?: boolean
+    isActive?: boolean
+    sortOrder?: number
+    employees?: EmployeeServiceUncheckedCreateNestedManyWithoutServiceInput
+    appointments?: AppointmentUncheckedCreateNestedManyWithoutServiceInput
+    consultations?: ConsultationRequestUncheckedCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceCreateOrConnectWithoutCategoryInput = {
+    where: ServiceWhereUniqueInput
+    create: XOR<ServiceCreateWithoutCategoryInput, ServiceUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type ServiceCreateManyCategoryInputEnvelope = {
+    data: ServiceCreateManyCategoryInput | ServiceCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CategoryCreateWithoutChildrenInput = {
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    services?: ServiceCreateNestedManyWithoutCategoryInput
+    parent?: CategoryCreateNestedOneWithoutChildrenInput
+  }
+
+  export type CategoryUncheckedCreateWithoutChildrenInput = {
+    id?: number
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    parentId?: number | null
+    services?: ServiceUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryCreateOrConnectWithoutChildrenInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutChildrenInput, CategoryUncheckedCreateWithoutChildrenInput>
+  }
+
+  export type CategoryCreateWithoutParentInput = {
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    services?: ServiceCreateNestedManyWithoutCategoryInput
+    children?: CategoryCreateNestedManyWithoutParentInput
+  }
+
+  export type CategoryUncheckedCreateWithoutParentInput = {
+    id?: number
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    services?: ServiceUncheckedCreateNestedManyWithoutCategoryInput
+    children?: CategoryUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CategoryCreateOrConnectWithoutParentInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutParentInput, CategoryUncheckedCreateWithoutParentInput>
+  }
+
+  export type CategoryCreateManyParentInputEnvelope = {
+    data: CategoryCreateManyParentInput | CategoryCreateManyParentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ServiceUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: ServiceWhereUniqueInput
+    update: XOR<ServiceUpdateWithoutCategoryInput, ServiceUncheckedUpdateWithoutCategoryInput>
+    create: XOR<ServiceCreateWithoutCategoryInput, ServiceUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type ServiceUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: ServiceWhereUniqueInput
+    data: XOR<ServiceUpdateWithoutCategoryInput, ServiceUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type ServiceUpdateManyWithWhereWithoutCategoryInput = {
+    where: ServiceScalarWhereInput
+    data: XOR<ServiceUpdateManyMutationInput, ServiceUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type ServiceScalarWhereInput = {
+    AND?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
+    OR?: ServiceScalarWhereInput[]
+    NOT?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
+    id?: IntFilter<"Service"> | number
+    name?: StringFilter<"Service"> | string
+    categoryId?: IntFilter<"Service"> | number
+    description?: StringNullableFilter<"Service"> | string | null
+    durationMin?: IntFilter<"Service"> | number
+    price?: DecimalFilter<"Service"> | Decimal | DecimalJsLike | number | string
+    requiresConsultation?: BoolFilter<"Service"> | boolean
+    isActive?: BoolFilter<"Service"> | boolean
+    sortOrder?: IntFilter<"Service"> | number
+  }
+
+  export type CategoryUpsertWithoutChildrenInput = {
+    update: XOR<CategoryUpdateWithoutChildrenInput, CategoryUncheckedUpdateWithoutChildrenInput>
+    create: XOR<CategoryCreateWithoutChildrenInput, CategoryUncheckedCreateWithoutChildrenInput>
+    where?: CategoryWhereInput
+  }
+
+  export type CategoryUpdateToOneWithWhereWithoutChildrenInput = {
+    where?: CategoryWhereInput
+    data: XOR<CategoryUpdateWithoutChildrenInput, CategoryUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type CategoryUpdateWithoutChildrenInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    services?: ServiceUpdateManyWithoutCategoryNestedInput
+    parent?: CategoryUpdateOneWithoutChildrenNestedInput
+  }
+
+  export type CategoryUncheckedUpdateWithoutChildrenInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    services?: ServiceUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CategoryUpsertWithWhereUniqueWithoutParentInput = {
+    where: CategoryWhereUniqueInput
+    update: XOR<CategoryUpdateWithoutParentInput, CategoryUncheckedUpdateWithoutParentInput>
+    create: XOR<CategoryCreateWithoutParentInput, CategoryUncheckedCreateWithoutParentInput>
+  }
+
+  export type CategoryUpdateWithWhereUniqueWithoutParentInput = {
+    where: CategoryWhereUniqueInput
+    data: XOR<CategoryUpdateWithoutParentInput, CategoryUncheckedUpdateWithoutParentInput>
+  }
+
+  export type CategoryUpdateManyWithWhereWithoutParentInput = {
+    where: CategoryScalarWhereInput
+    data: XOR<CategoryUpdateManyMutationInput, CategoryUncheckedUpdateManyWithoutParentInput>
+  }
+
+  export type CategoryScalarWhereInput = {
+    AND?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
+    OR?: CategoryScalarWhereInput[]
+    NOT?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
+    id?: IntFilter<"Category"> | number
+    name?: StringFilter<"Category"> | string
+    slug?: StringFilter<"Category"> | string
+    sortOrder?: IntFilter<"Category"> | number
+    isActive?: BoolFilter<"Category"> | boolean
+    createdAt?: DateTimeFilter<"Category"> | Date | string
+    parentId?: IntNullableFilter<"Category"> | number | null
+  }
+
   export type EmployeeCreateWithoutServicesInput = {
     name: string
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     workSchedules?: WorkScheduleCreateNestedManyWithoutEmployeeInput
@@ -16953,6 +18734,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutEmployeeInput
@@ -16967,12 +18749,13 @@ export namespace Prisma {
 
   export type ServiceCreateWithoutEmployeesInput = {
     name: string
-    category: $Enums.ServiceCategory
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
+    category: CategoryCreateNestedOneWithoutServicesInput
     appointments?: AppointmentCreateNestedManyWithoutServiceInput
     consultations?: ConsultationRequestCreateNestedManyWithoutServiceInput
   }
@@ -16980,12 +18763,13 @@ export namespace Prisma {
   export type ServiceUncheckedCreateWithoutEmployeesInput = {
     id?: number
     name: string
-    category: $Enums.ServiceCategory
+    categoryId: number
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
     appointments?: AppointmentUncheckedCreateNestedManyWithoutServiceInput
     consultations?: ConsultationRequestUncheckedCreateNestedManyWithoutServiceInput
   }
@@ -17011,6 +18795,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUpdateManyWithoutEmployeeNestedInput
@@ -17026,6 +18811,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -17046,12 +18832,13 @@ export namespace Prisma {
 
   export type ServiceUpdateWithoutEmployeesInput = {
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    category?: CategoryUpdateOneRequiredWithoutServicesNestedInput
     appointments?: AppointmentUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUpdateManyWithoutServiceNestedInput
   }
@@ -17059,12 +18846,13 @@ export namespace Prisma {
   export type ServiceUncheckedUpdateWithoutEmployeesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
+    categoryId?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     appointments?: AppointmentUncheckedUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUncheckedUpdateManyWithoutServiceNestedInput
   }
@@ -17074,6 +18862,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -17089,6 +18878,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutEmployeeInput
@@ -17117,6 +18907,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -17132,6 +18923,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -17144,6 +18936,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -17159,6 +18952,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -17187,6 +18981,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -17202,6 +18997,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -17214,6 +19010,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -17229,6 +19026,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -17243,12 +19041,13 @@ export namespace Prisma {
 
   export type ServiceCreateWithoutAppointmentsInput = {
     name: string
-    category: $Enums.ServiceCategory
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
+    category: CategoryCreateNestedOneWithoutServicesInput
     employees?: EmployeeServiceCreateNestedManyWithoutServiceInput
     consultations?: ConsultationRequestCreateNestedManyWithoutServiceInput
   }
@@ -17256,12 +19055,13 @@ export namespace Prisma {
   export type ServiceUncheckedCreateWithoutAppointmentsInput = {
     id?: number
     name: string
-    category: $Enums.ServiceCategory
+    categoryId: number
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
     employees?: EmployeeServiceUncheckedCreateNestedManyWithoutServiceInput
     consultations?: ConsultationRequestUncheckedCreateNestedManyWithoutServiceInput
   }
@@ -17317,6 +19117,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -17332,6 +19133,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -17352,12 +19154,13 @@ export namespace Prisma {
 
   export type ServiceUpdateWithoutAppointmentsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    category?: CategoryUpdateOneRequiredWithoutServicesNestedInput
     employees?: EmployeeServiceUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUpdateManyWithoutServiceNestedInput
   }
@@ -17365,12 +19168,13 @@ export namespace Prisma {
   export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
+    categoryId?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     employees?: EmployeeServiceUncheckedUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUncheckedUpdateManyWithoutServiceNestedInput
   }
@@ -17413,12 +19217,13 @@ export namespace Prisma {
 
   export type ServiceCreateWithoutConsultationsInput = {
     name: string
-    category: $Enums.ServiceCategory
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
+    category: CategoryCreateNestedOneWithoutServicesInput
     employees?: EmployeeServiceCreateNestedManyWithoutServiceInput
     appointments?: AppointmentCreateNestedManyWithoutServiceInput
   }
@@ -17426,12 +19231,13 @@ export namespace Prisma {
   export type ServiceUncheckedCreateWithoutConsultationsInput = {
     id?: number
     name: string
-    category: $Enums.ServiceCategory
+    categoryId: number
     description?: string | null
     durationMin: number
     price: Decimal | DecimalJsLike | number | string
     requiresConsultation?: boolean
     isActive?: boolean
+    sortOrder?: number
     employees?: EmployeeServiceUncheckedCreateNestedManyWithoutServiceInput
     appointments?: AppointmentUncheckedCreateNestedManyWithoutServiceInput
   }
@@ -17446,6 +19252,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -17461,6 +19268,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     isActive?: boolean
+    sortOrder?: number
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -17520,12 +19328,13 @@ export namespace Prisma {
 
   export type ServiceUpdateWithoutConsultationsInput = {
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    category?: CategoryUpdateOneRequiredWithoutServicesNestedInput
     employees?: EmployeeServiceUpdateManyWithoutServiceNestedInput
     appointments?: AppointmentUpdateManyWithoutServiceNestedInput
   }
@@ -17533,12 +19342,13 @@ export namespace Prisma {
   export type ServiceUncheckedUpdateWithoutConsultationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    category?: EnumServiceCategoryFieldUpdateOperationsInput | $Enums.ServiceCategory
+    categoryId?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     durationMin?: IntFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     employees?: EmployeeServiceUncheckedUpdateManyWithoutServiceNestedInput
     appointments?: AppointmentUncheckedUpdateManyWithoutServiceNestedInput
   }
@@ -17559,6 +19369,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -17574,6 +19385,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -17736,6 +19548,7 @@ export namespace Prisma {
 
   export type EmployeeServiceCreateManyEmployeeInput = {
     serviceId: number
+    sortOrder?: number
   }
 
   export type WorkScheduleCreateManyEmployeeInput = {
@@ -17783,15 +19596,18 @@ export namespace Prisma {
   }
 
   export type EmployeeServiceUpdateWithoutEmployeeInput = {
+    sortOrder?: IntFieldUpdateOperationsInput | number
     service?: ServiceUpdateOneRequiredWithoutEmployeesNestedInput
   }
 
   export type EmployeeServiceUncheckedUpdateWithoutEmployeeInput = {
     serviceId?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type EmployeeServiceUncheckedUpdateManyWithoutEmployeeInput = {
     serviceId?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type WorkScheduleUpdateWithoutEmployeeInput = {
@@ -17926,6 +19742,7 @@ export namespace Prisma {
 
   export type EmployeeServiceCreateManyServiceInput = {
     employeeId: number
+    sortOrder?: number
   }
 
   export type AppointmentCreateManyServiceInput = {
@@ -17956,15 +19773,18 @@ export namespace Prisma {
   }
 
   export type EmployeeServiceUpdateWithoutServiceInput = {
+    sortOrder?: IntFieldUpdateOperationsInput | number
     employee?: EmployeeUpdateOneRequiredWithoutServicesNestedInput
   }
 
   export type EmployeeServiceUncheckedUpdateWithoutServiceInput = {
     employeeId?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type EmployeeServiceUncheckedUpdateManyWithoutServiceInput = {
     employeeId?: IntFieldUpdateOperationsInput | number
+    sortOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type AppointmentUpdateWithoutServiceInput = {
@@ -18048,6 +19868,94 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ServiceCreateManyCategoryInput = {
+    id?: number
+    name: string
+    description?: string | null
+    durationMin: number
+    price: Decimal | DecimalJsLike | number | string
+    requiresConsultation?: boolean
+    isActive?: boolean
+    sortOrder?: number
+  }
+
+  export type CategoryCreateManyParentInput = {
+    id?: number
+    name: string
+    slug: string
+    sortOrder?: number
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ServiceUpdateWithoutCategoryInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMin?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    employees?: EmployeeServiceUpdateManyWithoutServiceNestedInput
+    appointments?: AppointmentUpdateManyWithoutServiceNestedInput
+    consultations?: ConsultationRequestUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceUncheckedUpdateWithoutCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMin?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    employees?: EmployeeServiceUncheckedUpdateManyWithoutServiceNestedInput
+    appointments?: AppointmentUncheckedUpdateManyWithoutServiceNestedInput
+    consultations?: ConsultationRequestUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceUncheckedUpdateManyWithoutCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMin?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    requiresConsultation?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CategoryUpdateWithoutParentInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    services?: ServiceUpdateManyWithoutCategoryNestedInput
+    children?: CategoryUpdateManyWithoutParentNestedInput
+  }
+
+  export type CategoryUncheckedUpdateWithoutParentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    services?: ServiceUncheckedUpdateManyWithoutCategoryNestedInput
+    children?: CategoryUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type CategoryUncheckedUpdateManyWithoutParentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -18066,6 +19974,10 @@ export namespace Prisma {
      */
     export type ServiceCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use CategoryCountOutputTypeDefaultArgs instead
+     */
+    export type CategoryCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CategoryCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
@@ -18077,6 +19989,10 @@ export namespace Prisma {
      * @deprecated Use ServiceDefaultArgs instead
      */
     export type ServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CategoryDefaultArgs instead
+     */
+    export type CategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CategoryDefaultArgs<ExtArgs>
     /**
      * @deprecated Use EmployeeServiceDefaultArgs instead
      */

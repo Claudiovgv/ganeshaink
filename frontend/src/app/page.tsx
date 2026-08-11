@@ -1,14 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import ServicosGrid from './servicos/ServicosGrid';
 
 export default async function HomePage() {
-  const [employees, services] = await Promise.all([
+  const [employees, services, categories] = await Promise.all([
     api.employees.list().catch(() => []),
     api.services.list().catch(() => []),
+    api.categories.list().catch(() => []),
   ]);
 
-  void services; // fetched for future use
   const featuredEmployees = employees.slice(0, 3);
 
   return (
@@ -73,25 +74,7 @@ export default async function HomePage() {
               Do corte perfeito à arte permanente — cada visita é uma experiência única.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { label: 'Barbearia', href: '/servicos?categoria=barbershop', desc: 'Cortes, barba e tratamentos premium' },
-              { label: 'Tatuagem', href: '/consulta', desc: 'Arte personalizada por artistas especializados' },
-              { label: 'Piercing', href: '/consulta', desc: 'Body piercing profissional e seguro' },
-              { label: 'Unhas', href: '/servicos?categoria=nails', desc: 'Manicure, gel e nail art' },
-            ].map(({ label, href, desc }) => (
-              <Link
-                key={label}
-                href={href}
-                className="bg-bg-card border border-gold-border rounded-lg p-6 hover:border-gold transition-colors group"
-              >
-                <h3 className="font-display text-xl font-semibold text-gold mb-2 group-hover:text-gold-light transition-colors">
-                  {label}
-                </h3>
-                <p className="text-text-secondary text-sm leading-relaxed">{desc}</p>
-              </Link>
-            ))}
-          </div>
+          <ServicosGrid services={services} categories={categories} />
         </div>
       </section>
 

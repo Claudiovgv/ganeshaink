@@ -1,15 +1,12 @@
 'use client';
 import { useState, useTransition } from 'react';
-import type { ServiceCategory, StatsPeriod, StatsResponse } from '@/lib/types';
+import type { StatsPeriod, StatsResponse } from '@/lib/types';
 import { fetchStatsAction } from '@/lib/actions';
 import { toLisbon, formatLisbon } from '@/lib/timezone';
 
-const CATEGORY_LABELS: Record<ServiceCategory, string> = {
-  barbershop: 'Barbearia', tattoo: 'Tatuagem', piercing: 'Piercing', nails: 'Unhas',
-};
-const CATEGORY_COLORS: Record<ServiceCategory, string> = {
-  barbershop: 'bg-blue-500', tattoo: 'bg-purple-500', piercing: 'bg-emerald-500', nails: 'bg-pink-500',
-};
+// Categorias são criadas livremente no backoffice, por isso a cor não pode
+// ser fixa por nome — atribui-se em ciclo pela posição na lista.
+const CATEGORY_COLOR_CYCLE = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-pink-500', 'bg-amber-500', 'bg-cyan-500'];
 
 const PERIOD_LABELS: Record<StatsPeriod, string> = { week: 'Semana', month: 'Mês', year: 'Ano' };
 
@@ -116,15 +113,15 @@ export default function EstatisticasClient({ initial }: { initial: StatsResponse
           <p className="text-text-secondary text-sm">Sem marcações concluídas neste período.</p>
         ) : (
           <div className="space-y-3">
-            {data.byCategory.map((c) => (
-              <div key={c.category}>
+            {data.byCategory.map((c, i) => (
+              <div key={c.category.id}>
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-text-primary">{CATEGORY_LABELS[c.category]}</span>
+                  <span className="text-text-primary">{c.category.name}</span>
                   <span className="text-text-secondary">{money(c.revenue)} · {c.count}x</span>
                 </div>
                 <div className="h-2 bg-bg-section rounded-full overflow-hidden">
                   <div
-                    className={`h-full ${CATEGORY_COLORS[c.category]}`}
+                    className={`h-full ${CATEGORY_COLOR_CYCLE[i % CATEGORY_COLOR_CYCLE.length]}`}
                     style={{ width: `${(c.revenue / maxCategoryRevenue) * 100}%` }}
                   />
                 </div>
@@ -153,7 +150,7 @@ export default function EstatisticasClient({ initial }: { initial: StatsResponse
               {data.byService.map((s) => (
                 <tr key={s.serviceId} className="border-b border-gold-border/10 last:border-0">
                   <td className="px-5 py-2.5 text-text-primary">{s.name}</td>
-                  <td className="px-5 py-2.5 text-text-secondary text-xs">{CATEGORY_LABELS[s.category]}</td>
+                  <td className="px-5 py-2.5 text-text-secondary text-xs">{s.category.name}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">{s.count}</td>
                   <td className="px-5 py-2.5 text-gold text-right font-medium">{money(s.revenue)}</td>
                 </tr>

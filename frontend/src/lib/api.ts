@@ -27,10 +27,18 @@ export interface Employee {
   services: Service[];
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  children?: Category[];
+}
+
 export interface Service {
   id: number;
   name: string;
-  category: 'barbershop' | 'tattoo' | 'piercing' | 'nails';
+  category: Category;
   description: string | null;
   durationMin: number;
   price: number | null;
@@ -90,6 +98,9 @@ export const api = {
         category ? `/services?category=${category}` : '/services',
         { next: { revalidate: 300 } } as RequestInit,
       ),
+  },
+  categories: {
+    list: () => apiFetch<Category[]>('/categories', { next: { revalidate: 300 } } as RequestInit),
   },
   availability: {
     slots: (employeeId: number, date: string, serviceId: number) =>

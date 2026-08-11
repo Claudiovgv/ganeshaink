@@ -54,16 +54,67 @@ const SERVICES = [
 ];
 
 async function main() {
+  // Este script APAGA marcações, pedidos de consulta e serviços antes de recriar.
+  // Nunca deve correr contra produção — é destrutivo e irreversível.
+  if (process.env.NODE_ENV === 'production' && process.env.SEED_ALLOW_DESTRUCTIVE !== 'yes-apagar-tudo') {
+    throw new Error(
+      'RECUSADO: seed destrutivo em NODE_ENV=production.\n' +
+      'Este script apaga appointments, consultation_requests e services.\n' +
+      'Se é mesmo isso que queres, corre com SEED_ALLOW_DESTRUCTIVE=yes-apagar-tudo'
+    );
+  }
+
   const conn = await mysql.createConnection(parseDbUrl(process.env.DATABASE_URL));
   console.log('Seeding database...');
 
-  // Superadmin
-  const superadminHash = await bcrypt.hash('admin123', 10);
+  // Superadmin — password vem do ambiente, nunca do código.
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@ganeshaink.pt';
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  if (!adminPassword) {
+    throw new Error(
+      'Falta SEED_ADMIN_PASSWORD. Corre com:\n' +
+      '  SEED_ADMIN_PASSWORD="<password forte>" node prisma/seed.js'
+    );
+  }
+  const superadminHash = await bcrypt.hash(adminPassword, 10);
   await conn.execute(
     'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE id=id',
-    ['Admin', 'admin@ganeshaink.pt', superadminHash, 'admin']
+    ['Admin', adminEmail, superadminHash, 'admin']
   );
-  console.log('✓ Admin de fallback: admin@ganeshaink.pt / admin123');
+  console.log(`✓ Admin de fallback: ${adminEmail}`);
+
+  // Categorias — garante que as 4 categorias base existem, sem apagar
+  // categorias adicionais que possam ter sido criadas no backoffice.
+  const CATEGORIES = [
+    ['barbershop', 'Barbearia'],
+    ['tattoo', 'Tatuagem'],
+    ['piercing', 'Piercing'],
+    ['nails', 'Unhas'],
+  ];
+  for (const [slug, name] of CATEGORIES) {
+    await conn.execute(
+      'INSERT INTO categories (slug, name) VALUES (?, ?) ON DUPLICATE KEY UPDATE id=id',
+      [slug, name]
+    );
+  }
+  const [categoryRows] = await conn.execute('SELECT id, slug FROM categories');
+  const categoryIdBySlug = Object.fromEntries(categoryRows.map(c => [c.slug, c.id]));
+
+  // Subcategorias de Barbearia — mesma ideia: garante que existem, sem apagar outras.
+  const SUBCATEGORIES = [
+    ['barba', 'Barba', 'barbershop'],
+    ['cabelo', 'Cabelo', 'barbershop'],
+    ['barba-cabelo', 'Barba + Cabelo', 'barbershop'],
+    ['pack-premium', 'Pack Premium', 'barbershop'],
+  ];
+  for (const [slug, name, parentSlug] of SUBCATEGORIES) {
+    await conn.execute(
+      'INSERT INTO categories (slug, name, parent_id) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE id=id',
+      [slug, name, categoryIdBySlug[parentSlug]]
+    );
+  }
+  const [allCategoryRows] = await conn.execute('SELECT id, slug FROM categories');
+  Object.assign(categoryIdBySlug, Object.fromEntries(allCategoryRows.map(c => [c.slug, c.id])));
 
   // Serviços — reset limpo (dev/local só tem dados de teste)
   await conn.execute('DELETE FROM appointments');
@@ -72,18 +123,18 @@ async function main() {
   await conn.execute('DELETE FROM services');
   await conn.execute('ALTER TABLE services AUTO_INCREMENT = 1');
 
-  const serviceIdsByCategory = { barbershop: [], tattoo: [], piercing: [], nails: [] };
   for (const [name, category, description, durationMin, price, requiresConsultation] of SERVICES) {
-    const [result] = await conn.execute(
-      'INSERT INTO services (name, category, description, duration_min, price, requires_consultation) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, category, description, durationMin, price, requiresConsultation]
+    const categoryId = categoryIdBySlug[category];
+    if (!categoryId) throw new Error(`Categoria desconhecida no seed: ${category}`);
+    await conn.execute(
+      'INSERT INTO services (name, category_id, description, duration_min, price, requires_consultation) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, categoryId, description, durationMin, price, requiresConsultation]
     );
-    serviceIdsByCategory[category].push(result.insertId);
   }
   console.log(`✓ ${SERVICES.length} serviços criados`);
 
   console.log('\n✅ Seed completo!');
-  console.log('Admin de fallback: admin@ganeshaink.pt / admin123 (muda esta password em produção)');
+  console.log(`Admin de fallback: ${adminEmail} (password: a que passaste em SEED_ADMIN_PASSWORD)`);
   console.log('Para criar a equipa real (nomes/passwords), corre separadamente: node prisma/seed-team.js');
   console.log('  (esse script não é commitado — contém credenciais reais, ver .gitignore)');
   await conn.end();

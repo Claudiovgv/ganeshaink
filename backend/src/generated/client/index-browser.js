@@ -140,23 +140,36 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   bio: 'bio',
   photoUrl: 'photoUrl',
   isActive: 'isActive',
+  sortOrder: 'sortOrder',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.ServiceScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  category: 'category',
+  categoryId: 'categoryId',
   description: 'description',
   durationMin: 'durationMin',
   price: 'price',
   requiresConsultation: 'requiresConsultation',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  sortOrder: 'sortOrder'
+};
+
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  parentId: 'parentId'
 };
 
 exports.Prisma.EmployeeServiceScalarFieldEnum = {
   employeeId: 'employeeId',
-  serviceId: 'serviceId'
+  serviceId: 'serviceId',
+  sortOrder: 'sortOrder'
 };
 
 exports.Prisma.WorkScheduleScalarFieldEnum = {
@@ -264,13 +277,6 @@ exports.Role = exports.$Enums.Role = {
   employee: 'employee'
 };
 
-exports.ServiceCategory = exports.$Enums.ServiceCategory = {
-  barbershop: 'barbershop',
-  tattoo: 'tattoo',
-  piercing: 'piercing',
-  nails: 'nails'
-};
-
 exports.TimeBlockType = exports.$Enums.TimeBlockType = {
   vacation: 'vacation',
   break: 'break',
@@ -302,6 +308,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Employee: 'Employee',
   Service: 'Service',
+  Category: 'Category',
   EmployeeService: 'EmployeeService',
   WorkSchedule: 'WorkSchedule',
   TimeBlock: 'TimeBlock',

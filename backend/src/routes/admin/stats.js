@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
 
     const appointments = await prisma.appointment.findMany({
       where: { status: 'completed', startDatetime: { gte: start, lte: end } },
-      include: { service: { select: { id: true, name: true, category: true, price: true } } },
+      include: { service: { select: { id: true, name: true, price: true, category: { include: { parent: true } } } } },
     });
 
     const totalRevenue = appointments.reduce((sum, a) => sum + Number(a.service.price), 0);
@@ -56,8 +56,8 @@ router.get('/', async (req, res) => {
     for (const a of appointments) {
       const price = Number(a.service.price);
 
-      const cat = a.service.category;
-      if (!byCategoryMap[cat]) byCategoryMap[cat] = { category: cat, revenue: 0, count: 0 };
+      const cat = a.service.category.slug;
+      if (!byCategoryMap[cat]) byCategoryMap[cat] = { category: a.service.category, revenue: 0, count: 0 };
       byCategoryMap[cat].revenue += price;
       byCategoryMap[cat].count += 1;
 

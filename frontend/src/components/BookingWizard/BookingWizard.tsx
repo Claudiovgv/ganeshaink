@@ -8,7 +8,9 @@ import Step4DateTime from './Step4DateTime';
 import Step5PersonalData from './Step5PersonalData';
 import { Service, Employee, Appointment } from '@/lib/api';
 
-export type Category = 'barbershop' | 'tattoo' | 'piercing' | 'nails';
+// Categorias são geríveis no backoffice, por isso deixaram de ser um valor
+// fixo — este é sempre o slug (ex.: "barbershop"), vindo de GET /categories.
+export type Category = string;
 
 export interface BookingState {
   step: 1 | 2 | 3 | 4 | 5 | 'success';

@@ -19,3 +19,4 @@ macbook.pub
 # Ferramentas locais de desenvolvimento (não vão para o servidor)
 .superpowers/
 .claude/
+backups/

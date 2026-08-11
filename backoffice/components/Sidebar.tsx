@@ -29,6 +29,11 @@ const Icons: Record<string, JSX.Element> = {
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   ),
+  Horários: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </svg>
+  ),
   Funcionários: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
@@ -38,6 +43,12 @@ const Icons: Record<string, JSX.Element> = {
   Serviços: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>
+    </svg>
+  ),
+  Categorias: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
     </svg>
   ),
   Clientes: (
@@ -126,7 +137,9 @@ const ADMIN_NAV_ALL = [
     section: 'Gestão',
     items: [
       { href: '/funcionarios', label: 'Funcionários', perm: 'manage_employees' as AdminPermissionKey | null },
+      { href: '/horarios', label: 'Horários', perm: 'manage_employees' as AdminPermissionKey | null },
       { href: '/servicos', label: 'Serviços', perm: 'manage_services' as AdminPermissionKey | null },
+      { href: '/categorias', label: 'Categorias', perm: 'manage_services' as AdminPermissionKey | null },
       { href: '/clientes', label: 'Clientes', perm: 'manage_clients' as AdminPermissionKey | null },
       { href: '/blog', label: 'Blog', perm: 'manage_blog' as AdminPermissionKey | null },
     ],
@@ -188,7 +201,9 @@ const SUPERADMIN_NAV = [
     section: 'Gestão',
     items: [
       { href: '/funcionarios', label: 'Funcionários' },
+      { href: '/horarios', label: 'Horários' },
       { href: '/servicos', label: 'Serviços' },
+      { href: '/categorias', label: 'Categorias' },
       { href: '/clientes', label: 'Clientes' },
       { href: '/blog', label: 'Blog' },
     ],

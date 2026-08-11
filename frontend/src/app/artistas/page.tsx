@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { api, Employee } from '@/lib/api';
-import { SERVICE_CATEGORIES } from '@/lib/utils';
 import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 function ArtistCard({ employee }: { employee: Employee }) {
-  const categories = Array.from(new Set(employee.services.map((s) => s.category)));
+  const categories = Array.from(new Map(employee.services.map((s) => [s.category.id, s.category])).values());
   return (
     <Link
       href={`/artistas/${employee.id}`}
@@ -34,10 +33,10 @@ function ArtistCard({ employee }: { employee: Employee }) {
           <div className="flex flex-wrap gap-1 mt-2">
             {categories.map((cat) => (
               <span
-                key={cat}
+                key={cat.id}
                 className="text-xs border border-gold-border text-text-secondary px-2 py-0.5 rounded"
               >
-                {SERVICE_CATEGORIES[cat]}
+                {cat.name}
               </span>
             ))}
           </div>

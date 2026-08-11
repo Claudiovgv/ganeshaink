@@ -1,22 +1,24 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
 
-const VALID_CATEGORIES = ['barbershop', 'tattoo', 'piercing', 'nails'];
-
 router.get('/', async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category } = req.query; // slug, ex.: "barbershop" ou "barba" (subcategoria)
     const where = { isActive: true };
     if (category) {
-      if (!VALID_CATEGORIES.includes(category)) {
-        return res.json([]);
-      }
-      where.category = category;
+      const cat = await prisma.category.findUnique({
+        where: { slug: category },
+        include: { children: { where: { isActive: true }, select: { id: true } } },
+      });
+      if (!cat || !cat.isActive) return res.json([]);
+      // Categoria de topo com subcategorias: mostra os serviços de TODAS elas.
+      where.categoryId = cat.children.length > 0 ? { in: cat.children.map(c => c.id) } : cat.id;
     }
 
     const services = await prisma.service.findMany({
       where,
-      orderBy: [{ category: 'asc' }, { name: 'asc' }],
+      include: { category: { include: { parent: true } } },
+      orderBy: [{ category: { sortOrder: 'asc' } }, { sortOrder: 'asc' }, { name: 'asc' }],
     });
 
     res.json(services);

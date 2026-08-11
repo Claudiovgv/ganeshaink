@@ -1,15 +1,17 @@
 const request = require('supertest');
 const app = require('../src/app');
 const prisma = require('../src/config/database');
+const { ensureCategory } = require('./helpers/categories');
 
 describe('Consultations (public)', () => {
   let service;
 
   beforeAll(async () => {
+    const category = await ensureCategory('tattoo', 'Tatuagem');
     service = await prisma.service.create({
       data: {
         name: 'Tattoo Pequena Test',
-        category: 'tattoo',
+        categoryId: category.id,
         durationMin: 120,
         price: 80,
         requiresConsultation: true,

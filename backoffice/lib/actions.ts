@@ -19,13 +19,6 @@ export async function loginAction(_prevState: ActionState, formData: FormData): 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  // DEV MOCK — bypassa o backend para visualização local (nunca em produção)
-  if (process.env.NODE_ENV !== 'production' && email === 'admin@ganeshaink.pt' && password === 'admin123') {
-    const cookieStore = await cookies();
-    setSessionCookie(cookieStore, 'dev-mock-token');
-    redirect('/');
-  }
-
   let result: { token: string; user: { role: string } } | { requires2FA: true; needsSetup: boolean; pendingToken: string };
   try {
     result = await api.auth.login(email, password);
@@ -101,6 +94,10 @@ export async function deleteEmployeeAction(id: number) {
   return api.employees.remove(id);
 }
 
+export async function reorderEmployeesAction(employeeIds: number[]) {
+  return api.employees.reorder(employeeIds);
+}
+
 export async function createServiceAction(role: 'superadmin' | 'admin' | 'employee', data: object) {
   if (role === 'admin' || role === 'superadmin') return api.services.adminCreate(data);
   return api.services.employeeCreate(data);
@@ -109,6 +106,38 @@ export async function createServiceAction(role: 'superadmin' | 'admin' | 'employ
 export async function updateServiceAction(role: 'superadmin' | 'admin' | 'employee', id: number, data: object) {
   if (role === 'admin' || role === 'superadmin') return api.services.adminUpdate(id, data);
   return api.services.employeeUpdate(id, data);
+}
+
+export async function deleteServiceAction(id: number) {
+  return api.services.adminRemove(id);
+}
+
+export async function reorderCatalogAction(serviceIds: number[]) {
+  return api.services.adminReorder(serviceIds);
+}
+
+export async function updateMyServiceOrderAction(serviceIds: number[]) {
+  return api.services.updateMyOrder(serviceIds);
+}
+
+export async function reorderEmployeeServicesAction(employeeId: number, serviceIds: number[]) {
+  return api.services.reorderForEmployee(employeeId, serviceIds);
+}
+
+export async function createCategoryAction(name: string, parentId?: number) {
+  return api.categories.create(name, parentId);
+}
+
+export async function updateCategoryAction(id: number, data: { name?: string; isActive?: boolean }) {
+  return api.categories.update(id, data);
+}
+
+export async function deleteCategoryAction(id: number) {
+  return api.categories.remove(id);
+}
+
+export async function reorderCategoriesAction(categoryIds: number[]) {
+  return api.categories.reorder(categoryIds);
 }
 
 export async function createBlogPostAction(data: object) {
@@ -123,8 +152,17 @@ export async function deleteBlogPostAction(id: number) {
   await api.blog.remove(id);
 }
 
+// O backend guarda apenas os dias em que se trabalha — os dias desligados
+// desaparecem do horário, que é como ficam fechados às marcações.
 export async function updateScheduleAction(schedule: import('./types').WeeklyScheduleDay[]) {
-  return api.schedule.update(schedule);
+  return api.schedule.update(schedule.filter((d) => d.isActive));
+}
+
+export async function updateEmployeeScheduleAction(
+  employeeId: number,
+  schedule: import('./types').WeeklyScheduleDay[],
+) {
+  return api.adminSchedules.update(employeeId, schedule.filter((d) => d.isActive));
 }
 
 export async function createTimeBlockAction(data: object) {

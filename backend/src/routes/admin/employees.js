@@ -11,10 +11,30 @@ router.get('/', async (req, res) => {
     const employees = await prisma.employee.findMany({
       include: {
         user: { select: { id: true, email: true, role: true } },
-        services: { include: { service: true } },
+        services: { orderBy: { sortOrder: 'asc' }, include: { service: { include: { category: { include: { parent: true } } } } } },
         workSchedules: { where: { isActive: true } },
       },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     });
+    res.json(employees);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Ordem em que os artistas aparecem em /artistas no site.
+router.put('/reorder', async (req, res) => {
+  try {
+    const { employeeIds } = req.body;
+    if (!Array.isArray(employeeIds)) return res.status(400).json({ error: 'employeeIds must be an array' });
+
+    await prisma.$transaction(
+      employeeIds.map((id, index) =>
+        prisma.employee.update({ where: { id: parseInt(id) }, data: { sortOrder: index } })
+      )
+    );
+
+    const employees = await prisma.employee.findMany({ orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] });
     res.json(employees);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
@@ -73,6 +93,41 @@ router.put('/:id', async (req, res) => {
       }
     }
     res.json(employee);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Ordem em que os serviços de UM funcionário aparecem na página dele —
+// o superadmin/admin pode ajustar por ele (ex.: se ele próprio não souber fazê-lo).
+router.put('/:id/services/reorder', async (req, res) => {
+  try {
+    const employeeId = parseInt(req.params.id);
+    const { serviceIds } = req.body;
+    if (!Array.isArray(serviceIds)) return res.status(400).json({ error: 'serviceIds must be an array' });
+
+    const owned = await prisma.employeeService.findMany({ where: { employeeId }, select: { serviceId: true } });
+    const ownedIds = new Set(owned.map(o => o.serviceId));
+    const invalid = serviceIds.map(Number).filter(id => !ownedIds.has(id));
+    if (invalid.length > 0) {
+      return res.status(400).json({ error: `Serviços não atribuídos a este funcionário: ${invalid.join(', ')}` });
+    }
+
+    await prisma.$transaction(
+      serviceIds.map((serviceId, index) =>
+        prisma.employeeService.update({
+          where: { employeeId_serviceId: { employeeId, serviceId: parseInt(serviceId) } },
+          data: { sortOrder: index },
+        })
+      )
+    );
+
+    const services = await prisma.employeeService.findMany({
+      where: { employeeId },
+      orderBy: { sortOrder: 'asc' },
+      include: { service: { include: { category: { include: { parent: true } } } } },
+    });
+    res.json(services.map(es => ({ ...es.service, sortOrder: es.sortOrder })));
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

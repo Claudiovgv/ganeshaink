@@ -3,8 +3,9 @@ const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const prisma = require('../src/config/database');
 const bcrypt = require('bcryptjs');
+const { ensureCategory } = require('./helpers/categories');
 
-let adminToken, adminUser, empUser, employee, service;
+let adminToken, adminUser, empUser, employee, service, nailsCategory;
 
 beforeAll(async () => {
   await prisma.user.deleteMany({ where: { email: { in: ['admin-rt@test.com', 'emp-rt@test.com'] } } });
@@ -26,8 +27,10 @@ beforeAll(async () => {
   });
   employee = empUser.employee;
 
+  const barbershopCategory = await ensureCategory('barbershop', 'Barbearia');
+  nailsCategory = await ensureCategory('nails', 'Unhas');
   service = await prisma.service.create({
-    data: { name: 'Admin Test Svc', category: 'barbershop', durationMin: 30, price: 10 },
+    data: { name: 'Admin Test Svc', categoryId: barbershopCategory.id, durationMin: 30, price: 10 },
   });
 });
 
@@ -106,9 +109,33 @@ describe('POST /v1/admin/services', () => {
     const res = await request(app)
       .post('/v1/admin/services')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ name: 'New Service Test', category: 'nails', durationMin: 60, price: 25 });
+      .send({ name: 'New Service Test', categoryId: nailsCategory.id, durationMin: 60, price: 25 });
     expect(res.status).toBe(201);
     expect(res.body.name).toBe('New Service Test');
     await prisma.service.delete({ where: { id: res.body.id } });
+  });
+});
+
+describe('DELETE /v1/admin/services/:id', () => {
+  it('deletes a service with no history', async () => {
+    const created = await prisma.service.create({
+      data: { name: 'Delete Me Test', categoryId: nailsCategory.id, durationMin: 30, price: 10 },
+    });
+    const res = await request(app)
+      .delete(`/v1/admin/services/${created.id}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    const stillThere = await prisma.service.findUnique({ where: { id: created.id } });
+    expect(stillThere).toBeNull();
+  });
+
+  it('refuses to delete a service with an appointment, suggesting deactivation instead', async () => {
+    const res = await request(app)
+      .delete(`/v1/admin/services/${service.id}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(409);
+    expect(res.body.error).toMatch(/Desative/);
+    const stillThere = await prisma.service.findUnique({ where: { id: service.id } });
+    expect(stillThere).not.toBeNull();
   });
 });

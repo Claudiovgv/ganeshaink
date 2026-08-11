@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
-import { formatPrice, formatDuration, SERVICE_CATEGORIES } from '@/lib/utils';
+import { formatPrice, formatDuration } from '@/lib/utils';
 import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
 
 interface Props {
@@ -28,7 +28,7 @@ export default async function ArtistProfilePage({ params }: Props) {
   const employee = await getEmployee(Number(params.id));
   if (!employee) notFound();
 
-  const categories = Array.from(new Set(employee.services.map((s) => s.category)));
+  const categories = Array.from(new Map(employee.services.map((s) => [s.category.id, s.category])).values());
 
   return (
     <div className="pt-20">
@@ -47,8 +47,8 @@ export default async function ArtistProfilePage({ params }: Props) {
             <h1 className="font-display text-4xl font-bold mb-3">{employee.name}</h1>
             <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
               {categories.map((cat) => (
-                <span key={cat} className="text-xs border border-gold text-gold px-3 py-1 rounded">
-                  {SERVICE_CATEGORIES[cat]}
+                <span key={cat.id} className="text-xs border border-gold text-gold px-3 py-1 rounded">
+                  {cat.name}
                 </span>
               ))}
             </div>

@@ -23,17 +23,28 @@ export interface Employee {
   services: { service: Service }[];
 }
 
-export type ServiceCategory = 'barbershop' | 'tattoo' | 'piercing' | 'nails';
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  parentId: number | null;
+  _count?: { services: number };
+  children?: Category[];
+}
 
 export interface Service {
   id: number;
   name: string;
-  category: ServiceCategory;
+  categoryId: number;
+  category: Category;
   description: string | null;
   durationMin: number;
   price: number;
   requiresConsultation: boolean;
   isActive: boolean;
+  sortOrder?: number;
 }
 
 export type AppointmentStatus = 'confirmed' | 'cancelled' | 'completed';
@@ -84,6 +95,12 @@ export interface WeeklyScheduleDay {
   endTime: string;   // "19:00"
 }
 
+export interface EmployeeSchedules {
+  id: number;
+  name: string;
+  workSchedules: Omit<WeeklyScheduleDay, 'isActive'>[];
+}
+
 export interface TimeBlock {
   id: number;
   type: 'holiday' | 'unavailable';
@@ -125,7 +142,7 @@ export interface Client {
 export type StatsPeriod = 'week' | 'month' | 'year';
 
 export interface StatsByCategory {
-  category: ServiceCategory;
+  category: Category;
   revenue: number;
   count: number;
 }
@@ -133,7 +150,7 @@ export interface StatsByCategory {
 export interface StatsByService {
   serviceId: number;
   name: string;
-  category: ServiceCategory;
+  category: Category;
   revenue: number;
   count: number;
 }

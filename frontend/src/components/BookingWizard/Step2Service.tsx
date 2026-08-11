@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, Service } from '@/lib/api';
-import { formatPrice, formatDuration, SERVICE_CATEGORIES } from '@/lib/utils';
+import { formatPrice, formatDuration } from '@/lib/utils';
 import { Category } from './BookingWizard';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import Button from '../ui/Button';
@@ -28,7 +28,7 @@ export default function Step2Service({ category, onSelect, onBack }: Props) {
   return (
     <div>
       <h2 className="font-display text-2xl font-bold mb-2">Escolhe o Serviço</h2>
-      <p className="text-text-secondary text-sm mb-8">{SERVICE_CATEGORIES[category]}</p>
+      {services[0] && <p className="text-text-secondary text-sm mb-8">{services[0].category.name}</p>}
 
       {loading && <LoadingSpinner />}
       {error && <p className="text-red-400 text-sm">{error}</p>}

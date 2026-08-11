@@ -6,7 +6,10 @@ router.use(authenticate, requirePermission('manage_services'));
 
 router.get('/', async (req, res) => {
   try {
-    const services = await prisma.service.findMany({ orderBy: [{ category: 'asc' }, { name: 'asc' }] });
+    const services = await prisma.service.findMany({
+      include: { category: { include: { parent: true } } },
+      orderBy: [{ category: { sortOrder: 'asc' } }, { name: 'asc' }],
+    });
     res.json(services);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
@@ -15,12 +18,20 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, category, description, durationMin, price, requiresConsultation } = req.body;
-    if (!name || !category || !durationMin || price === undefined)
-      return res.status(400).json({ error: 'name, category, durationMin, price required' });
+    const { name, categoryId, description, durationMin, price, requiresConsultation } = req.body;
+    if (!name || !categoryId || !durationMin || price === undefined)
+      return res.status(400).json({ error: 'name, categoryId, durationMin, price required' });
 
     const service = await prisma.service.create({
-      data: { name, category, description: description || null, durationMin: parseInt(durationMin), price: parseFloat(price), requiresConsultation: requiresConsultation || false },
+      data: {
+        name,
+        categoryId: parseInt(categoryId),
+        description: description || null,
+        durationMin: parseInt(durationMin),
+        price: parseFloat(price),
+        requiresConsultation: requiresConsultation || false,
+      },
+      include: { category: { include: { parent: true } } },
     });
     res.status(201).json(service);
   } catch (err) {
@@ -31,18 +42,40 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, category, description, durationMin, price, requiresConsultation, isActive } = req.body;
+    const { name, categoryId, description, durationMin, price, requiresConsultation, isActive } = req.body;
     const updateData = {};
     if (name !== undefined) updateData.name = name;
-    if (category !== undefined) updateData.category = category;
+    if (categoryId !== undefined) updateData.categoryId = parseInt(categoryId);
     if (description !== undefined) updateData.description = description;
     if (durationMin !== undefined) updateData.durationMin = parseInt(durationMin);
     if (price !== undefined) updateData.price = parseFloat(price);
     if (requiresConsultation !== undefined) updateData.requiresConsultation = requiresConsultation;
     if (isActive !== undefined) updateData.isActive = isActive;
 
-    const service = await prisma.service.update({ where: { id }, data: updateData });
+    const service = await prisma.service.update({ where: { id }, data: updateData, include: { category: { include: { parent: true } } } });
     res.json(service);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Ordem do catálogo público /servicos, dentro de cada categoria.
+router.put('/reorder', async (req, res) => {
+  try {
+    const { serviceIds } = req.body;
+    if (!Array.isArray(serviceIds)) return res.status(400).json({ error: 'serviceIds must be an array' });
+
+    await prisma.$transaction(
+      serviceIds.map((id, index) =>
+        prisma.service.update({ where: { id: parseInt(id) }, data: { sortOrder: index } })
+      )
+    );
+
+    const services = await prisma.service.findMany({
+      include: { category: { include: { parent: true } } },
+      orderBy: [{ category: { sortOrder: 'asc' } }, { sortOrder: 'asc' }],
+    });
+    res.json(services);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -50,8 +83,25 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    await prisma.service.update({ where: { id: parseInt(req.params.id) }, data: { isActive: false } });
-    res.json({ message: 'Service deactivated' });
+    const id = parseInt(req.params.id);
+    const service = await prisma.service.findUnique({ where: { id } });
+    if (!service) return res.status(404).json({ error: 'Serviço não encontrado' });
+
+    const [appointmentCount, consultationCount] = await Promise.all([
+      prisma.appointment.count({ where: { serviceId: id } }),
+      prisma.consultationRequest.count({ where: { serviceId: id } }),
+    ]);
+    if (appointmentCount > 0 || consultationCount > 0) {
+      return res.status(409).json({
+        error: `Este serviço tem ${appointmentCount} marcação(ões) e ${consultationCount} pedido(s) de consulta associados e não pode ser apagado. Desative-o em vez disso.`,
+      });
+    }
+
+    await prisma.$transaction([
+      prisma.employeeService.deleteMany({ where: { serviceId: id } }),
+      prisma.service.delete({ where: { id } }),
+    ]);
+    res.json({ message: 'Serviço apagado com sucesso' });
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

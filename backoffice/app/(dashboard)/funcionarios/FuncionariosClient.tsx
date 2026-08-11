@@ -1,14 +1,10 @@
 'use client';
 import { useState, useTransition } from 'react';
-import type { Employee, Service, ServiceCategory } from '@/lib/types';
+import type { Employee, Service } from '@/lib/types';
 import DataTable from '@/components/DataTable';
 import Button from '@/components/Button';
-import { createEmployeeAction, updateEmployeeAction, deleteEmployeeAction } from '@/lib/actions';
-
-const CATEGORY_LABELS: Record<ServiceCategory, string> = {
-  barbershop: 'Barbearia', tattoo: 'Tatuagem', piercing: 'Piercing', nails: 'Unhas',
-};
-const CATEGORY_ORDER: ServiceCategory[] = ['barbershop', 'tattoo', 'piercing', 'nails'];
+import ReorderList from '@/components/ReorderList';
+import { createEmployeeAction, updateEmployeeAction, deleteEmployeeAction, reorderEmployeesAction } from '@/lib/actions';
 
 const emptyForm = { name: '', email: '', password: '', bio: '', role: 'employee', serviceIds: [] as number[] };
 type FormState = typeof emptyForm;
@@ -18,8 +14,10 @@ function initials(name: string) {
 }
 
 function ServicePicker({ services, selected, onChange }: { services: Service[]; selected: number[]; onChange: (ids: number[]) => void }) {
-  const grouped = CATEGORY_ORDER
-    .map((cat) => ({ cat, items: services.filter((s) => s.category === cat) }))
+  const categories = Array.from(new Map(services.map((s) => [s.category.id, s.category])).values())
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+  const grouped = categories
+    .map((cat) => ({ cat, items: services.filter((s) => s.categoryId === cat.id) }))
     .filter((g) => g.items.length > 0);
 
   function toggle(id: number) {
@@ -29,8 +27,8 @@ function ServicePicker({ services, selected, onChange }: { services: Service[]; 
   return (
     <div className="space-y-3 max-h-56 overflow-y-auto border border-gold-border rounded px-3 py-2 bg-bg-section">
       {grouped.map(({ cat, items }) => (
-        <div key={cat}>
-          <p className="text-text-muted text-[10px] uppercase tracking-wider mb-1">{CATEGORY_LABELS[cat]}</p>
+        <div key={cat.id}>
+          <p className="text-text-muted text-[10px] uppercase tracking-wider mb-1">{cat.name}</p>
           <div className="flex flex-wrap gap-1.5">
             {items.map((s) => (
               <button
@@ -60,7 +58,16 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
   const [form, setForm] = useState<FormState>(emptyForm);
   const [deleting, setDeleting] = useState<Employee | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [ordering, setOrdering] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  async function handleReorder(orderedIds: number[]) {
+    await reorderEmployeesAction(orderedIds);
+    setEmployees((prev) => {
+      const byId = new Map(prev.map((e) => [e.id, e]));
+      return orderedIds.map((id) => byId.get(id)!).filter(Boolean);
+    });
+  }
 
   function openCreate() {
     setForm(emptyForm);
@@ -178,11 +185,30 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
         <p className="text-text-secondary text-sm">Gere a equipa que acede ao backoffice e aparece no site.</p>
-        <Button onClick={openCreate}>+ Novo Funcionário</Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setOrdering((o) => !o)}>
+            {ordering ? 'Ver tabela' : 'Ordenar'}
+          </Button>
+          <Button onClick={openCreate}>+ Novo Funcionário</Button>
+        </div>
       </div>
-      <DataTable columns={columns} data={employees} emptyMessage="Ainda não há funcionários. Cria o primeiro com o botão acima." />
+
+      {ordering ? (
+        <div className="bg-bg-card border border-gold-border/30 rounded-lg p-4 max-w-lg">
+          <p className="text-text-secondary text-sm mb-4">
+            Ordem em que os artistas aparecem em <strong>/artistas</strong> no site.
+          </p>
+          <ReorderList
+            items={employees.map((e) => ({ id: e.id, label: e.name, sub: e.isActive ? undefined : 'Inativo' }))}
+            onSave={handleReorder}
+            emptyMessage="Ainda não há funcionários."
+          />
+        </div>
+      ) : (
+        <DataTable columns={columns} data={employees} emptyMessage="Ainda não há funcionários. Cria o primeiro com o botão acima." />
+      )}
 
       {(showForm || editing) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">

@@ -11,15 +11,6 @@ const END_HOUR = 21;
 const TOTAL_MINUTES = (END_HOUR - START_HOUR) * 60;
 const DAY_LABELS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setDate(d.getDate() + diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
 function addDays(date: Date, n: number): Date {
   const d = new Date(date);
   d.setDate(d.getDate() + n);
@@ -35,10 +26,17 @@ interface Props {
   employeeColorMap: Record<number, string>;
 }
 
+function startOfToday(): Date {
+  const d = toLisbon(new Date());
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export default function CalendarWeek({ appointments, employeeColorMap }: Props) {
-  // Ancorado à data/hora de Lisboa, não à do dispositivo — evita desalinhos perto da meia-noite
-  // ou quando o backoffice é usado fora de Portugal.
-  const [viewStart, setViewStart] = useState(() => getWeekStart(toLisbon(new Date())));
+  // O dia de hoje é sempre a primeira coluna visível — não a segunda-feira
+  // da semana. É mais fácil ver de imediato "o que tenho hoje e a seguir"
+  // sem ter de procurar a coluna certa.
+  const [viewStart, setViewStart] = useState(startOfToday);
   const [daysToShow, setDaysToShow] = useState(4); // mobile-first
   const [slotHeight, setSlotHeight] = useState(2.5); // px por minuto — mobile-first
   const [selected, setSelected] = useState<Appointment | null>(null);
@@ -47,8 +45,8 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
   useEffect(() => {
     const update = () => {
       const mobile = window.innerWidth < 768;
-      setDaysToShow(mobile ? 4 : 6);
-      setSlotHeight(mobile ? 2.5 : 4);
+      setDaysToShow(mobile ? 3 : 6);
+      setSlotHeight(mobile ? 3.2 : 4);
     };
     update();
     window.addEventListener('resize', update);
@@ -73,7 +71,7 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
   }
 
   function aptHeight(apt: Appointment): number {
-    return Math.max(apt.service.durationMin * slotHeight, 24);
+    return Math.max(apt.service.durationMin * slotHeight, 34);
   }
 
   return (
@@ -100,11 +98,7 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
         </button>
 
         <button
-          onClick={() => {
-            const start = getWeekStart(toLisbon(new Date()));
-            // No mobile, começa no dia de hoje em vez da segunda
-            setViewStart(daysToShow < 6 ? (() => { const d = toLisbon(new Date()); d.setHours(0,0,0,0); return d; })() : start);
-          }}
+          onClick={() => setViewStart(startOfToday())}
           className="text-xs text-gold border border-gold px-3 py-1 rounded hover:bg-gold-muted transition-colors"
         >
           Hoje
@@ -114,11 +108,11 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
       {/* ── Grelha ── */}
       <div className="flex flex-1 overflow-auto">
         {/* Coluna de horas */}
-        <div className="w-12 flex-shrink-0 border-r border-gold-border/20">
-          <div className="h-10 border-b border-gold-border/20" />
+        <div className="w-14 flex-shrink-0 border-r border-gold-border/20">
+          <div className="h-14 border-b border-gold-border/20" />
           {hours.map((h) => (
-            <div key={h} style={{ height: 60 * slotHeight }} className="border-b border-gold-border/10 px-1 pt-1">
-              <span className="text-[10px] text-text-muted">{String(h).padStart(2, '0')}:00</span>
+            <div key={h} style={{ height: 60 * slotHeight }} className="border-b border-gold-border/10 px-1.5 pt-1">
+              <span className="text-xs font-medium text-text-secondary">{String(h).padStart(2, '0')}:00</span>
             </div>
           ))}
         </div>
@@ -133,11 +127,20 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
           const dow = dayDate.getDay();
 
           return (
-            <div key={isoDate} className="flex-1 min-w-0 border-r border-gold-border/10 last:border-r-0">
+            <div
+              key={isoDate}
+              className={`flex-1 min-w-0 border-r last:border-r-0 ${isToday ? 'border-gold-border/40 bg-gold-muted/40' : 'border-gold-border/10'}`}
+            >
               {/* Cabeçalho do dia */}
-              <div className={`h-10 border-b border-gold-border/20 flex flex-col items-center justify-center ${isToday ? 'bg-gold-muted' : ''}`}>
-                <span className="text-[9px] text-text-muted uppercase tracking-wide">{DAY_LABELS[dow]}</span>
-                <span className={`text-sm font-semibold leading-none ${isToday ? 'text-gold' : 'text-text-primary'}`}>
+              <div className={`h-14 border-b flex flex-col items-center justify-center gap-0.5 ${isToday ? 'border-gold bg-gold-muted' : 'border-gold-border/20'}`}>
+                {isToday ? (
+                  <span className="text-[10px] font-bold text-bg-primary bg-gold px-1.5 py-0.5 rounded-full uppercase tracking-wide leading-none">
+                    Hoje
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-text-secondary uppercase tracking-wide font-medium">{DAY_LABELS[dow]}</span>
+                )}
+                <span className={`text-base font-bold leading-none ${isToday ? 'text-gold' : 'text-text-primary'}`}>
                   {dayDate.getDate()}
                 </span>
               </div>
@@ -159,10 +162,10 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
                   if (nowMin < 0 || nowMin > TOTAL_MINUTES) return null;
                   return (
                     <div
-                      className="absolute left-0 right-0 border-t-2 border-gold z-10 pointer-events-none"
+                      className="absolute left-0 right-0 border-t-2 border-red-500 z-10 pointer-events-none"
                       style={{ top: nowMin * slotHeight }}
                     >
-                      <div className="w-2 h-2 rounded-full bg-gold -mt-1 -ml-1" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500 -mt-[5px] -ml-1" />
                     </div>
                   );
                 })()}
@@ -173,21 +176,21 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
                     <button
                       key={apt.id}
                       onClick={() => setSelected(apt)}
-                      className="absolute left-0.5 right-0.5 rounded text-left overflow-hidden hover:brightness-110 transition-all"
+                      className="absolute left-0.5 right-0.5 rounded-md text-left overflow-hidden hover:brightness-110 hover:z-20 transition-all shadow-sm"
                       style={{
                         top: aptTop(apt),
                         height: aptHeight(apt),
-                        backgroundColor: `${color}22`,
-                        borderLeft: `3px solid ${color}`,
+                        backgroundColor: `${color}3D`,
+                        borderLeft: `4px solid ${color}`,
                       }}
                     >
-                      <div className="px-1 py-0.5">
-                        <p className="text-[10px] font-semibold leading-tight truncate" style={{ color }}>
+                      <div className="px-1.5 py-1">
+                        <p className="text-[11px] font-bold leading-tight truncate" style={{ color }}>
                           {formatLisbon(apt.startDatetime, 'HH:mm')}
                         </p>
-                        <p className="text-[10px] leading-tight truncate text-text-primary">{apt.clientName}</p>
+                        <p className="text-[11px] font-semibold leading-tight truncate text-text-primary">{apt.clientName}</p>
                         {apt.service.durationMin >= 30 && (
-                          <p className="text-[9px] leading-tight truncate text-text-secondary">{apt.service.name}</p>
+                          <p className="text-[10px] leading-tight truncate text-text-secondary">{apt.service.name}</p>
                         )}
                       </div>
                     </button>

@@ -25,9 +25,3 @@ export function formatDuration(minutes: number): string {
   return m === 0 ? `${h}h` : `${h}h${m}min`;
 }
 
-export const SERVICE_CATEGORIES: Record<string, string> = {
-  barbershop: 'Barbearia',
-  tattoo: 'Tatuagem',
-  piercing: 'Piercing',
-  nails: 'Unhas',
-};

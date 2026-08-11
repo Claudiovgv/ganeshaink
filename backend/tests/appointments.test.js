@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../src/app');
 const prisma = require('../src/config/database');
 const bcrypt = require('bcryptjs');
+const { ensureCategory } = require('./helpers/categories');
 
 describe('Appointments (public)', () => {
   let employee, service, user;
@@ -20,8 +21,9 @@ describe('Appointments (public)', () => {
     });
     employee = user.employee;
 
+    const category = await ensureCategory('barbershop', 'Barbearia');
     service = await prisma.service.create({
-      data: { name: 'Test Cut', category: 'barbershop', durationMin: 30, price: 10 },
+      data: { name: 'Test Cut', categoryId: category.id, durationMin: 30, price: 10 },
     });
 
     await prisma.employeeService.create({

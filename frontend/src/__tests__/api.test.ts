@@ -1,4 +1,4 @@
-import { formatPrice, formatDuration, formatDate, SERVICE_CATEGORIES } from '@/lib/utils';
+import { formatPrice, formatDuration, formatDate } from '@/lib/utils';
 
 describe('utils', () => {
   test('formatPrice formata EUR correctamente', () => {
@@ -12,12 +12,5 @@ describe('utils', () => {
     expect(formatDuration(60)).toBe('1h');
     expect(formatDuration(90)).toBe('1h30min');
     expect(formatDuration(120)).toBe('2h');
-  });
-
-  test('SERVICE_CATEGORIES tem todas as categorias', () => {
-    expect(SERVICE_CATEGORIES.barbershop).toBe('Barbearia');
-    expect(SERVICE_CATEGORIES.tattoo).toBe('Tatuagem');
-    expect(SERVICE_CATEGORIES.piercing).toBe('Piercing');
-    expect(SERVICE_CATEGORIES.nails).toBe('Unhas');
   });
 });

@@ -6,9 +6,9 @@ router.get('/', async (req, res) => {
     const employees = await prisma.employee.findMany({
       where: { isActive: true },
       include: {
-        services: { include: { service: true } },
+        services: { orderBy: { sortOrder: 'asc' }, include: { service: { include: { category: { include: { parent: true } } } } } },
       },
-      orderBy: { name: 'asc' },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     });
 
     const result = employees.map(emp => ({
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
     const employee = await prisma.employee.findUnique({
       where: { id },
       include: {
-        services: { include: { service: true } },
+        services: { orderBy: { sortOrder: 'asc' }, include: { service: { include: { category: { include: { parent: true } } } } } },
         workSchedules: { where: { isActive: true } },
       },
     });

@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import type {
-  AdminPermissionKey, Appointment, BlogPost, Client, ConfigurableRole, ConsultationRequest,
-  Employee, EmployeePermissionKey, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry, TimeBlock, User, WeeklyScheduleDay,
+  AdminPermissionKey, Appointment, BlogPost, Category, Client, ConfigurableRole, ConsultationRequest,
+  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry, TimeBlock, User, WeeklyScheduleDay,
 } from './types';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002/v1';
@@ -84,6 +84,8 @@ export const api = {
       apiFetch<Employee>(`/admin/employees/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     remove: (id: number) =>
       apiFetch<{ message: string }>(`/admin/employees/${id}`, { method: 'DELETE' }),
+    reorder: (employeeIds: number[]) =>
+      apiFetch<Employee[]>('/admin/employees/reorder', { method: 'PUT', body: JSON.stringify({ employeeIds }) }),
   },
   services: {
     adminList: () => apiFetch<Service[]>('/admin/services'),
@@ -91,11 +93,35 @@ export const api = {
       apiFetch<Service>('/admin/services', { method: 'POST', body: JSON.stringify(data) }),
     adminUpdate: (id: number, data: object) =>
       apiFetch<Service>(`/admin/services/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    adminRemove: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/services/${id}`, { method: 'DELETE' }),
     employeeList: () => apiFetch<Service[]>('/employee/services'),
     employeeCreate: (data: object) =>
       apiFetch<Service>('/employee/services', { method: 'POST', body: JSON.stringify(data) }),
     employeeUpdate: (id: number, data: object) =>
       apiFetch<Service>(`/employee/services/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    adminReorder: (serviceIds: number[]) =>
+      apiFetch<Service[]>('/admin/services/reorder', { method: 'PUT', body: JSON.stringify({ serviceIds }) }),
+    myOrder: () => apiFetch<Service[]>('/employee/services/my-order'),
+    updateMyOrder: (serviceIds: number[]) =>
+      apiFetch<Service[]>('/employee/services/my-order', { method: 'PUT', body: JSON.stringify({ serviceIds }) }),
+    reorderForEmployee: (employeeId: number, serviceIds: number[]) =>
+      apiFetch<Service[]>(`/admin/employees/${employeeId}/services/reorder`, {
+        method: 'PUT',
+        body: JSON.stringify({ serviceIds }),
+      }),
+  },
+  categories: {
+    list: () => apiFetch<Category[]>('/categories'),
+    adminList: () => apiFetch<Category[]>('/admin/categories'),
+    create: (name: string, parentId?: number) =>
+      apiFetch<Category>('/admin/categories', { method: 'POST', body: JSON.stringify({ name, parentId }) }),
+    update: (id: number, data: { name?: string; isActive?: boolean }) =>
+      apiFetch<Category>(`/admin/categories/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    reorder: (categoryIds: number[]) =>
+      apiFetch<Category[]>('/admin/categories/reorder', { method: 'PUT', body: JSON.stringify({ categoryIds }) }),
+    remove: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/categories/${id}`, { method: 'DELETE' }),
   },
   blog: {
     list: () => apiFetch<BlogPost[]>('/admin/blog'),
@@ -112,7 +138,15 @@ export const api = {
   schedule: {
     get: () => apiFetch<WeeklyScheduleDay[]>('/employee/schedule'),
     update: (data: WeeklyScheduleDay[]) =>
-      apiFetch<WeeklyScheduleDay[]>('/employee/schedule', { method: 'PUT', body: JSON.stringify({ schedule: data }) }),
+      apiFetch<WeeklyScheduleDay[]>('/employee/schedule', { method: 'PUT', body: JSON.stringify({ schedules: data }) }),
+  },
+  adminSchedules: {
+    list: () => apiFetch<EmployeeSchedules[]>('/admin/schedules'),
+    update: (employeeId: number, data: WeeklyScheduleDay[]) =>
+      apiFetch<WeeklyScheduleDay[]>(`/admin/schedules/${employeeId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ schedules: data }),
+      }),
   },
   timeBlocks: {
     list: () => apiFetch<TimeBlock[]>('/employee/time-blocks'),

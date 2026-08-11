@@ -37,6 +37,14 @@ router.post('/login', authLimiter, async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    // Atalho só para desenvolvimento local: salta o 2FA por completo.
+    // NUNCA ativar em produção — só funciona se a env var estiver explicitamente
+    // definida, e não faz parte de nenhuma configuração de deploy.
+    if (process.env.DISABLE_2FA_FOR_LOCAL_DEV === 'true' && process.env.NODE_ENV !== 'test') {
+      const { password: _, twoFactorSecret: __, ...safeUser } = user;
+      return res.json({ token: issueToken(user), user: safeUser });
+    }
+
     // 2FA is mandatory for every account. First login (no secret yet) triggers setup instead of a code prompt.
     const pendingToken = jwt.sign(
       { id: user.id, pending2FA: true },
