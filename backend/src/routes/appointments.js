@@ -5,7 +5,7 @@ const { lisboaTimeToUTC } = require('../services/availability.service');
 const { publicLimiter } = require('../middleware/rateLimit');
 const { addMinutes } = require('date-fns');
 const { sendMail } = require('../lib/mailer');
-const { appointmentConfirmedEmail, appointmentStatusChangedEmail } = require('../lib/emailTemplates');
+const { appointmentReceivedEmail, appointmentStatusChangedEmail } = require('../lib/emailTemplates');
 
 router.post('/', publicLimiter, async (req, res) => {
   try {
@@ -49,14 +49,14 @@ router.post('/', publicLimiter, async (req, res) => {
         serviceId: parseInt(serviceId),
         startDatetime,
         endDatetime,
-        status: 'confirmed',
+        status: 'pending',
         notes: notes || null,
         cancelToken: uuidv4(),
       },
       include: { employee: { select: { id: true, name: true } }, service: true },
     });
 
-    const { subject, html } = appointmentConfirmedEmail(appointment);
+    const { subject, html } = appointmentReceivedEmail(appointment);
     sendMail({ to: appointment.clientEmail, subject, html });
 
     res.status(201).json(appointment);

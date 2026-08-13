@@ -27,6 +27,7 @@ const adminUsersRoutes = require('./routes/admin/users');
 const adminRolesRoutes = require('./routes/admin/roles');
 const adminStatsRoutes = require('./routes/admin/stats');
 const adminSchedulesRoutes = require('./routes/admin/schedules');
+const adminBlocksRoutes = require('./routes/admin/blocks');
 
 const employeeAppointmentsRoutes = require('./routes/employee/appointments');
 const employeeScheduleRoutes = require('./routes/employee/schedule');
@@ -79,6 +80,7 @@ app.use(`${API_BASE}/v1/admin/users`, adminUsersRoutes);
 app.use(`${API_BASE}/v1/admin/roles`, adminRolesRoutes);
 app.use(`${API_BASE}/v1/admin/stats`, adminStatsRoutes);
 app.use(`${API_BASE}/v1/admin/schedules`, adminSchedulesRoutes);
+app.use(`${API_BASE}/v1/admin/blocks`, adminBlocksRoutes);
 
 // Employee routes
 app.use(`${API_BASE}/v1/employee/appointments`, employeeAppointmentsRoutes);

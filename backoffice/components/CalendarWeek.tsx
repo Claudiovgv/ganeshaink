@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Appointment } from '@/lib/types';
 import AppointmentModal from './AppointmentModal';
 import { format } from 'date-fns';
@@ -40,6 +40,7 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
   const [daysToShow, setDaysToShow] = useState(4); // mobile-first
   const [slotHeight, setSlotHeight] = useState(2.5); // px por minuto — mobile-first
   const [selected, setSelected] = useState<Appointment | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   // Detecta tamanho do ecrã após mount (evita problemas de hydration)
   useEffect(() => {
@@ -52,6 +53,23 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
+
+  // Ao abrir (ou ao voltar a "Hoje"), o calendário começa já posicionado na
+  // hora atual — como um calendário normal — em vez de sempre no topo (08:00),
+  // obrigando a subir para ver o que já passou.
+  function scrollToNow() {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const now = toLisbon(new Date());
+    const nowMin = now.getHours() * 60 + now.getMinutes() - START_HOUR * 60;
+    if (nowMin < 0) return;
+    grid.scrollTop = Math.max(nowMin * slotHeight - 120, 0);
+  }
+
+  useEffect(() => {
+    scrollToNow();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slotHeight]);
 
   const today = toLisbon(new Date());
   today.setHours(0, 0, 0, 0);
@@ -98,7 +116,10 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
         </button>
 
         <button
-          onClick={() => setViewStart(startOfToday())}
+          onClick={() => {
+            setViewStart(startOfToday());
+            scrollToNow();
+          }}
           className="text-xs text-gold border border-gold px-3 py-1 rounded hover:bg-gold-muted transition-colors"
         >
           Hoje
@@ -106,7 +127,7 @@ export default function CalendarWeek({ appointments, employeeColorMap }: Props) 
       </div>
 
       {/* ── Grelha ── */}
-      <div className="flex flex-1 overflow-auto">
+      <div ref={gridRef} className="flex flex-1 overflow-auto">
         {/* Coluna de horas */}
         <div className="w-14 flex-shrink-0 border-r border-gold-border/20">
           <div className="h-14 border-b border-gold-border/20" />

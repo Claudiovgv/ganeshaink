@@ -1,7 +1,8 @@
 import { cookies } from 'next/headers';
 import type {
-  AdminPermissionKey, Appointment, BlogPost, Category, Client, ConfigurableRole, ConsultationRequest,
-  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry, TimeBlock, User, WeeklyScheduleDay,
+  AdminPermissionKey, Appointment, BlogPost, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
+  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry,
+  TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay,
 } from './types';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002/v1';
@@ -57,10 +58,24 @@ export const api = {
       ).toString();
       return apiFetch<Appointment[]>(`/admin/appointments${q ? `?${q}` : ''}`);
     },
-    create: (data: object) =>
-      apiFetch<Appointment>('/admin/appointments', { method: 'POST', body: JSON.stringify(data) }),
+    create: async (data: object): Promise<CreateAppointmentResult> => {
+      const cookieStore = await cookies();
+      const token = cookieStore.get('ganesha_token')?.value;
+      const res = await fetch(`${API}/admin/appointments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      const body = await res.json().catch(() => ({}));
+      if (res.status === 409 && body.conflict) return { ok: false, conflict: body.conflict };
+      if (!res.ok) throw new Error(body.error ?? res.statusText);
+      return { ok: true, appointment: body as Appointment };
+    },
     updateStatus: (id: number, status: string) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }),
+    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string }) =>
+      apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     myList: (params?: { date?: string }) => {
       const q = new URLSearchParams(
         Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
@@ -134,6 +149,11 @@ export const api = {
   },
   clients: {
     list: () => apiFetch<Client[]>('/admin/clients'),
+    updateNickname: (email: string, nickname: string) =>
+      apiFetch<{ email: string; nickname: string | null }>(`/admin/clients/${encodeURIComponent(email)}/nickname`, {
+        method: 'PUT',
+        body: JSON.stringify({ nickname }),
+      }),
   },
   schedule: {
     get: () => apiFetch<WeeklyScheduleDay[]>('/employee/schedule'),
@@ -150,10 +170,21 @@ export const api = {
   },
   timeBlocks: {
     list: () => apiFetch<TimeBlock[]>('/employee/time-blocks'),
-    create: (data: object) =>
+    preview: (data: TimeBlockInput) =>
+      apiFetch<{ conflicts: TimeBlockConflict[] }>('/employee/time-blocks/preview', { method: 'POST', body: JSON.stringify(data) }),
+    create: (data: TimeBlockInput) =>
       apiFetch<TimeBlock>('/employee/time-blocks', { method: 'POST', body: JSON.stringify(data) }),
     remove: (id: number) =>
       apiFetch<void>(`/employee/time-blocks/${id}`, { method: 'DELETE' }),
+  },
+  adminBlocks: {
+    list: () => apiFetch<TimeBlock[]>('/admin/blocks'),
+    preview: (data: TimeBlockInput) =>
+      apiFetch<{ conflicts: TimeBlockConflict[] }>('/admin/blocks/preview', { method: 'POST', body: JSON.stringify(data) }),
+    create: (data: TimeBlockInput) =>
+      apiFetch<TimeBlock[]>('/admin/blocks', { method: 'POST', body: JSON.stringify(data) }),
+    remove: (id: number) =>
+      apiFetch<void>(`/admin/blocks/${id}`, { method: 'DELETE' }),
   },
   profile: {
     get: () => apiFetch<Employee>('/employee/profile'),
@@ -164,6 +195,8 @@ export const api = {
     getSmtp: () => apiFetch<SmtpSettings>('/admin/settings/smtp'),
     updateSmtp: (data: Partial<SmtpSettings>) =>
       apiFetch<{ message: string }>('/admin/settings/smtp', { method: 'PUT', body: JSON.stringify(data) }),
+    testSmtp: (data: Partial<SmtpSettings> & { testEmail: string }) =>
+      apiFetch<{ message: string }>('/admin/settings/smtp/test', { method: 'POST', body: JSON.stringify(data) }),
   },
   logs: {
     list: (params?: { level?: string; page?: number }) => {

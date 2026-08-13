@@ -20,10 +20,22 @@ function normalize(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
+const PAGE_SIZE = 10;
+const STATUS_OPTIONS: { value: Appointment['status'] | ''; label: string }[] = [
+  { value: '', label: 'Todos os estados' },
+  { value: 'pending', label: 'Pendente' },
+  { value: 'confirmed', label: 'Confirmada' },
+  { value: 'completed', label: 'Concluída' },
+  { value: 'cancelled', label: 'Cancelada' },
+];
+
 export default function AppointmentsClient({ initial, employees, services, clients }: Props) {
   const [appointments, setAppointments] = useState(initial);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
+  const [employeeFilter, setEmployeeFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [page, setPage] = useState(1);
   const [statusError, setStatusError] = useState('');
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -60,18 +72,27 @@ export default function AppointmentsClient({ initial, employees, services, clien
 
   const filtered = useMemo(() => {
     const q = normalize(search.trim());
-    if (!q) return appointments;
     return appointments.filter((a) => {
+      if (employeeFilter && String(a.employee.id) !== employeeFilter) return false;
+      if (statusFilter && a.status !== statusFilter) return false;
+      if (!q) return true;
       const haystack = normalize(`${a.clientName} ${a.clientPhone} ${a.service.name} ${a.employee.name}`);
       return haystack.includes(q);
     });
-  }, [appointments, search]);
+  }, [appointments, search, employeeFilter, statusFilter]);
 
-  // Sempre ordenadas cronologicamente, mesmo depois de atualizações locais.
+  // Mais recentes primeiro.
   const sorted = useMemo(
-    () => [...filtered].sort((a, b) => a.startDatetime.localeCompare(b.startDatetime)),
+    () => [...filtered].sort((a, b) => b.startDatetime.localeCompare(a.startDatetime)),
     [filtered]
   );
+
+  // Volta à página 1 sempre que os filtros mudam.
+  useEffect(() => { setPage(1); }, [search, employeeFilter, statusFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const page_ = Math.min(page, totalPages);
+  const paginated = sorted.slice((page_ - 1) * PAGE_SIZE, page_ * PAGE_SIZE);
 
   const columns = [
     {
@@ -113,6 +134,12 @@ export default function AppointmentsClient({ initial, employees, services, clien
       label: 'Ações',
       render: (a: Appointment) => (
         <div className="flex items-center gap-2 flex-wrap">
+          {a.status === 'pending' && (
+            <>
+              <Button size="sm" variant="ghost" onClick={() => handleStatus(a.id, 'confirmed')} disabled={isPending}>Confirmar</Button>
+              <Button size="sm" variant="danger" onClick={() => handleStatus(a.id, 'cancelled')} disabled={isPending}>Cancelar</Button>
+            </>
+          )}
           {a.status === 'confirmed' && (
             <>
               <Button size="sm" variant="ghost" onClick={() => handleStatus(a.id, 'completed')} disabled={isPending}>Concluir</Button>
@@ -133,23 +160,56 @@ export default function AppointmentsClient({ initial, employees, services, clien
         <Button onClick={() => setShowModal(true)} size="sm">+ Nova Marcação</Button>
       </div>
 
-      <div className="relative mb-4">
-        <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-        </svg>
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar por cliente, telefone, serviço ou artista..."
-          className="w-full bg-bg-card border border-gold-border rounded pl-9 pr-3 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-gold"
-        />
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="relative flex-1">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Pesquisar por cliente, telefone, serviço ou artista..."
+            className="w-full bg-bg-card border border-gold-border rounded pl-9 pr-3 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-gold"
+          />
+        </div>
+        <select
+          value={employeeFilter}
+          onChange={(e) => setEmployeeFilter(e.target.value)}
+          className="bg-bg-card border border-gold-border rounded px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:border-gold"
+        >
+          <option value="">Todos os artistas</option>
+          {employees.map((e) => (
+            <option key={e.id} value={e.id}>{e.name}</option>
+          ))}
+        </select>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="bg-bg-card border border-gold-border rounded px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:border-gold"
+        >
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
       </div>
 
       {statusError && (
         <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/30 rounded px-3 py-2 mb-4">{statusError}</p>
       )}
 
-      <DataTable columns={columns} data={sorted} emptyMessage={search ? 'Sem resultados para essa pesquisa.' : 'Sem marcações.'} />
+      <DataTable columns={columns} data={paginated} emptyMessage={search || employeeFilter || statusFilter ? 'Sem resultados para esses filtros.' : 'Sem marcações.'} />
+
+      {sorted.length > 0 && (
+        <div className="flex items-center justify-center gap-3 mt-4">
+          <Button size="sm" variant="ghost" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page_ === 1}>
+            ‹ Anterior
+          </Button>
+          <span className="text-text-secondary text-sm">Página {page_} de {totalPages}</span>
+          <Button size="sm" variant="ghost" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page_ === totalPages}>
+            Seguinte ›
+          </Button>
+        </div>
+      )}
 
       {showModal && (
         <NovaMarcacaoModal

@@ -210,6 +210,19 @@ model Setting {
   @@map("settings")
 }
 
+// Alcunha interna para distinguir clientes com o mesmo nome — visível só no
+// backoffice, nunca exposta nas rotas públicas. "Cliente" não é uma entidade
+// própria (é derivada das marcações por email), por isso vive à parte,
+// associada ao email.
+model ClientNickname {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  nickname  String
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("client_nicknames")
+}
+
 model SystemLog {
   id        Int      @id @default(autoincrement())
   level     LogLevel @default(info)

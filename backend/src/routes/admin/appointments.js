@@ -11,9 +11,11 @@ router.use(authenticate, requirePermission('manage_appointments'));
 
 const TIMEZONE = 'Europe/Lisbon';
 
-// Impede duas marcações do mesmo artista em horários que se sobrepõem.
-async function hasConflict(employeeId, startDatetime, endDatetime, excludeId) {
-  const conflict = await prisma.appointment.findFirst({
+// Avisa de duas marcações do mesmo artista em horários que se sobrepõem —
+// não bloqueia: quem gere marcações por dentro (admin/artista) pode saber
+// que vai mais rápido nesse serviço, ou juntar clientes de propósito.
+async function findConflict(employeeId, startDatetime, endDatetime, excludeId) {
+  return prisma.appointment.findFirst({
     where: {
       employeeId,
       status: { not: 'cancelled' },
@@ -21,8 +23,8 @@ async function hasConflict(employeeId, startDatetime, endDatetime, excludeId) {
       startDatetime: { lt: endDatetime },
       endDatetime: { gt: startDatetime },
     },
+    include: { service: true },
   });
-  return Boolean(conflict);
 }
 
 router.get('/', async (req, res) => {
@@ -51,11 +53,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Marcações inseridas internamente (ex.: recuperadas de fora do site) podem
+// ainda não ter o contacto do cliente confirmado — fica um placeholder único
+// (para não fundir clientes diferentes na página de Clientes) e o artista
+// substitui pelo contacto real assim que o souber, via PUT /:id.
+function placeholderContact() {
+  const token = uuidv4().slice(0, 8);
+  return { email: `sem-contacto+${token}@ganeshaink.pt`, phone: 'Sem contacto' };
+}
+
 router.post('/', async (req, res) => {
   try {
-    const { clientName, clientEmail, clientPhone, employeeId, serviceId, date, time, notes } = req.body;
-    if (!clientName || !clientEmail || !clientPhone || !employeeId || !serviceId || !date || !time) {
-      return res.status(400).json({ error: 'All fields required' });
+    const { clientName, clientEmail, clientPhone, employeeId, serviceId, date, time, notes, force } = req.body;
+    if (!clientName || !employeeId || !serviceId || !date || !time) {
+      return res.status(400).json({ error: 'clientName, employeeId, serviceId, date e time são obrigatórios' });
     }
     const service = await prisma.service.findUnique({ where: { id: parseInt(serviceId) } });
     if (!service) return res.status(404).json({ error: 'Service not found' });
@@ -63,13 +74,28 @@ router.post('/', async (req, res) => {
     const startDatetime = lisboaTimeToUTC(date, time);
     const endDatetime = addMinutes(startDatetime, service.durationMin);
 
-    if (await hasConflict(parseInt(employeeId), startDatetime, endDatetime)) {
-      return res.status(409).json({ error: 'Este artista já tem uma marcação nesse horário' });
+    if (!force) {
+      const conflict = await findConflict(parseInt(employeeId), startDatetime, endDatetime);
+      if (conflict) {
+        return res.status(409).json({
+          error: 'Este artista já tem uma marcação nesse horário',
+          conflict: {
+            clientName: conflict.clientName,
+            startDatetime: conflict.startDatetime,
+            endDatetime: conflict.endDatetime,
+            service: conflict.service.name,
+          },
+        });
+      }
     }
+
+    const placeholder = (!clientEmail || !clientPhone) ? placeholderContact() : null;
 
     const appointment = await prisma.appointment.create({
       data: {
-        clientName, clientEmail, clientPhone,
+        clientName,
+        clientEmail: clientEmail || placeholder.email,
+        clientPhone: clientPhone || placeholder.phone,
         employeeId: parseInt(employeeId),
         serviceId: parseInt(serviceId),
         startDatetime, endDatetime,
@@ -88,7 +114,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { status, notes, date, time } = req.body;
+    const { status, notes, date, time, clientName, clientEmail, clientPhone, force } = req.body;
 
     const existing = await prisma.appointment.findUnique({ where: { id }, include: { service: true } });
     if (!existing) return res.status(404).json({ error: 'Appointment not found' });
@@ -96,12 +122,26 @@ router.put('/:id', async (req, res) => {
     const updateData = {};
     if (status) updateData.status = status;
     if (notes !== undefined) updateData.notes = notes;
+    if (clientName) updateData.clientName = clientName;
+    if (clientEmail) updateData.clientEmail = clientEmail;
+    if (clientPhone) updateData.clientPhone = clientPhone;
     if (date && time) {
       updateData.startDatetime = lisboaTimeToUTC(date, time);
       updateData.endDatetime = addMinutes(updateData.startDatetime, existing.service.durationMin);
 
-      if (await hasConflict(existing.employeeId, updateData.startDatetime, updateData.endDatetime, id)) {
-        return res.status(409).json({ error: 'Este artista já tem uma marcação nesse horário' });
+      if (!force) {
+        const conflict = await findConflict(existing.employeeId, updateData.startDatetime, updateData.endDatetime, id);
+        if (conflict) {
+          return res.status(409).json({
+            error: 'Este artista já tem uma marcação nesse horário',
+            conflict: {
+              clientName: conflict.clientName,
+              startDatetime: conflict.startDatetime,
+              endDatetime: conflict.endDatetime,
+              service: conflict.service.name,
+            },
+          });
+        }
       }
     }
 

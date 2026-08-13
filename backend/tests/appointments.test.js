@@ -67,7 +67,7 @@ describe('Appointments (public)', () => {
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('id');
       expect(res.body.clientEmail).toBe('pedro@test.com');
-      expect(res.body.status).toBe('confirmed');
+      expect(res.body.status).toBe('pending');
       expect(res.body).toHaveProperty('cancelToken');
     });
 

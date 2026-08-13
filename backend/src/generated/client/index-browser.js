@@ -240,6 +240,13 @@ exports.Prisma.SettingScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ClientNicknameScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  nickname: 'nickname',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SystemLogScalarFieldEnum = {
   id: 'id',
   level: 'level',
@@ -316,6 +323,7 @@ exports.Prisma.ModelName = {
   ConsultationRequest: 'ConsultationRequest',
   BlogPost: 'BlogPost',
   Setting: 'Setting',
+  ClientNickname: 'ClientNickname',
   SystemLog: 'SystemLog'
 };
 

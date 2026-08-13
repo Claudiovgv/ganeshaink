@@ -25,6 +25,15 @@ async function getSmtpConfig() {
   };
 }
 
+function buildTransporter(config) {
+  return nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: Number(config.port) === 465,
+    auth: { user: config.user, pass: config.pass },
+  });
+}
+
 // Fire-and-forget email send — never throws, never blocks the caller.
 // Booking/consultation flows must succeed even if SMTP is unreachable or unconfigured.
 async function sendMail({ to, subject, html }) {
@@ -35,13 +44,7 @@ async function sendMail({ to, subject, html }) {
       return;
     }
 
-    const transporter = nodemailer.createTransport({
-      host: config.host,
-      port: config.port,
-      secure: config.port === 465,
-      auth: { user: config.user, pass: config.pass },
-    });
-
+    const transporter = buildTransporter(config);
     await transporter.sendMail({ from: config.from, to, subject, html, attachments: [LOGO_ATTACHMENT] });
     logEvent('info', 'email', `Email enviado: "${subject}" para ${to}`);
   } catch (err) {
@@ -50,4 +53,20 @@ async function sendMail({ to, subject, html }) {
   }
 }
 
-module.exports = { sendMail };
+// Used by the SMTP settings screen's "send test email" action — unlike sendMail,
+// this throws so the admin sees the real error instead of a silent server-log entry.
+async function sendTestMail(config, to) {
+  if (!config.host || !config.user || !config.pass) {
+    throw new Error('Preenche pelo menos o servidor, utilizador e password antes de testar.');
+  }
+  const transporter = buildTransporter(config);
+  await transporter.verify();
+  await transporter.sendMail({
+    from: config.from,
+    to,
+    subject: 'Email de teste — Ganesha Ink',
+    html: '<p>Este é um email de teste enviado a partir das definições de SMTP do backoffice. Se o recebeste, a configuração está a funcionar.</p>',
+  });
+}
+
+module.exports = { sendMail, sendTestMail, getSmtpConfig };

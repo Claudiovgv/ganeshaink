@@ -23,7 +23,7 @@ export default async function SmtpPage() {
       <TopBar title="SMTP" />
       <div className="p-6 max-w-md">
         {settings
-          ? <SmtpClient initial={settings} />
+          ? <SmtpClient initial={settings} userEmail={user.email} />
           : <p className="text-text-secondary">Não foi possível carregar as definições de SMTP.</p>
         }
       </div>

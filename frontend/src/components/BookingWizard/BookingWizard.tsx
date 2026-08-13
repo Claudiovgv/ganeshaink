@@ -75,9 +75,9 @@ export default function BookingWizard() {
     return (
       <div className="max-w-lg mx-auto px-4 py-16 text-center">
         <div className="text-5xl mb-6">✅</div>
-        <h2 className="font-display text-3xl font-bold mb-3 text-gold">Marcação Confirmada!</h2>
+        <h2 className="font-display text-3xl font-bold mb-3 text-gold">Pedido de Marcação Recebido!</h2>
         <p className="text-text-secondary mb-2">
-          Receberás um email de confirmação em breve.
+          Fica pendente de confirmação pelo artista. Receberás um email assim que for confirmada.
         </p>
         <div className="bg-bg-card border border-gold-border rounded-lg p-6 mt-8 text-left space-y-3">
           <p><span className="text-text-secondary text-sm">Serviço:</span> <span className="font-semibold">{state.appointment.service.name}</span></p>

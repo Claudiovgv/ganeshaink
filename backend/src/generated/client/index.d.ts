@@ -69,6 +69,11 @@ export type BlogPost = $Result.DefaultSelection<Prisma.$BlogPostPayload>
  */
 export type Setting = $Result.DefaultSelection<Prisma.$SettingPayload>
 /**
+ * Model ClientNickname
+ * 
+ */
+export type ClientNickname = $Result.DefaultSelection<Prisma.$ClientNicknamePayload>
+/**
  * Model SystemLog
  * 
  */
@@ -379,6 +384,16 @@ export class PrismaClient<
     * ```
     */
   get setting(): Prisma.SettingDelegate<ExtArgs>;
+
+  /**
+   * `prisma.clientNickname`: Exposes CRUD operations for the **ClientNickname** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ClientNicknames
+    * const clientNicknames = await prisma.clientNickname.findMany()
+    * ```
+    */
+  get clientNickname(): Prisma.ClientNicknameDelegate<ExtArgs>;
 
   /**
    * `prisma.systemLog`: Exposes CRUD operations for the **SystemLog** model.
@@ -841,6 +856,7 @@ export namespace Prisma {
     ConsultationRequest: 'ConsultationRequest',
     BlogPost: 'BlogPost',
     Setting: 'Setting',
+    ClientNickname: 'ClientNickname',
     SystemLog: 'SystemLog'
   };
 
@@ -857,7 +873,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "employee" | "service" | "category" | "employeeService" | "workSchedule" | "timeBlock" | "appointment" | "consultationRequest" | "blogPost" | "setting" | "systemLog"
+      modelProps: "user" | "employee" | "service" | "category" | "employeeService" | "workSchedule" | "timeBlock" | "appointment" | "consultationRequest" | "blogPost" | "setting" | "clientNickname" | "systemLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1584,6 +1600,72 @@ export namespace Prisma {
           count: {
             args: Prisma.SettingCountArgs<ExtArgs>
             result: $Utils.Optional<SettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      ClientNickname: {
+        payload: Prisma.$ClientNicknamePayload<ExtArgs>
+        fields: Prisma.ClientNicknameFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ClientNicknameFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ClientNicknameFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>
+          }
+          findFirst: {
+            args: Prisma.ClientNicknameFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ClientNicknameFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>
+          }
+          findMany: {
+            args: Prisma.ClientNicknameFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>[]
+          }
+          create: {
+            args: Prisma.ClientNicknameCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>
+          }
+          createMany: {
+            args: Prisma.ClientNicknameCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ClientNicknameDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>
+          }
+          update: {
+            args: Prisma.ClientNicknameUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>
+          }
+          deleteMany: {
+            args: Prisma.ClientNicknameDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ClientNicknameUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ClientNicknameUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClientNicknamePayload>
+          }
+          aggregate: {
+            args: Prisma.ClientNicknameAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateClientNickname>
+          }
+          groupBy: {
+            args: Prisma.ClientNicknameGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ClientNicknameGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ClientNicknameCountArgs<ExtArgs>
+            result: $Utils.Optional<ClientNicknameCountAggregateOutputType> | number
           }
         }
       }
@@ -12732,6 +12814,861 @@ export namespace Prisma {
 
 
   /**
+   * Model ClientNickname
+   */
+
+  export type AggregateClientNickname = {
+    _count: ClientNicknameCountAggregateOutputType | null
+    _avg: ClientNicknameAvgAggregateOutputType | null
+    _sum: ClientNicknameSumAggregateOutputType | null
+    _min: ClientNicknameMinAggregateOutputType | null
+    _max: ClientNicknameMaxAggregateOutputType | null
+  }
+
+  export type ClientNicknameAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ClientNicknameSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ClientNicknameMinAggregateOutputType = {
+    id: number | null
+    email: string | null
+    nickname: string | null
+    updatedAt: Date | null
+  }
+
+  export type ClientNicknameMaxAggregateOutputType = {
+    id: number | null
+    email: string | null
+    nickname: string | null
+    updatedAt: Date | null
+  }
+
+  export type ClientNicknameCountAggregateOutputType = {
+    id: number
+    email: number
+    nickname: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ClientNicknameAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ClientNicknameSumAggregateInputType = {
+    id?: true
+  }
+
+  export type ClientNicknameMinAggregateInputType = {
+    id?: true
+    email?: true
+    nickname?: true
+    updatedAt?: true
+  }
+
+  export type ClientNicknameMaxAggregateInputType = {
+    id?: true
+    email?: true
+    nickname?: true
+    updatedAt?: true
+  }
+
+  export type ClientNicknameCountAggregateInputType = {
+    id?: true
+    email?: true
+    nickname?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ClientNicknameAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ClientNickname to aggregate.
+     */
+    where?: ClientNicknameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClientNicknames to fetch.
+     */
+    orderBy?: ClientNicknameOrderByWithRelationInput | ClientNicknameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ClientNicknameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClientNicknames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClientNicknames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ClientNicknames
+    **/
+    _count?: true | ClientNicknameCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ClientNicknameAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ClientNicknameSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClientNicknameMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClientNicknameMaxAggregateInputType
+  }
+
+  export type GetClientNicknameAggregateType<T extends ClientNicknameAggregateArgs> = {
+        [P in keyof T & keyof AggregateClientNickname]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClientNickname[P]>
+      : GetScalarType<T[P], AggregateClientNickname[P]>
+  }
+
+
+
+
+  export type ClientNicknameGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ClientNicknameWhereInput
+    orderBy?: ClientNicknameOrderByWithAggregationInput | ClientNicknameOrderByWithAggregationInput[]
+    by: ClientNicknameScalarFieldEnum[] | ClientNicknameScalarFieldEnum
+    having?: ClientNicknameScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClientNicknameCountAggregateInputType | true
+    _avg?: ClientNicknameAvgAggregateInputType
+    _sum?: ClientNicknameSumAggregateInputType
+    _min?: ClientNicknameMinAggregateInputType
+    _max?: ClientNicknameMaxAggregateInputType
+  }
+
+  export type ClientNicknameGroupByOutputType = {
+    id: number
+    email: string
+    nickname: string
+    updatedAt: Date
+    _count: ClientNicknameCountAggregateOutputType | null
+    _avg: ClientNicknameAvgAggregateOutputType | null
+    _sum: ClientNicknameSumAggregateOutputType | null
+    _min: ClientNicknameMinAggregateOutputType | null
+    _max: ClientNicknameMaxAggregateOutputType | null
+  }
+
+  type GetClientNicknameGroupByPayload<T extends ClientNicknameGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ClientNicknameGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClientNicknameGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClientNicknameGroupByOutputType[P]>
+            : GetScalarType<T[P], ClientNicknameGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClientNicknameSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    nickname?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["clientNickname"]>
+
+
+  export type ClientNicknameSelectScalar = {
+    id?: boolean
+    email?: boolean
+    nickname?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $ClientNicknamePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ClientNickname"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      email: string
+      nickname: string
+      updatedAt: Date
+    }, ExtArgs["result"]["clientNickname"]>
+    composites: {}
+  }
+
+  type ClientNicknameGetPayload<S extends boolean | null | undefined | ClientNicknameDefaultArgs> = $Result.GetResult<Prisma.$ClientNicknamePayload, S>
+
+  type ClientNicknameCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ClientNicknameFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ClientNicknameCountAggregateInputType | true
+    }
+
+  export interface ClientNicknameDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ClientNickname'], meta: { name: 'ClientNickname' } }
+    /**
+     * Find zero or one ClientNickname that matches the filter.
+     * @param {ClientNicknameFindUniqueArgs} args - Arguments to find a ClientNickname
+     * @example
+     * // Get one ClientNickname
+     * const clientNickname = await prisma.clientNickname.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ClientNicknameFindUniqueArgs>(args: SelectSubset<T, ClientNicknameFindUniqueArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ClientNickname that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ClientNicknameFindUniqueOrThrowArgs} args - Arguments to find a ClientNickname
+     * @example
+     * // Get one ClientNickname
+     * const clientNickname = await prisma.clientNickname.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ClientNicknameFindUniqueOrThrowArgs>(args: SelectSubset<T, ClientNicknameFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ClientNickname that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameFindFirstArgs} args - Arguments to find a ClientNickname
+     * @example
+     * // Get one ClientNickname
+     * const clientNickname = await prisma.clientNickname.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ClientNicknameFindFirstArgs>(args?: SelectSubset<T, ClientNicknameFindFirstArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ClientNickname that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameFindFirstOrThrowArgs} args - Arguments to find a ClientNickname
+     * @example
+     * // Get one ClientNickname
+     * const clientNickname = await prisma.clientNickname.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ClientNicknameFindFirstOrThrowArgs>(args?: SelectSubset<T, ClientNicknameFindFirstOrThrowArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ClientNicknames that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ClientNicknames
+     * const clientNicknames = await prisma.clientNickname.findMany()
+     * 
+     * // Get first 10 ClientNicknames
+     * const clientNicknames = await prisma.clientNickname.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const clientNicknameWithIdOnly = await prisma.clientNickname.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ClientNicknameFindManyArgs>(args?: SelectSubset<T, ClientNicknameFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ClientNickname.
+     * @param {ClientNicknameCreateArgs} args - Arguments to create a ClientNickname.
+     * @example
+     * // Create one ClientNickname
+     * const ClientNickname = await prisma.clientNickname.create({
+     *   data: {
+     *     // ... data to create a ClientNickname
+     *   }
+     * })
+     * 
+     */
+    create<T extends ClientNicknameCreateArgs>(args: SelectSubset<T, ClientNicknameCreateArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ClientNicknames.
+     * @param {ClientNicknameCreateManyArgs} args - Arguments to create many ClientNicknames.
+     * @example
+     * // Create many ClientNicknames
+     * const clientNickname = await prisma.clientNickname.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ClientNicknameCreateManyArgs>(args?: SelectSubset<T, ClientNicknameCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ClientNickname.
+     * @param {ClientNicknameDeleteArgs} args - Arguments to delete one ClientNickname.
+     * @example
+     * // Delete one ClientNickname
+     * const ClientNickname = await prisma.clientNickname.delete({
+     *   where: {
+     *     // ... filter to delete one ClientNickname
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ClientNicknameDeleteArgs>(args: SelectSubset<T, ClientNicknameDeleteArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ClientNickname.
+     * @param {ClientNicknameUpdateArgs} args - Arguments to update one ClientNickname.
+     * @example
+     * // Update one ClientNickname
+     * const clientNickname = await prisma.clientNickname.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ClientNicknameUpdateArgs>(args: SelectSubset<T, ClientNicknameUpdateArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ClientNicknames.
+     * @param {ClientNicknameDeleteManyArgs} args - Arguments to filter ClientNicknames to delete.
+     * @example
+     * // Delete a few ClientNicknames
+     * const { count } = await prisma.clientNickname.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ClientNicknameDeleteManyArgs>(args?: SelectSubset<T, ClientNicknameDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ClientNicknames.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ClientNicknames
+     * const clientNickname = await prisma.clientNickname.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ClientNicknameUpdateManyArgs>(args: SelectSubset<T, ClientNicknameUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ClientNickname.
+     * @param {ClientNicknameUpsertArgs} args - Arguments to update or create a ClientNickname.
+     * @example
+     * // Update or create a ClientNickname
+     * const clientNickname = await prisma.clientNickname.upsert({
+     *   create: {
+     *     // ... data to create a ClientNickname
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ClientNickname we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ClientNicknameUpsertArgs>(args: SelectSubset<T, ClientNicknameUpsertArgs<ExtArgs>>): Prisma__ClientNicknameClient<$Result.GetResult<Prisma.$ClientNicknamePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ClientNicknames.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameCountArgs} args - Arguments to filter ClientNicknames to count.
+     * @example
+     * // Count the number of ClientNicknames
+     * const count = await prisma.clientNickname.count({
+     *   where: {
+     *     // ... the filter for the ClientNicknames we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClientNicknameCountArgs>(
+      args?: Subset<T, ClientNicknameCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClientNicknameCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ClientNickname.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClientNicknameAggregateArgs>(args: Subset<T, ClientNicknameAggregateArgs>): Prisma.PrismaPromise<GetClientNicknameAggregateType<T>>
+
+    /**
+     * Group by ClientNickname.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClientNicknameGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClientNicknameGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClientNicknameGroupByArgs['orderBy'] }
+        : { orderBy?: ClientNicknameGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClientNicknameGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClientNicknameGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ClientNickname model
+   */
+  readonly fields: ClientNicknameFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ClientNickname.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ClientNicknameClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ClientNickname model
+   */ 
+  interface ClientNicknameFieldRefs {
+    readonly id: FieldRef<"ClientNickname", 'Int'>
+    readonly email: FieldRef<"ClientNickname", 'String'>
+    readonly nickname: FieldRef<"ClientNickname", 'String'>
+    readonly updatedAt: FieldRef<"ClientNickname", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ClientNickname findUnique
+   */
+  export type ClientNicknameFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * Filter, which ClientNickname to fetch.
+     */
+    where: ClientNicknameWhereUniqueInput
+  }
+
+  /**
+   * ClientNickname findUniqueOrThrow
+   */
+  export type ClientNicknameFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * Filter, which ClientNickname to fetch.
+     */
+    where: ClientNicknameWhereUniqueInput
+  }
+
+  /**
+   * ClientNickname findFirst
+   */
+  export type ClientNicknameFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * Filter, which ClientNickname to fetch.
+     */
+    where?: ClientNicknameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClientNicknames to fetch.
+     */
+    orderBy?: ClientNicknameOrderByWithRelationInput | ClientNicknameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClientNicknames.
+     */
+    cursor?: ClientNicknameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClientNicknames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClientNicknames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClientNicknames.
+     */
+    distinct?: ClientNicknameScalarFieldEnum | ClientNicknameScalarFieldEnum[]
+  }
+
+  /**
+   * ClientNickname findFirstOrThrow
+   */
+  export type ClientNicknameFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * Filter, which ClientNickname to fetch.
+     */
+    where?: ClientNicknameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClientNicknames to fetch.
+     */
+    orderBy?: ClientNicknameOrderByWithRelationInput | ClientNicknameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClientNicknames.
+     */
+    cursor?: ClientNicknameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClientNicknames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClientNicknames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClientNicknames.
+     */
+    distinct?: ClientNicknameScalarFieldEnum | ClientNicknameScalarFieldEnum[]
+  }
+
+  /**
+   * ClientNickname findMany
+   */
+  export type ClientNicknameFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * Filter, which ClientNicknames to fetch.
+     */
+    where?: ClientNicknameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClientNicknames to fetch.
+     */
+    orderBy?: ClientNicknameOrderByWithRelationInput | ClientNicknameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ClientNicknames.
+     */
+    cursor?: ClientNicknameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClientNicknames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClientNicknames.
+     */
+    skip?: number
+    distinct?: ClientNicknameScalarFieldEnum | ClientNicknameScalarFieldEnum[]
+  }
+
+  /**
+   * ClientNickname create
+   */
+  export type ClientNicknameCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * The data needed to create a ClientNickname.
+     */
+    data: XOR<ClientNicknameCreateInput, ClientNicknameUncheckedCreateInput>
+  }
+
+  /**
+   * ClientNickname createMany
+   */
+  export type ClientNicknameCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ClientNicknames.
+     */
+    data: ClientNicknameCreateManyInput | ClientNicknameCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ClientNickname update
+   */
+  export type ClientNicknameUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * The data needed to update a ClientNickname.
+     */
+    data: XOR<ClientNicknameUpdateInput, ClientNicknameUncheckedUpdateInput>
+    /**
+     * Choose, which ClientNickname to update.
+     */
+    where: ClientNicknameWhereUniqueInput
+  }
+
+  /**
+   * ClientNickname updateMany
+   */
+  export type ClientNicknameUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ClientNicknames.
+     */
+    data: XOR<ClientNicknameUpdateManyMutationInput, ClientNicknameUncheckedUpdateManyInput>
+    /**
+     * Filter which ClientNicknames to update
+     */
+    where?: ClientNicknameWhereInput
+  }
+
+  /**
+   * ClientNickname upsert
+   */
+  export type ClientNicknameUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * The filter to search for the ClientNickname to update in case it exists.
+     */
+    where: ClientNicknameWhereUniqueInput
+    /**
+     * In case the ClientNickname found by the `where` argument doesn't exist, create a new ClientNickname with this data.
+     */
+    create: XOR<ClientNicknameCreateInput, ClientNicknameUncheckedCreateInput>
+    /**
+     * In case the ClientNickname was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ClientNicknameUpdateInput, ClientNicknameUncheckedUpdateInput>
+  }
+
+  /**
+   * ClientNickname delete
+   */
+  export type ClientNicknameDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+    /**
+     * Filter which ClientNickname to delete.
+     */
+    where: ClientNicknameWhereUniqueInput
+  }
+
+  /**
+   * ClientNickname deleteMany
+   */
+  export type ClientNicknameDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ClientNicknames to delete
+     */
+    where?: ClientNicknameWhereInput
+  }
+
+  /**
+   * ClientNickname without action
+   */
+  export type ClientNicknameDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClientNickname
+     */
+    select?: ClientNicknameSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model SystemLog
    */
 
@@ -13795,6 +14732,16 @@ export namespace Prisma {
   export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
 
 
+  export const ClientNicknameScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    nickname: 'nickname',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ClientNicknameScalarFieldEnum = (typeof ClientNicknameScalarFieldEnum)[keyof typeof ClientNicknameScalarFieldEnum]
+
+
   export const SystemLogScalarFieldEnum: {
     id: 'id',
     level: 'level',
@@ -14755,6 +15702,55 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Setting"> | Date | string
   }
 
+  export type ClientNicknameWhereInput = {
+    AND?: ClientNicknameWhereInput | ClientNicknameWhereInput[]
+    OR?: ClientNicknameWhereInput[]
+    NOT?: ClientNicknameWhereInput | ClientNicknameWhereInput[]
+    id?: IntFilter<"ClientNickname"> | number
+    email?: StringFilter<"ClientNickname"> | string
+    nickname?: StringFilter<"ClientNickname"> | string
+    updatedAt?: DateTimeFilter<"ClientNickname"> | Date | string
+  }
+
+  export type ClientNicknameOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    nickname?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClientNicknameWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    email?: string
+    AND?: ClientNicknameWhereInput | ClientNicknameWhereInput[]
+    OR?: ClientNicknameWhereInput[]
+    NOT?: ClientNicknameWhereInput | ClientNicknameWhereInput[]
+    nickname?: StringFilter<"ClientNickname"> | string
+    updatedAt?: DateTimeFilter<"ClientNickname"> | Date | string
+  }, "id" | "email">
+
+  export type ClientNicknameOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    nickname?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ClientNicknameCountOrderByAggregateInput
+    _avg?: ClientNicknameAvgOrderByAggregateInput
+    _max?: ClientNicknameMaxOrderByAggregateInput
+    _min?: ClientNicknameMinOrderByAggregateInput
+    _sum?: ClientNicknameSumOrderByAggregateInput
+  }
+
+  export type ClientNicknameScalarWhereWithAggregatesInput = {
+    AND?: ClientNicknameScalarWhereWithAggregatesInput | ClientNicknameScalarWhereWithAggregatesInput[]
+    OR?: ClientNicknameScalarWhereWithAggregatesInput[]
+    NOT?: ClientNicknameScalarWhereWithAggregatesInput | ClientNicknameScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ClientNickname"> | number
+    email?: StringWithAggregatesFilter<"ClientNickname"> | string
+    nickname?: StringWithAggregatesFilter<"ClientNickname"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ClientNickname"> | Date | string
+  }
+
   export type SystemLogWhereInput = {
     AND?: SystemLogWhereInput | SystemLogWhereInput[]
     OR?: SystemLogWhereInput[]
@@ -15659,6 +16655,52 @@ export namespace Prisma {
   export type SettingUncheckedUpdateManyInput = {
     key?: StringFieldUpdateOperationsInput | string
     value?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClientNicknameCreateInput = {
+    email: string
+    nickname: string
+    updatedAt?: Date | string
+  }
+
+  export type ClientNicknameUncheckedCreateInput = {
+    id?: number
+    email: string
+    nickname: string
+    updatedAt?: Date | string
+  }
+
+  export type ClientNicknameUpdateInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClientNicknameUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClientNicknameCreateManyInput = {
+    id?: number
+    email: string
+    nickname: string
+    updatedAt?: Date | string
+  }
+
+  export type ClientNicknameUpdateManyMutationInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClientNicknameUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    nickname?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -16655,6 +17697,35 @@ export namespace Prisma {
     key?: SortOrder
     value?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ClientNicknameCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    nickname?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClientNicknameAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ClientNicknameMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    nickname?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClientNicknameMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    nickname?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClientNicknameSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type EnumLogLevelFilter<$PrismaModel = never> = {
@@ -20021,6 +21092,10 @@ export namespace Prisma {
      * @deprecated Use SettingDefaultArgs instead
      */
     export type SettingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SettingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ClientNicknameDefaultArgs instead
+     */
+    export type ClientNicknameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ClientNicknameDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SystemLogDefaultArgs instead
      */

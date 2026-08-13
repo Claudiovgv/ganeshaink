@@ -2,6 +2,7 @@ const router = require('express').Router();
 const prisma = require('../../config/database');
 const { authenticate, requirePermission } = require('../../middleware/auth');
 const { logEvent } = require('../../lib/logger');
+const { sendTestMail, getSmtpConfig } = require('../../lib/mailer');
 
 router.use(authenticate, requirePermission('manage_settings'));
 
@@ -51,6 +52,29 @@ router.put('/smtp', async (req, res) => {
     res.json({ message: 'SMTP settings saved' });
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/smtp/test', async (req, res) => {
+  try {
+    const { smtpHost, smtpPort, smtpUser, smtpPass, smtpFrom, testEmail } = req.body;
+    if (!testEmail) return res.status(400).json({ error: 'testEmail é obrigatório' });
+
+    const saved = await getSmtpConfig();
+    const config = {
+      host: smtpHost || saved.host,
+      port: Number(smtpPort || saved.port),
+      user: smtpUser || saved.user,
+      // Reuse the saved password when the form still shows the masked placeholder or was left empty.
+      pass: smtpPass && smtpPass !== '••••••••' ? smtpPass : saved.pass,
+      from: smtpFrom || saved.from,
+    };
+
+    await sendTestMail(config, testEmail);
+    await logEvent('info', 'settings', `Email de teste SMTP enviado para ${testEmail}`, { userId: req.user.id, ip: req.ip });
+    res.json({ message: `Email de teste enviado para ${testEmail}` });
+  } catch (err) {
+    res.status(422).json({ error: err.message || 'Falha ao enviar o email de teste' });
   }
 });
 

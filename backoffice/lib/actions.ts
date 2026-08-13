@@ -68,10 +68,17 @@ export async function updateAppointmentStatusAction(id: number, status: string) 
 }
 
 export async function createAppointmentAction(data: {
-  clientName: string; clientEmail: string; clientPhone: string;
-  employeeId: number; serviceId: number; date: string; time: string; notes?: string;
+  clientName: string; clientEmail?: string; clientPhone?: string;
+  employeeId: number; serviceId: number; date: string; time: string; notes?: string; force?: boolean;
 }) {
   return api.appointments.create(data);
+}
+
+export async function updateAppointmentClientAction(
+  id: number,
+  data: { clientName?: string; clientEmail?: string; clientPhone?: string },
+) {
+  return api.appointments.updateClient(id, data);
 }
 
 export async function scheduleConsultationAction(id: number, data: { employeeId: number; date: string; time: string }) {
@@ -80,6 +87,10 @@ export async function scheduleConsultationAction(id: number, data: { employeeId:
 
 export async function rejectConsultationAction(id: number) {
   await api.consultations.reject(id);
+}
+
+export async function updateClientNicknameAction(email: string, nickname: string) {
+  return api.clients.updateNickname(email, nickname);
 }
 
 export async function createEmployeeAction(data: object) {
@@ -165,12 +176,28 @@ export async function updateEmployeeScheduleAction(
   return api.adminSchedules.update(employeeId, schedule.filter((d) => d.isActive));
 }
 
-export async function createTimeBlockAction(data: object) {
+export async function previewTimeBlockAction(data: import('./types').TimeBlockInput) {
+  return api.timeBlocks.preview(data);
+}
+
+export async function createTimeBlockAction(data: import('./types').TimeBlockInput) {
   return api.timeBlocks.create(data);
 }
 
 export async function deleteTimeBlockAction(id: number) {
   await api.timeBlocks.remove(id);
+}
+
+export async function previewAdminBlockAction(data: import('./types').TimeBlockInput) {
+  return api.adminBlocks.preview(data);
+}
+
+export async function createAdminBlockAction(data: import('./types').TimeBlockInput) {
+  return api.adminBlocks.create(data);
+}
+
+export async function deleteAdminBlockAction(id: number) {
+  await api.adminBlocks.remove(id);
 }
 
 export async function updateProfileAction(data: object) {
@@ -191,6 +218,10 @@ export async function disable2FAAction(password: string) {
 
 export async function updateSmtpSettingsAction(data: import('./types').SmtpSettings) {
   return api.settings.updateSmtp(data);
+}
+
+export async function testSmtpSettingsAction(data: import('./types').SmtpSettings & { testEmail: string }) {
+  return api.settings.testSmtp(data);
 }
 
 export async function fetchLogsAction(params: { level?: string; page?: number }) {

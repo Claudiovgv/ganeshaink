@@ -78,6 +78,17 @@ function appointmentConfirmedEmail(appointment) {
   };
 }
 
+function appointmentReceivedEmail(appointment) {
+  return {
+    subject: 'Marcação recebida — Ganesha Ink',
+    html: layout('Recebemos o teu pedido de marcação', `
+      ${paragraph(`Olá <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong>,`)}
+      ${paragraph('Recebemos o teu pedido de marcação. Fica pendente de confirmação pelo artista — assim que for confirmada, receberás um novo email.')}
+      ${appointmentDetails(appointment)}
+    `),
+  };
+}
+
 function appointmentStatusChangedEmail(appointment) {
   const STATUS_LABEL = { confirmed: 'confirmada', cancelled: 'cancelada', completed: 'concluída', pending: 'pendente' };
   const label = STATUS_LABEL[appointment.status] || appointment.status;
@@ -102,4 +113,4 @@ function consultationReceivedEmail(consultation) {
   };
 }
 
-module.exports = { appointmentConfirmedEmail, appointmentStatusChangedEmail, consultationReceivedEmail };
+module.exports = { appointmentConfirmedEmail, appointmentReceivedEmail, appointmentStatusChangedEmail, consultationReceivedEmail };

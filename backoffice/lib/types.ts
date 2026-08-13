@@ -47,7 +47,7 @@ export interface Service {
   sortOrder?: number;
 }
 
-export type AppointmentStatus = 'confirmed' | 'cancelled' | 'completed';
+export type AppointmentStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
 
 export interface Appointment {
   id: number;
@@ -62,6 +62,15 @@ export interface Appointment {
   service: Service;
   cancelToken: string;
 }
+
+export interface AppointmentConflict {
+  clientName: string;
+  startDatetime: string;
+  endDatetime: string;
+  service: string;
+}
+
+export type CreateAppointmentResult = { ok: true; appointment: Appointment } | { ok: false; conflict: AppointmentConflict };
 
 export type ConsultationStatus = 'pending' | 'scheduled' | 'rejected';
 
@@ -101,12 +110,37 @@ export interface EmployeeSchedules {
   workSchedules: Omit<WeeklyScheduleDay, 'isActive'>[];
 }
 
+export type TimeBlockType = 'vacation' | 'break' | 'custom';
+
 export interface TimeBlock {
   id: number;
-  type: 'holiday' | 'unavailable';
+  employeeId: number;
+  employee?: { id: number; name: string };
+  type: TimeBlockType;
   reason: string | null;
   startDatetime: string;
   endDatetime: string;
+}
+
+export interface TimeBlockInput {
+  employeeId?: number | 'all'; // só usado nas rotas de admin
+  type: TimeBlockType;
+  reason?: string;
+  startDate: string; // "yyyy-MM-dd"
+  startTime?: string; // "HH:mm" — não usado quando type === 'vacation'
+  endDate: string;
+  endTime?: string;
+  cancelAppointmentIds?: number[];
+}
+
+export interface TimeBlockConflict {
+  id: number;
+  clientName: string;
+  clientEmail: string;
+  startDatetime: string;
+  endDatetime: string;
+  service: { name: string };
+  employee: { id: number; name: string };
 }
 
 export interface SmtpSettings {
@@ -136,6 +170,7 @@ export interface Client {
   name: string;
   email: string;
   phone: string;
+  nickname: string | null;
   appointmentCount: number;
 }
 

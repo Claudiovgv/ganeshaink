@@ -138,6 +138,7 @@ const ADMIN_NAV_ALL = [
     items: [
       { href: '/funcionarios', label: 'Funcionários', perm: 'manage_employees' as AdminPermissionKey | null },
       { href: '/horarios', label: 'Horários', perm: 'manage_employees' as AdminPermissionKey | null },
+      { href: '/bloqueios-equipa', label: 'Bloqueios', perm: 'manage_employees' as AdminPermissionKey | null },
       { href: '/servicos', label: 'Serviços', perm: 'manage_services' as AdminPermissionKey | null },
       { href: '/categorias', label: 'Categorias', perm: 'manage_services' as AdminPermissionKey | null },
       { href: '/clientes', label: 'Clientes', perm: 'manage_clients' as AdminPermissionKey | null },
@@ -202,6 +203,7 @@ const SUPERADMIN_NAV = [
     items: [
       { href: '/funcionarios', label: 'Funcionários' },
       { href: '/horarios', label: 'Horários' },
+      { href: '/bloqueios-equipa', label: 'Bloqueios' },
       { href: '/servicos', label: 'Serviços' },
       { href: '/categorias', label: 'Categorias' },
       { href: '/clientes', label: 'Clientes' },

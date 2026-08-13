@@ -1,8 +1,9 @@
 'use client';
 import { useState, useTransition, useEffect } from 'react';
-import type { Appointment, Client, Employee, Service } from '@/lib/types';
+import type { Appointment, AppointmentConflict, Client, Employee, Service } from '@/lib/types';
 import Button from './Button';
 import { createAppointmentAction } from '@/lib/actions';
+import { formatLisbon } from '@/lib/timezone';
 
 interface Props {
   employees: Employee[];
@@ -25,6 +26,7 @@ const TIME_SLOTS = [
 export default function NovaMarcacaoModal({ employees, services, clients, onClose, onCreated, prefill }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
+  const [conflict, setConflict] = useState<AppointmentConflict | null>(null);
 
   // Cliente
   const [clientMode, setClientMode] = useState<ClientMode>(prefill ? 'new' : 'existing');
@@ -60,32 +62,44 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
   const clientEmail = clientMode === 'existing' ? selectedClient?.email ?? '' : newClient.email;
   const clientPhone = clientMode === 'existing' ? selectedClient?.phone ?? '' : newClient.phone;
 
+  function submit(force: boolean) {
+    startTransition(async () => {
+      try {
+        const result = await createAppointmentAction({
+          clientName,
+          clientEmail: clientEmail || undefined,
+          clientPhone: clientPhone || undefined,
+          employeeId: Number(employeeId),
+          serviceId: Number(serviceId),
+          date, time,
+          notes: notes || undefined,
+          force,
+        });
+        if (!result.ok) {
+          setConflict(result.conflict);
+          return;
+        }
+        onCreated(result.appointment);
+        onClose();
+      } catch (err) {
+        setError((err as Error).message || 'Erro ao criar marcação. Tenta novamente.');
+      }
+    });
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clientName || !clientEmail || !clientPhone) {
-      setError('Dados do cliente em falta.');
+    setError('');
+    setConflict(null);
+    if (!clientName) {
+      setError('O nome do cliente é obrigatório.');
       return;
     }
     if (!employeeId || !serviceId || !date || !time) {
       setError('Preenche todos os campos da marcação.');
       return;
     }
-
-    startTransition(async () => {
-      try {
-        const created = await createAppointmentAction({
-          clientName, clientEmail, clientPhone,
-          employeeId: Number(employeeId),
-          serviceId: Number(serviceId),
-          date, time,
-          notes: notes || undefined,
-        }) as Appointment;
-        onCreated(created);
-        onClose();
-      } catch (err) {
-        setError((err as Error).message || 'Erro ao criar marcação. Tenta novamente.');
-      }
-    });
+    submit(false);
   }
 
   // data mínima = hoje
@@ -173,16 +187,14 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
                 />
                 <input
                   type="email"
-                  required
-                  placeholder="Email *"
+                  placeholder="Email (opcional — dá para adicionar depois)"
                   value={newClient.email}
                   onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
                   className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none"
                 />
                 <input
                   type="tel"
-                  required
-                  placeholder="Telefone *"
+                  placeholder="Telefone (opcional — dá para adicionar depois)"
                   value={newClient.phone}
                   onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
                   className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none"
@@ -201,8 +213,8 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
               className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
             >
               <option value="">Selecionar...</option>
-              {employees.filter((e) => e.isActive).map((e) => (
-                <option key={e.id} value={e.id}>{e.name}</option>
+              {employees.map((e) => (
+                <option key={e.id} value={e.id}>{e.name}{!e.isActive ? ' (inativo)' : ''}</option>
               ))}
             </select>
           </div>
@@ -268,6 +280,25 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
           </div>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
+
+          {conflict && (
+            <div className="bg-amber-500/10 border border-amber-500/40 rounded px-3 py-2.5 text-sm space-y-2">
+              <p className="text-amber-400 font-medium">
+                Este artista já tem uma marcação nesta hora:
+              </p>
+              <p className="text-text-primary">
+                {conflict.clientName} — {conflict.service}
+                <br />
+                <span className="text-text-secondary text-xs">
+                  {formatLisbon(conflict.startDatetime, 'HH:mm')}–{formatLisbon(conflict.endDatetime, 'HH:mm')}
+                </span>
+              </p>
+              <p className="text-text-secondary text-xs">Podes marcar mesmo assim (ex.: artista mais rápido nesse serviço, ou duas cadeiras).</p>
+              <Button type="button" size="sm" onClick={() => submit(true)} disabled={isPending} loading={isPending}>
+                Marcar mesmo assim
+              </Button>
+            </div>
+          )}
 
           <div className="flex gap-3 pt-1">
             <Button type="button" variant="ghost" onClick={onClose} className="flex-1">

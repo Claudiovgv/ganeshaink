@@ -65,6 +65,37 @@ describe('POST /v1/admin/appointments', () => {
     expect(res.body.clientName).toBe('Manual Client');
     expect(res.body.status).toBe('confirmed');
   });
+
+  it('creates with a placeholder contact when email/phone are omitted', async () => {
+    const res = await request(app)
+      .post('/v1/admin/appointments')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientName: 'No Contact Yet', employeeId: employee.id, serviceId: service.id, date: '2026-05-05', time: '16:00' });
+    expect(res.status).toBe(201);
+    expect(res.body.clientEmail).toMatch(/^sem-contacto\+/);
+    expect(res.body.clientPhone).toBe('Sem contacto');
+  });
+
+  it('warns (409, with conflict details) instead of hard-blocking on overlap', async () => {
+    const first = await request(app)
+      .post('/v1/admin/appointments')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientName: 'First', clientEmail: 'first@test.com', clientPhone: '911111111', employeeId: employee.id, serviceId: service.id, date: '2026-05-07', time: '10:00' });
+    expect(first.status).toBe(201);
+
+    const conflicting = await request(app)
+      .post('/v1/admin/appointments')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientName: 'Second', clientEmail: 'second@test.com', clientPhone: '922222222', employeeId: employee.id, serviceId: service.id, date: '2026-05-07', time: '10:15' });
+    expect(conflicting.status).toBe(409);
+    expect(conflicting.body.conflict.clientName).toBe('First');
+
+    const forced = await request(app)
+      .post('/v1/admin/appointments')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientName: 'Second', clientEmail: 'second@test.com', clientPhone: '922222222', employeeId: employee.id, serviceId: service.id, date: '2026-05-07', time: '10:15', force: true });
+    expect(forced.status).toBe(201);
+  });
 });
 
 describe('PUT /v1/admin/appointments/:id', () => {
@@ -79,6 +110,17 @@ describe('PUT /v1/admin/appointments/:id', () => {
     const res = await request(app).put(`/v1/admin/appointments/${apt.id}`).set('Authorization', `Bearer ${adminToken}`).send({ status: 'cancelled' });
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('cancelled');
+  });
+
+  it('admin can update the client contact details', async () => {
+    const res = await request(app)
+      .put(`/v1/admin/appointments/${apt.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientName: 'Corrected Name', clientEmail: 'real@test.com', clientPhone: '933333333' });
+    expect(res.status).toBe(200);
+    expect(res.body.clientName).toBe('Corrected Name');
+    expect(res.body.clientEmail).toBe('real@test.com');
+    expect(res.body.clientPhone).toBe('933333333');
   });
 });
 
