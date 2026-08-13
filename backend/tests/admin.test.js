@@ -122,6 +122,58 @@ describe('PUT /v1/admin/appointments/:id', () => {
     expect(res.body.clientEmail).toBe('real@test.com');
     expect(res.body.clientPhone).toBe('933333333');
   });
+
+  it('admin can set a custom price, overriding the service catalog price', async () => {
+    const res = await request(app)
+      .put(`/v1/admin/appointments/${apt.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ price: '7.50' });
+    expect(res.status).toBe(200);
+    expect(Number(res.body.price)).toBe(7.5);
+  });
+
+  it('admin can clear the custom price back to the service default', async () => {
+    const res = await request(app)
+      .put(`/v1/admin/appointments/${apt.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ price: '' });
+    expect(res.status).toBe(200);
+    expect(res.body.price).toBeNull();
+  });
+});
+
+describe('Appointment price override affects stats revenue', () => {
+  it('uses the appointment price instead of the service price when set', async () => {
+    // Serviço próprio com preço facilmente identificável, para isolar da
+    // receita de outros testes que corram no mesmo mês.
+    const category = await ensureCategory('barbershop', 'Barbearia');
+    const priceService = await prisma.service.create({
+      data: { name: 'Price Override Svc', categoryId: category.id, durationMin: 30, price: 10 },
+    });
+
+    const now = new Date();
+    const apt = await prisma.appointment.create({
+      data: {
+        clientName: 'Price Override Test', clientEmail: 'price-ov@test.com', clientPhone: '944444444',
+        employeeId: employee.id, serviceId: priceService.id, price: '99.99',
+        startDatetime: now, endDatetime: new Date(now.getTime() + 30 * 60000),
+        status: 'completed', cancelToken: 'price-ov-token',
+      },
+    });
+
+    const res = await request(app)
+      .get('/v1/admin/stats')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .query({ period: 'month', offset: '0' });
+
+    expect(res.status).toBe(200);
+    const entry = res.body.byService.find((s) => s.serviceId === priceService.id);
+    expect(entry).toBeDefined();
+    expect(entry.revenue).toBe(99.99); // não 10 — confirma que usou o preço da marcação, não o do catálogo
+
+    await prisma.appointment.delete({ where: { id: apt.id } });
+    await prisma.service.delete({ where: { id: priceService.id } });
+  });
 });
 
 describe('GET /v1/admin/consultations', () => {

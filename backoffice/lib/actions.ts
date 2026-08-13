@@ -76,7 +76,7 @@ export async function createAppointmentAction(data: {
 
 export async function updateAppointmentClientAction(
   id: number,
-  data: { clientName?: string; clientEmail?: string; clientPhone?: string },
+  data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null },
 ) {
   return api.appointments.updateClient(id, data);
 }

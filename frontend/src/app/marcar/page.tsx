@@ -6,7 +6,12 @@ export const metadata: Metadata = {
   description: 'Marca o teu serviço online — barbearia, piercing ou unhas em poucos passos.',
 };
 
-export default function MarcarPage() {
+interface Props {
+  searchParams: { category?: string; service?: string };
+}
+
+export default function MarcarPage({ searchParams }: Props) {
+  const serviceId = searchParams.service ? Number(searchParams.service) : undefined;
   return (
     <div className="pt-20 min-h-screen">
       <section className="bg-bg-section py-12 px-4 text-center">
@@ -15,7 +20,7 @@ export default function MarcarPage() {
         </h1>
         <p className="text-text-secondary">Escolhe o serviço, artista, data e hora.</p>
       </section>
-      <BookingWizard />
+      <BookingWizard initialCategory={searchParams.category} initialServiceId={serviceId} />
     </div>
   );
 }

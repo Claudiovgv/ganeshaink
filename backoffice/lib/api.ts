@@ -74,7 +74,7 @@ export const api = {
     },
     updateStatus: (id: number, status: string) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }),
-    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string }) =>
+    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null }) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     myList: (params?: { date?: string }) => {
       const q = new URLSearchParams(

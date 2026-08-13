@@ -8990,12 +8990,14 @@ export namespace Prisma {
     id: number | null
     employeeId: number | null
     serviceId: number | null
+    price: Decimal | null
   }
 
   export type AppointmentSumAggregateOutputType = {
     id: number | null
     employeeId: number | null
     serviceId: number | null
+    price: Decimal | null
   }
 
   export type AppointmentMinAggregateOutputType = {
@@ -9008,6 +9010,7 @@ export namespace Prisma {
     startDatetime: Date | null
     endDatetime: Date | null
     status: $Enums.AppointmentStatus | null
+    price: Decimal | null
     notes: string | null
     cancelToken: string | null
     createdAt: Date | null
@@ -9023,6 +9026,7 @@ export namespace Prisma {
     startDatetime: Date | null
     endDatetime: Date | null
     status: $Enums.AppointmentStatus | null
+    price: Decimal | null
     notes: string | null
     cancelToken: string | null
     createdAt: Date | null
@@ -9038,6 +9042,7 @@ export namespace Prisma {
     startDatetime: number
     endDatetime: number
     status: number
+    price: number
     notes: number
     cancelToken: number
     createdAt: number
@@ -9049,12 +9054,14 @@ export namespace Prisma {
     id?: true
     employeeId?: true
     serviceId?: true
+    price?: true
   }
 
   export type AppointmentSumAggregateInputType = {
     id?: true
     employeeId?: true
     serviceId?: true
+    price?: true
   }
 
   export type AppointmentMinAggregateInputType = {
@@ -9067,6 +9074,7 @@ export namespace Prisma {
     startDatetime?: true
     endDatetime?: true
     status?: true
+    price?: true
     notes?: true
     cancelToken?: true
     createdAt?: true
@@ -9082,6 +9090,7 @@ export namespace Prisma {
     startDatetime?: true
     endDatetime?: true
     status?: true
+    price?: true
     notes?: true
     cancelToken?: true
     createdAt?: true
@@ -9097,6 +9106,7 @@ export namespace Prisma {
     startDatetime?: true
     endDatetime?: true
     status?: true
+    price?: true
     notes?: true
     cancelToken?: true
     createdAt?: true
@@ -9199,6 +9209,7 @@ export namespace Prisma {
     startDatetime: Date
     endDatetime: Date
     status: $Enums.AppointmentStatus
+    price: Decimal | null
     notes: string | null
     cancelToken: string | null
     createdAt: Date
@@ -9233,6 +9244,7 @@ export namespace Prisma {
     startDatetime?: boolean
     endDatetime?: boolean
     status?: boolean
+    price?: boolean
     notes?: boolean
     cancelToken?: boolean
     createdAt?: boolean
@@ -9252,6 +9264,7 @@ export namespace Prisma {
     startDatetime?: boolean
     endDatetime?: boolean
     status?: boolean
+    price?: boolean
     notes?: boolean
     cancelToken?: boolean
     createdAt?: boolean
@@ -9280,6 +9293,7 @@ export namespace Prisma {
       startDatetime: Date
       endDatetime: Date
       status: $Enums.AppointmentStatus
+      price: Prisma.Decimal | null
       notes: string | null
       cancelToken: string | null
       createdAt: Date
@@ -9664,6 +9678,7 @@ export namespace Prisma {
     readonly startDatetime: FieldRef<"Appointment", 'DateTime'>
     readonly endDatetime: FieldRef<"Appointment", 'DateTime'>
     readonly status: FieldRef<"Appointment", 'AppointmentStatus'>
+    readonly price: FieldRef<"Appointment", 'Decimal'>
     readonly notes: FieldRef<"Appointment", 'String'>
     readonly cancelToken: FieldRef<"Appointment", 'String'>
     readonly createdAt: FieldRef<"Appointment", 'DateTime'>
@@ -14681,6 +14696,7 @@ export namespace Prisma {
     startDatetime: 'startDatetime',
     endDatetime: 'endDatetime',
     status: 'status',
+    price: 'price',
     notes: 'notes',
     cancelToken: 'cancelToken',
     createdAt: 'createdAt'
@@ -15395,6 +15411,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFilter<"Appointment"> | Date | string
     endDatetime?: DateTimeFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+    price?: DecimalNullableFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     cancelToken?: StringNullableFilter<"Appointment"> | string | null
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
@@ -15413,6 +15430,7 @@ export namespace Prisma {
     startDatetime?: SortOrder
     endDatetime?: SortOrder
     status?: SortOrder
+    price?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     cancelToken?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -15435,6 +15453,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFilter<"Appointment"> | Date | string
     endDatetime?: DateTimeFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+    price?: DecimalNullableFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
     employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
@@ -15452,6 +15471,7 @@ export namespace Prisma {
     startDatetime?: SortOrder
     endDatetime?: SortOrder
     status?: SortOrder
+    price?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     cancelToken?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -15475,6 +15495,7 @@ export namespace Prisma {
     startDatetime?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
     endDatetime?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusWithAggregatesFilter<"Appointment"> | $Enums.AppointmentStatus
+    price?: DecimalNullableWithAggregatesFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     cancelToken?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
@@ -16333,6 +16354,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -16351,6 +16373,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -16364,6 +16387,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16382,6 +16406,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16398,6 +16423,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -16410,6 +16436,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16425,6 +16452,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17409,6 +17437,17 @@ export namespace Prisma {
     not?: NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type ConsultationRequestNullableRelationFilter = {
     is?: ConsultationRequestWhereInput | null
     isNot?: ConsultationRequestWhereInput | null
@@ -17424,6 +17463,7 @@ export namespace Prisma {
     startDatetime?: SortOrder
     endDatetime?: SortOrder
     status?: SortOrder
+    price?: SortOrder
     notes?: SortOrder
     cancelToken?: SortOrder
     createdAt?: SortOrder
@@ -17433,6 +17473,7 @@ export namespace Prisma {
     id?: SortOrder
     employeeId?: SortOrder
     serviceId?: SortOrder
+    price?: SortOrder
   }
 
   export type AppointmentMaxOrderByAggregateInput = {
@@ -17445,6 +17486,7 @@ export namespace Prisma {
     startDatetime?: SortOrder
     endDatetime?: SortOrder
     status?: SortOrder
+    price?: SortOrder
     notes?: SortOrder
     cancelToken?: SortOrder
     createdAt?: SortOrder
@@ -17460,6 +17502,7 @@ export namespace Prisma {
     startDatetime?: SortOrder
     endDatetime?: SortOrder
     status?: SortOrder
+    price?: SortOrder
     notes?: SortOrder
     cancelToken?: SortOrder
     createdAt?: SortOrder
@@ -17469,6 +17512,7 @@ export namespace Prisma {
     id?: SortOrder
     employeeId?: SortOrder
     serviceId?: SortOrder
+    price?: SortOrder
   }
 
   export type EnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -17479,6 +17523,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -18456,6 +18516,14 @@ export namespace Prisma {
     set?: $Enums.AppointmentStatus
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput = {
     create?: XOR<EmployeeCreateWithoutAppointmentsInput, EmployeeUncheckedCreateWithoutAppointmentsInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutAppointmentsInput
@@ -18808,6 +18876,17 @@ export namespace Prisma {
     not?: NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AppointmentStatus | EnumAppointmentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.AppointmentStatus[]
@@ -18816,6 +18895,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumConsultationStatusFilter<$PrismaModel = never> = {
@@ -19148,6 +19243,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -19164,6 +19260,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -19360,6 +19457,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFilter<"Appointment"> | Date | string
     endDatetime?: DateTimeFilter<"Appointment"> | Date | string
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
+    price?: DecimalNullableFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     cancelToken?: StringNullableFilter<"Appointment"> | string | null
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
@@ -19451,6 +19549,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -19467,6 +19566,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -20359,6 +20459,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -20376,6 +20477,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -20482,6 +20584,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20499,6 +20602,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20648,6 +20752,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -20737,6 +20842,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20753,6 +20859,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20768,6 +20875,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20825,6 +20933,7 @@ export namespace Prisma {
     startDatetime: Date | string
     endDatetime: Date | string
     status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
     createdAt?: Date | string
@@ -20865,6 +20974,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20881,6 +20991,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20896,6 +21007,7 @@ export namespace Prisma {
     startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

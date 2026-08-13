@@ -57,6 +57,7 @@ export interface Appointment {
   startDatetime: string;
   endDatetime: string;
   status: AppointmentStatus;
+  price: number | null;
   notes: string | null;
   employee: { id: number; name: string };
   service: Service;

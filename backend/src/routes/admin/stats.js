@@ -48,13 +48,17 @@ router.get('/', async (req, res) => {
       include: { service: { select: { id: true, name: true, price: true, category: { include: { parent: true } } } } },
     });
 
-    const totalRevenue = appointments.reduce((sum, a) => sum + Number(a.service.price), 0);
+    // Uma marcação pode ter um valor próprio (desconto, ajuste manual) — quando
+    // existe, prevalece sobre o preço de catálogo do serviço.
+    const priceOf = (a) => Number(a.price ?? a.service.price);
+
+    const totalRevenue = appointments.reduce((sum, a) => sum + priceOf(a), 0);
     const totalAppointments = appointments.length;
 
     const byCategoryMap = {};
     const byServiceMap = {};
     for (const a of appointments) {
-      const price = Number(a.service.price);
+      const price = priceOf(a);
 
       const cat = a.service.category.slug;
       if (!byCategoryMap[cat]) byCategoryMap[cat] = { category: a.service.category, revenue: 0, count: 0 };

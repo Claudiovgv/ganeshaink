@@ -64,7 +64,7 @@ function placeholderContact() {
 
 router.post('/', async (req, res) => {
   try {
-    const { clientName, clientEmail, clientPhone, employeeId, serviceId, date, time, notes, force } = req.body;
+    const { clientName, clientEmail, clientPhone, employeeId, serviceId, date, time, notes, force, price } = req.body;
     if (!clientName || !employeeId || !serviceId || !date || !time) {
       return res.status(400).json({ error: 'clientName, employeeId, serviceId, date e time são obrigatórios' });
     }
@@ -101,6 +101,7 @@ router.post('/', async (req, res) => {
         startDatetime, endDatetime,
         status: 'confirmed',
         notes: notes || null,
+        price: price !== undefined && price !== '' ? price : null,
         cancelToken: uuidv4(),
       },
       include: { employee: { select: { id: true, name: true } }, service: true },
@@ -114,7 +115,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { status, notes, date, time, clientName, clientEmail, clientPhone, force } = req.body;
+    const { status, notes, date, time, clientName, clientEmail, clientPhone, force, price } = req.body;
 
     const existing = await prisma.appointment.findUnique({ where: { id }, include: { service: true } });
     if (!existing) return res.status(404).json({ error: 'Appointment not found' });
@@ -125,6 +126,8 @@ router.put('/:id', async (req, res) => {
     if (clientName) updateData.clientName = clientName;
     if (clientEmail) updateData.clientEmail = clientEmail;
     if (clientPhone) updateData.clientPhone = clientPhone;
+    // price: string vazia ou null limpa o valor específico (volta a usar o preço do serviço).
+    if (price !== undefined) updateData.price = price === '' || price === null ? null : price;
     if (date && time) {
       updateData.startDatetime = lisboaTimeToUTC(date, time);
       updateData.endDatetime = addMinutes(updateData.startDatetime, existing.service.durationMin);

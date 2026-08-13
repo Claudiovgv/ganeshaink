@@ -1,12 +1,12 @@
 'use client';
 
-import { useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Step1Category from './Step1Category';
 import Step2Service from './Step2Service';
 import Step3Employee from './Step3Employee';
 import Step4DateTime from './Step4DateTime';
 import Step5PersonalData from './Step5PersonalData';
-import { Service, Employee, Appointment } from '@/lib/api';
+import { api, Service, Employee, Appointment } from '@/lib/api';
 
 // Categorias são geríveis no backoffice, por isso deixaram de ser um valor
 // fixo — este é sempre o slug (ex.: "barbershop"), vindo de GET /categories.
@@ -28,6 +28,7 @@ type Action =
   | { type: 'SET_EMPLOYEE'; payload: Employee }
   | { type: 'SET_DATETIME'; payload: { date: string; time: string } }
   | { type: 'SET_APPOINTMENT'; payload: Appointment }
+  | { type: 'HYDRATE'; payload: { category: Category; service: Service } }
   | { type: 'BACK' }
   | { type: 'RESET' };
 
@@ -53,6 +54,10 @@ function reducer(state: BookingState, action: Action): BookingState {
       return { ...state, date: action.payload.date, time: action.payload.time, step: 5 };
     case 'SET_APPOINTMENT':
       return { ...state, appointment: action.payload, step: 'success' };
+    // Categoria/serviço já escolhidos antes de chegar ao wizard (ex.: a
+    // partir da grelha de serviços) — avança direto para a escolha de artista.
+    case 'HYDRATE':
+      return { ...state, category: action.payload.category, service: action.payload.service, step: 3 };
     case 'BACK':
       if (state.step === 2) return { ...state, step: 1 };
       if (state.step === 3) return { ...state, step: 2 };
@@ -68,8 +73,34 @@ function reducer(state: BookingState, action: Action): BookingState {
 
 const STEPS = ['Categoria', 'Serviço', 'Artista', 'Data & Hora', 'Dados'];
 
-export default function BookingWizard() {
+interface Props {
+  // Vêm de query params quando o utilizador já escolheu categoria/serviço
+  // fora do wizard (ex.: grelha de serviços) e clica em "Marcar" — evita
+  // fazê-lo recomeçar do Passo 1.
+  initialCategory?: string;
+  initialServiceId?: number;
+}
+
+export default function BookingWizard({ initialCategory, initialServiceId }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [hydrating, setHydrating] = useState(!!(initialCategory && initialServiceId));
+
+  useEffect(() => {
+    if (!initialCategory || !initialServiceId) return;
+    let cancelled = false;
+    api.services.list(initialCategory)
+      .then((services) => {
+        if (cancelled) return;
+        const service = services.find((s) => s.id === initialServiceId);
+        if (service) dispatch({ type: 'HYDRATE', payload: { category: initialCategory, service } });
+      })
+      .finally(() => { if (!cancelled) setHydrating(false); });
+    return () => { cancelled = true; };
+  }, [initialCategory, initialServiceId]);
+
+  if (hydrating) {
+    return <div className="max-w-2xl mx-auto px-4 py-24 text-center text-text-secondary">A carregar...</div>;
+  }
 
   if (state.step === 'success' && state.appointment) {
     return (

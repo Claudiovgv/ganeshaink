@@ -156,6 +156,7 @@ model Appointment {
   startDatetime DateTime             @map("start_datetime")
   endDatetime   DateTime             @map("end_datetime")
   status        AppointmentStatus    @default(confirmed)
+  price         Decimal?             @db.Decimal(8, 2)
   notes         String?              @db.Text
   cancelToken   String?              @unique @map("cancel_token")
   createdAt     DateTime             @default(now()) @map("created_at")

@@ -6,6 +6,7 @@ import DataTable from '@/components/DataTable';
 import Badge from '@/components/Badge';
 import Button from '@/components/Button';
 import NovaMarcacaoModal from '@/components/NovasMarcacaoModal';
+import EditAppointmentModal from '@/components/EditAppointmentModal';
 import { updateAppointmentStatusAction } from '@/lib/actions';
 import { formatLisbon } from '@/lib/timezone';
 
@@ -32,6 +33,7 @@ const STATUS_OPTIONS: { value: Appointment['status'] | ''; label: string }[] = [
 export default function AppointmentsClient({ initial, employees, services, clients }: Props) {
   const [appointments, setAppointments] = useState(initial);
   const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState<Appointment | null>(null);
   const [search, setSearch] = useState('');
   const [employeeFilter, setEmployeeFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -68,6 +70,10 @@ export default function AppointmentsClient({ initial, employees, services, clien
 
   function handleCreated(appt: Appointment) {
     setAppointments((prev) => [...prev, appt].sort((a, b) => a.startDatetime.localeCompare(b.startDatetime)));
+  }
+
+  function handleUpdated(appt: Appointment) {
+    setAppointments((prev) => prev.map((a) => (a.id === appt.id ? appt : a)));
   }
 
   const filtered = useMemo(() => {
@@ -136,16 +142,17 @@ export default function AppointmentsClient({ initial, employees, services, clien
         <div className="flex items-center gap-2 flex-wrap">
           {a.status === 'pending' && (
             <>
-              <Button size="sm" variant="ghost" onClick={() => handleStatus(a.id, 'confirmed')} disabled={isPending}>Confirmar</Button>
-              <Button size="sm" variant="danger" onClick={() => handleStatus(a.id, 'cancelled')} disabled={isPending}>Cancelar</Button>
+              <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleStatus(a.id, 'confirmed'); }} disabled={isPending}>Confirmar</Button>
+              <Button size="sm" variant="danger" onClick={(e) => { e.stopPropagation(); handleStatus(a.id, 'cancelled'); }} disabled={isPending}>Cancelar</Button>
             </>
           )}
           {a.status === 'confirmed' && (
             <>
-              <Button size="sm" variant="ghost" onClick={() => handleStatus(a.id, 'completed')} disabled={isPending}>Concluir</Button>
-              <Button size="sm" variant="danger" onClick={() => handleStatus(a.id, 'cancelled')} disabled={isPending}>Cancelar</Button>
+              <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleStatus(a.id, 'completed'); }} disabled={isPending}>Concluir</Button>
+              <Button size="sm" variant="danger" onClick={(e) => { e.stopPropagation(); handleStatus(a.id, 'cancelled'); }} disabled={isPending}>Cancelar</Button>
             </>
           )}
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setEditing(a); }}>Editar</Button>
         </div>
       ),
     },
@@ -219,6 +226,14 @@ export default function AppointmentsClient({ initial, employees, services, clien
           prefill={prefill.clientName ? prefill : undefined}
           onClose={() => setShowModal(false)}
           onCreated={handleCreated}
+        />
+      )}
+
+      {editing && (
+        <EditAppointmentModal
+          appointment={editing}
+          onClose={() => setEditing(null)}
+          onUpdated={handleUpdated}
         />
       )}
     </>

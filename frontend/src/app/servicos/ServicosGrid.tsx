@@ -29,7 +29,7 @@ function ServiceCard({ service }: { service: Service }) {
           </Link>
         ) : (
           <Link
-            href="/marcar"
+            href={`/marcar?category=${service.category.slug}&service=${service.id}`}
             className="text-xs bg-gold text-bg-primary px-3 py-1 rounded hover:bg-gold-light transition-colors font-semibold"
           >
             Marcar
