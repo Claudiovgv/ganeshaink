@@ -142,6 +142,39 @@ describe('PUT /v1/admin/appointments/:id', () => {
   });
 });
 
+describe('DELETE /v1/admin/appointments/:id', () => {
+  it('admin can delete an appointment', async () => {
+    const apt = await prisma.appointment.create({
+      data: { clientName: 'Delete Test', clientEmail: 'del@test.com', clientPhone: '977777777', employeeId: employee.id, serviceId: service.id, startDatetime: new Date('2026-05-09T09:00:00Z'), endDatetime: new Date('2026-05-09T09:30:00Z'), status: 'confirmed', cancelToken: 'del-token-123' },
+    });
+    const res = await request(app).delete(`/v1/admin/appointments/${apt.id}`).set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    const stillThere = await prisma.appointment.findUnique({ where: { id: apt.id } });
+    expect(stillThere).toBeNull();
+  });
+
+  it('unlinks a scheduled consultation instead of failing on the foreign key', async () => {
+    const apt = await prisma.appointment.create({
+      data: { clientName: 'Delete With Consultation', clientEmail: 'delcons@test.com', clientPhone: '988888888', employeeId: employee.id, serviceId: service.id, startDatetime: new Date('2026-05-10T09:00:00Z'), endDatetime: new Date('2026-05-10T09:30:00Z'), status: 'confirmed', cancelToken: 'del-token-456' },
+    });
+    const consultation = await prisma.consultationRequest.create({
+      data: { clientName: 'Delete With Consultation', clientEmail: 'delcons@test.com', clientPhone: '988888888', serviceId: service.id, description: 'test', status: 'scheduled', scheduledAppointmentId: apt.id },
+    });
+
+    const res = await request(app).delete(`/v1/admin/appointments/${apt.id}`).set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+
+    const updatedConsultation = await prisma.consultationRequest.findUnique({ where: { id: consultation.id } });
+    expect(updatedConsultation.scheduledAppointmentId).toBeNull();
+    await prisma.consultationRequest.delete({ where: { id: consultation.id } });
+  });
+
+  it('returns 404 for a non-existent appointment', async () => {
+    const res = await request(app).delete('/v1/admin/appointments/999999999').set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(404);
+  });
+});
+
 describe('Appointment price override affects stats revenue', () => {
   it('uses the appointment price instead of the service price when set', async () => {
     // Serviço próprio com preço facilmente identificável, para isolar da
@@ -195,6 +228,26 @@ describe('POST /v1/admin/employees', () => {
     // cleanup
     await prisma.employee.deleteMany({ where: { user: { email: 'new-emp-admin@test.com' } } });
     await prisma.user.deleteMany({ where: { email: 'new-emp-admin@test.com' } });
+  });
+});
+
+describe('PUT /v1/admin/employees/:id (config Barbearia)', () => {
+  it('admin can set and clear materialCost and payoutPercent', async () => {
+    const res = await request(app)
+      .put(`/v1/admin/employees/${employee.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ materialCost: '1.50', payoutPercent: '35' });
+    expect(res.status).toBe(200);
+    expect(Number(res.body.materialCost)).toBe(1.5);
+    expect(Number(res.body.payoutPercent)).toBe(35);
+
+    const cleared = await request(app)
+      .put(`/v1/admin/employees/${employee.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ materialCost: '', payoutPercent: '' });
+    expect(cleared.status).toBe(200);
+    expect(cleared.body.materialCost).toBeNull();
+    expect(cleared.body.payoutPercent).toBeNull();
   });
 });
 

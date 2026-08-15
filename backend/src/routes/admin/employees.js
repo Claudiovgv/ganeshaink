@@ -74,12 +74,15 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, bio, isActive, serviceIds } = req.body;
+    const { name, bio, isActive, serviceIds, materialCost, payoutPercent } = req.body;
 
     const updateData = {};
     if (name !== undefined) updateData.name = name;
     if (bio !== undefined) updateData.bio = bio;
     if (isActive !== undefined) updateData.isActive = isActive;
+    // Vazio/null limpa o valor (volta a "por configurar").
+    if (materialCost !== undefined) updateData.materialCost = materialCost === '' || materialCost === null ? null : materialCost;
+    if (payoutPercent !== undefined) updateData.payoutPercent = payoutPercent === '' || payoutPercent === null ? null : payoutPercent;
 
     const employee = await prisma.employee.update({ where: { id }, data: updateData });
 
