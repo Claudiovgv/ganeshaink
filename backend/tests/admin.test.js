@@ -209,6 +209,83 @@ describe('Appointment price override affects stats revenue', () => {
   });
 });
 
+describe('GET /v1/admin/stats/barbershop', () => {
+  it('computes material cost and barber payout from configured employee values', async () => {
+    const category = await ensureCategory('barbershop', 'Barbearia');
+    const barberUser = await prisma.user.create({
+      data: {
+        name: 'Barbershop Stats Test', email: 'barbershop-stats-test@test.com', password: await bcrypt.hash('pass123', 10), role: 'employee',
+        employee: { create: { name: 'Barbershop Stats Test', isActive: true, materialCost: '1.00', payoutPercent: '30' } },
+      },
+      include: { employee: true },
+    });
+    const barber = barberUser.employee;
+    const svc = await prisma.service.create({ data: { name: 'Barbershop Stats Svc', categoryId: category.id, durationMin: 30, price: 20 } });
+
+    const now = new Date();
+    const apt1 = await prisma.appointment.create({
+      data: { clientName: 'BS Test 1', clientEmail: 'bs1@test.com', clientPhone: '911111111', employeeId: barber.id, serviceId: svc.id, startDatetime: now, endDatetime: new Date(now.getTime() + 30 * 60000), status: 'completed', cancelToken: 'bs-token-1' },
+    });
+    const apt2 = await prisma.appointment.create({
+      data: { clientName: 'BS Test 2', clientEmail: 'bs2@test.com', clientPhone: '922222222', employeeId: barber.id, serviceId: svc.id, startDatetime: new Date(now.getTime() + 60000), endDatetime: new Date(now.getTime() + 30 * 60000 + 60000), status: 'completed', cancelToken: 'bs-token-2' },
+    });
+
+    const res = await request(app)
+      .get('/v1/admin/stats/barbershop')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .query({ period: 'month', offset: '0' });
+
+    expect(res.status).toBe(200);
+    const entry = res.body.barbers.find((b) => b.employeeId === barber.id);
+    expect(entry).toBeDefined();
+    expect(entry.count).toBe(2);
+    expect(entry.revenue).toBe(40);
+    expect(entry.materialCost).toBe(2);
+    expect(entry.netRevenue).toBe(38);
+    expect(entry.payoutAmount).toBeCloseTo(11.4);
+    expect(entry.hasConfig).toBe(true);
+
+    await prisma.appointment.deleteMany({ where: { id: { in: [apt1.id, apt2.id] } } });
+    await prisma.service.delete({ where: { id: svc.id } });
+    await prisma.employee.delete({ where: { id: barber.id } });
+    await prisma.user.delete({ where: { id: barberUser.id } });
+  });
+
+  it('marks a barber without configured material/percent as hasConfig=false and zero cost', async () => {
+    const category = await ensureCategory('barbershop', 'Barbearia');
+    const barberUser = await prisma.user.create({
+      data: {
+        name: 'Barbershop No Config Test', email: 'barbershop-noconfig-test@test.com', password: await bcrypt.hash('pass123', 10), role: 'employee',
+        employee: { create: { name: 'Barbershop No Config Test', isActive: true } },
+      },
+      include: { employee: true },
+    });
+    const barber = barberUser.employee;
+    const svc = await prisma.service.create({ data: { name: 'Barbershop No Config Svc', categoryId: category.id, durationMin: 30, price: 15 } });
+    const now = new Date();
+    const apt = await prisma.appointment.create({
+      data: { clientName: 'BS NoConfig', clientEmail: 'bsnc@test.com', clientPhone: '933333333', employeeId: barber.id, serviceId: svc.id, startDatetime: now, endDatetime: new Date(now.getTime() + 30 * 60000), status: 'completed', cancelToken: 'bs-token-3' },
+    });
+
+    const res = await request(app)
+      .get('/v1/admin/stats/barbershop')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .query({ period: 'month', offset: '0' });
+
+    expect(res.status).toBe(200);
+    const entry = res.body.barbers.find((b) => b.employeeId === barber.id);
+    expect(entry).toBeDefined();
+    expect(entry.hasConfig).toBe(false);
+    expect(entry.materialCost).toBe(0);
+    expect(entry.payoutAmount).toBe(0);
+
+    await prisma.appointment.delete({ where: { id: apt.id } });
+    await prisma.service.delete({ where: { id: svc.id } });
+    await prisma.employee.delete({ where: { id: barber.id } });
+    await prisma.user.delete({ where: { id: barberUser.id } });
+  });
+});
+
 describe('GET /v1/admin/consultations', () => {
   it('returns consultation list for admin', async () => {
     const res = await request(app).get('/v1/admin/consultations').set('Authorization', `Bearer ${adminToken}`);

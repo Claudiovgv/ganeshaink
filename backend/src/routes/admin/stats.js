@@ -43,8 +43,17 @@ router.get('/', async (req, res) => {
     }
     const { start, end } = getRange(period, offset);
 
+    // Ninguém marca manualmente cada marcação como "concluída" depois do
+    // horário passar — por isso uma "confirmed" cujo horário já passou conta
+    // como receita na mesma, tal como uma "completed" explícita.
     const appointments = await prisma.appointment.findMany({
-      where: { status: 'completed', startDatetime: { gte: start, lte: end } },
+      where: {
+        startDatetime: { gte: start, lte: end },
+        OR: [
+          { status: 'completed' },
+          { status: 'confirmed', endDatetime: { lt: new Date() } },
+        ],
+      },
       include: { service: { select: { id: true, name: true, price: true, category: { include: { parent: true } } } } },
     });
 
@@ -81,6 +90,101 @@ router.get('/', async (req, res) => {
       totalRevenue, totalAppointments,
       averageTicket: totalAppointments > 0 ? totalRevenue / totalAppointments : 0,
       byCategory, byService, mostRequested,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET /v1/admin/stats/barbershop — receita, custo de material e valor a
+// pagar por barbeiro. Usado pela página Análise > Barbearia.
+router.get('/barbershop', async (req, res) => {
+  try {
+    const { period = 'month', offset = '0' } = req.query;
+    if (!['week', 'month', 'year'].includes(period)) {
+      return res.status(400).json({ error: 'period must be week, month or year' });
+    }
+    const { start, end } = getRange(period, offset);
+
+    const barbershop = await prisma.category.findUnique({
+      where: { slug: 'barbershop' },
+      include: { children: { select: { id: true } } },
+    });
+    const emptyResponse = {
+      period, offset: parseInt(offset, 10) || 0,
+      range: { start: start.toISOString(), end: end.toISOString() },
+      barbers: [],
+      totals: { count: 0, revenue: 0, materialCost: 0, netRevenue: 0, payoutAmount: 0 },
+    };
+    if (!barbershop) return res.json(emptyResponse);
+
+    const categoryIds = barbershop.children.length > 0 ? barbershop.children.map((c) => c.id) : [barbershop.id];
+
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        startDatetime: { gte: start, lte: end },
+        service: { categoryId: { in: categoryIds } },
+        OR: [
+          { status: 'completed' },
+          { status: 'confirmed', endDatetime: { lt: new Date() } },
+        ],
+      },
+      include: {
+        service: { select: { price: true } },
+        employee: { select: { id: true, name: true, materialCost: true, payoutPercent: true } },
+      },
+    });
+
+    const priceOf = (a) => Number(a.price ?? a.service.price);
+
+    const byEmployee = {};
+    for (const a of appointments) {
+      const e = a.employee;
+      if (!byEmployee[e.id]) {
+        byEmployee[e.id] = {
+          employeeId: e.id,
+          name: e.name,
+          count: 0,
+          revenue: 0,
+          materialCostPerUnit: e.materialCost !== null ? Number(e.materialCost) : null,
+          payoutPercent: e.payoutPercent !== null ? Number(e.payoutPercent) : null,
+        };
+      }
+      byEmployee[e.id].count += 1;
+      byEmployee[e.id].revenue += priceOf(a);
+    }
+
+    const barbers = Object.values(byEmployee).map((b) => {
+      const hasConfig = b.materialCostPerUnit !== null && b.payoutPercent !== null;
+      const materialCost = b.count * (b.materialCostPerUnit ?? 0);
+      const netRevenue = b.revenue - materialCost;
+      const payoutAmount = netRevenue * ((b.payoutPercent ?? 0) / 100);
+      return {
+        employeeId: b.employeeId,
+        name: b.name,
+        count: b.count,
+        revenue: b.revenue,
+        materialCost,
+        netRevenue,
+        payoutPercent: b.payoutPercent,
+        payoutAmount,
+        hasConfig,
+      };
+    }).sort((a, b) => b.revenue - a.revenue);
+
+    const totals = barbers.reduce((acc, b) => ({
+      count: acc.count + b.count,
+      revenue: acc.revenue + b.revenue,
+      materialCost: acc.materialCost + b.materialCost,
+      netRevenue: acc.netRevenue + b.netRevenue,
+      payoutAmount: acc.payoutAmount + b.payoutAmount,
+    }), { count: 0, revenue: 0, materialCost: 0, netRevenue: 0, payoutAmount: 0 });
+
+    res.json({
+      period, offset: parseInt(offset, 10) || 0,
+      range: { start: start.toISOString(), end: end.toISOString() },
+      barbers, totals,
     });
   } catch (err) {
     console.error(err);
