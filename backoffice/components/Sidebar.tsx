@@ -19,6 +19,27 @@ const Icons: Record<string, JSX.Element> = {
       <path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/>
     </svg>
   ),
+  Barbearia: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
+      <line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>
+    </svg>
+  ),
+  Tatuagens: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0c0-4.5-7-13-7-13z"/>
+    </svg>
+  ),
+  Nails: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+    </svg>
+  ),
+  'Contas Barbearia': (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </svg>
+  ),
   Marcações: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
@@ -125,7 +146,15 @@ type EmployeePermissionKey = 'view_services' | 'manage_schedule' | 'manage_block
 
 const ADMIN_NAV_ALL = [
   { section: 'Agenda', items: [{ href: '/', label: 'Dashboard', perm: null as AdminPermissionKey | null }] },
-  { section: 'Análise', items: [{ href: '/estatisticas', label: 'Estatísticas', perm: 'view_stats' as AdminPermissionKey | null }] },
+  {
+    section: 'Análise',
+    items: [
+      { href: '/estatisticas', label: 'Estatísticas', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/barbearia', label: 'Barbearia', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/tatuagens', label: 'Tatuagens', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/nails', label: 'Nails', perm: 'view_stats' as AdminPermissionKey | null },
+    ],
+  },
   {
     section: 'Marcações',
     items: [
@@ -149,6 +178,7 @@ const ADMIN_NAV_ALL = [
     section: 'Definições',
     items: [
       { href: '/definicoes/smtp', label: 'SMTP', perm: 'manage_settings' as AdminPermissionKey | null },
+      { href: '/definicoes/contas-barbearia', label: 'Contas Barbearia', perm: 'manage_settings' as AdminPermissionKey | null },
       { href: '/definicoes/tecnologia', label: 'Tecnologia', perm: 'manage_settings' as AdminPermissionKey | null },
     ],
   },
@@ -190,7 +220,15 @@ function getEmployeeNav(permissions: Partial<Record<EmployeePermissionKey, boole
 
 const SUPERADMIN_NAV = [
   { section: 'Agenda', items: [{ href: '/', label: 'Dashboard' }] },
-  { section: 'Análise', items: [{ href: '/estatisticas', label: 'Estatísticas' }] },
+  {
+    section: 'Análise',
+    items: [
+      { href: '/estatisticas', label: 'Estatísticas' },
+      { href: '/barbearia', label: 'Barbearia' },
+      { href: '/tatuagens', label: 'Tatuagens' },
+      { href: '/nails', label: 'Nails' },
+    ],
+  },
   {
     section: 'Marcações',
     items: [
@@ -214,6 +252,7 @@ const SUPERADMIN_NAV = [
     section: 'Definições',
     items: [
       { href: '/definicoes/smtp', label: 'SMTP' },
+      { href: '/definicoes/contas-barbearia', label: 'Contas Barbearia' },
       { href: '/definicoes/tecnologia', label: 'Tecnologia' },
       { href: '/definicoes/logs', label: 'Log' },
     ],
