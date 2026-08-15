@@ -1,6 +1,7 @@
 'use server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { api } from './api';
 
 type ActionState = { error: string } | { requires2FA: true; needsSetup: boolean; pendingToken: string } | null;
@@ -65,6 +66,12 @@ export async function logoutAction() {
 
 export async function updateAppointmentStatusAction(id: number, status: string) {
   await api.appointments.updateStatus(id, status);
+  revalidatePath('/');
+}
+
+export async function deleteAppointmentAction(id: number) {
+  await api.appointments.remove(id);
+  revalidatePath('/');
 }
 
 export async function createAppointmentAction(data: {
@@ -216,12 +223,23 @@ export async function disable2FAAction(password: string) {
   return api.auth.disable2FA(password);
 }
 
+// Next.js redacts thrown Server Action error messages in production builds
+// (shows only a generic digest) — catch here and return the message instead,
+// same pattern used by every other action that needs to surface a real error.
 export async function updateSmtpSettingsAction(data: import('./types').SmtpSettings) {
-  return api.settings.updateSmtp(data);
+  try {
+    return { ok: true as const, message: (await api.settings.updateSmtp(data)).message };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
 }
 
 export async function testSmtpSettingsAction(data: import('./types').SmtpSettings & { testEmail: string }) {
-  return api.settings.testSmtp(data);
+  try {
+    return { ok: true as const, message: (await api.settings.testSmtp(data)).message };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
 }
 
 export async function fetchLogsAction(params: { level?: string; page?: number }) {
@@ -246,4 +264,8 @@ export async function updateRolePermissionsAction(role: import('./types').Config
 
 export async function fetchStatsAction(period: import('./types').StatsPeriod, offset: number) {
   return api.stats.get(period, offset);
+}
+
+export async function fetchBarbershopStatsAction(period: import('./types').StatsPeriod, offset: number) {
+  return api.stats.getBarbershop(period, offset);
 }

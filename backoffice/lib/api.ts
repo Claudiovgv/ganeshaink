@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import type {
-  AdminPermissionKey, Appointment, BlogPost, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
+  AdminPermissionKey, Appointment, BlogPost, BarbershopStatsResponse, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
   Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry,
   TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay,
 } from './types';
@@ -76,6 +76,8 @@ export const api = {
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }),
     updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null }) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/appointments/${id}`, { method: 'DELETE' }),
     myList: (params?: { date?: string }) => {
       const q = new URLSearchParams(
         Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
@@ -231,5 +233,7 @@ export const api = {
   stats: {
     get: (period: StatsPeriod, offset: number) =>
       apiFetch<StatsResponse>(`/admin/stats?period=${period}&offset=${offset}`),
+    getBarbershop: (period: StatsPeriod, offset: number) =>
+      apiFetch<BarbershopStatsResponse>(`/admin/stats/barbershop?period=${period}&offset=${offset}`),
   },
 };
