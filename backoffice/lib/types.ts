@@ -18,6 +18,8 @@ export interface Employee {
   name: string;
   bio: string | null;
   photoUrl: string | null;
+  materialCost: number | null;
+  payoutPercent: number | null;
   isActive: boolean;
   user: { id: number; email: string; role: string };
   services: { service: Service }[];
@@ -201,4 +203,24 @@ export interface StatsResponse {
   byCategory: StatsByCategory[];
   byService: StatsByService[];
   mostRequested: StatsByService | null;
+}
+
+export interface BarberStats {
+  employeeId: number;
+  name: string;
+  count: number;
+  revenue: number;
+  materialCost: number;
+  netRevenue: number;
+  payoutPercent: number | null;
+  payoutAmount: number;
+  hasConfig: boolean;
+}
+
+export interface BarbershopStatsResponse {
+  period: StatsPeriod;
+  offset: number;
+  range: { start: string; end: string };
+  barbers: BarberStats[];
+  totals: { count: number; revenue: number; materialCost: number; netRevenue: number; payoutAmount: number };
 }
