@@ -139,6 +139,8 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   name: 'name',
   bio: 'bio',
   photoUrl: 'photoUrl',
+  materialCost: 'materialCost',
+  payoutPercent: 'payoutPercent',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt'

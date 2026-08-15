@@ -3084,12 +3084,16 @@ export namespace Prisma {
   export type EmployeeAvgAggregateOutputType = {
     id: number | null
     userId: number | null
+    materialCost: Decimal | null
+    payoutPercent: Decimal | null
     sortOrder: number | null
   }
 
   export type EmployeeSumAggregateOutputType = {
     id: number | null
     userId: number | null
+    materialCost: Decimal | null
+    payoutPercent: Decimal | null
     sortOrder: number | null
   }
 
@@ -3099,6 +3103,8 @@ export namespace Prisma {
     name: string | null
     bio: string | null
     photoUrl: string | null
+    materialCost: Decimal | null
+    payoutPercent: Decimal | null
     isActive: boolean | null
     sortOrder: number | null
     createdAt: Date | null
@@ -3110,6 +3116,8 @@ export namespace Prisma {
     name: string | null
     bio: string | null
     photoUrl: string | null
+    materialCost: Decimal | null
+    payoutPercent: Decimal | null
     isActive: boolean | null
     sortOrder: number | null
     createdAt: Date | null
@@ -3121,6 +3129,8 @@ export namespace Prisma {
     name: number
     bio: number
     photoUrl: number
+    materialCost: number
+    payoutPercent: number
     isActive: number
     sortOrder: number
     createdAt: number
@@ -3131,12 +3141,16 @@ export namespace Prisma {
   export type EmployeeAvgAggregateInputType = {
     id?: true
     userId?: true
+    materialCost?: true
+    payoutPercent?: true
     sortOrder?: true
   }
 
   export type EmployeeSumAggregateInputType = {
     id?: true
     userId?: true
+    materialCost?: true
+    payoutPercent?: true
     sortOrder?: true
   }
 
@@ -3146,6 +3160,8 @@ export namespace Prisma {
     name?: true
     bio?: true
     photoUrl?: true
+    materialCost?: true
+    payoutPercent?: true
     isActive?: true
     sortOrder?: true
     createdAt?: true
@@ -3157,6 +3173,8 @@ export namespace Prisma {
     name?: true
     bio?: true
     photoUrl?: true
+    materialCost?: true
+    payoutPercent?: true
     isActive?: true
     sortOrder?: true
     createdAt?: true
@@ -3168,6 +3186,8 @@ export namespace Prisma {
     name?: true
     bio?: true
     photoUrl?: true
+    materialCost?: true
+    payoutPercent?: true
     isActive?: true
     sortOrder?: true
     createdAt?: true
@@ -3266,6 +3286,8 @@ export namespace Prisma {
     name: string
     bio: string | null
     photoUrl: string | null
+    materialCost: Decimal | null
+    payoutPercent: Decimal | null
     isActive: boolean
     sortOrder: number
     createdAt: Date
@@ -3296,6 +3318,8 @@ export namespace Prisma {
     name?: boolean
     bio?: boolean
     photoUrl?: boolean
+    materialCost?: boolean
+    payoutPercent?: boolean
     isActive?: boolean
     sortOrder?: boolean
     createdAt?: boolean
@@ -3315,6 +3339,8 @@ export namespace Prisma {
     name?: boolean
     bio?: boolean
     photoUrl?: boolean
+    materialCost?: boolean
+    payoutPercent?: boolean
     isActive?: boolean
     sortOrder?: boolean
     createdAt?: boolean
@@ -3346,6 +3372,8 @@ export namespace Prisma {
       name: string
       bio: string | null
       photoUrl: string | null
+      materialCost: Prisma.Decimal | null
+      payoutPercent: Prisma.Decimal | null
       isActive: boolean
       sortOrder: number
       createdAt: Date
@@ -3729,6 +3757,8 @@ export namespace Prisma {
     readonly name: FieldRef<"Employee", 'String'>
     readonly bio: FieldRef<"Employee", 'String'>
     readonly photoUrl: FieldRef<"Employee", 'String'>
+    readonly materialCost: FieldRef<"Employee", 'Decimal'>
+    readonly payoutPercent: FieldRef<"Employee", 'Decimal'>
     readonly isActive: FieldRef<"Employee", 'Boolean'>
     readonly sortOrder: FieldRef<"Employee", 'Int'>
     readonly createdAt: FieldRef<"Employee", 'DateTime'>
@@ -14616,6 +14646,8 @@ export namespace Prisma {
     name: 'name',
     bio: 'bio',
     photoUrl: 'photoUrl',
+    materialCost: 'materialCost',
+    payoutPercent: 'payoutPercent',
     isActive: 'isActive',
     sortOrder: 'sortOrder',
     createdAt: 'createdAt'
@@ -14981,6 +15013,8 @@ export namespace Prisma {
     name?: StringFilter<"Employee"> | string
     bio?: StringNullableFilter<"Employee"> | string | null
     photoUrl?: StringNullableFilter<"Employee"> | string | null
+    materialCost?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Employee"> | boolean
     sortOrder?: IntFilter<"Employee"> | number
     createdAt?: DateTimeFilter<"Employee"> | Date | string
@@ -14998,6 +15032,8 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrderInput | SortOrder
     photoUrl?: SortOrderInput | SortOrder
+    materialCost?: SortOrderInput | SortOrder
+    payoutPercent?: SortOrderInput | SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -15018,6 +15054,8 @@ export namespace Prisma {
     name?: StringFilter<"Employee"> | string
     bio?: StringNullableFilter<"Employee"> | string | null
     photoUrl?: StringNullableFilter<"Employee"> | string | null
+    materialCost?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Employee"> | boolean
     sortOrder?: IntFilter<"Employee"> | number
     createdAt?: DateTimeFilter<"Employee"> | Date | string
@@ -15035,6 +15073,8 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrderInput | SortOrder
     photoUrl?: SortOrderInput | SortOrder
+    materialCost?: SortOrderInput | SortOrder
+    payoutPercent?: SortOrderInput | SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -15054,6 +15094,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Employee"> | string
     bio?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     photoUrl?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    materialCost?: DecimalNullableWithAggregatesFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: DecimalNullableWithAggregatesFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolWithAggregatesFilter<"Employee"> | boolean
     sortOrder?: IntWithAggregatesFilter<"Employee"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
@@ -15927,6 +15969,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -15944,6 +15988,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -15958,6 +16004,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15975,6 +16023,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15991,6 +16041,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -16000,6 +16052,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16011,6 +16065,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17011,6 +17067,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type UserRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -17072,6 +17139,8 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     photoUrl?: SortOrder
+    materialCost?: SortOrder
+    payoutPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -17080,6 +17149,8 @@ export namespace Prisma {
   export type EmployeeAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    materialCost?: SortOrder
+    payoutPercent?: SortOrder
     sortOrder?: SortOrder
   }
 
@@ -17089,6 +17160,8 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     photoUrl?: SortOrder
+    materialCost?: SortOrder
+    payoutPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -17100,6 +17173,8 @@ export namespace Prisma {
     name?: SortOrder
     bio?: SortOrder
     photoUrl?: SortOrder
+    materialCost?: SortOrder
+    payoutPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -17108,7 +17183,25 @@ export namespace Prisma {
   export type EmployeeSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    materialCost?: SortOrder
+    payoutPercent?: SortOrder
     sortOrder?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -17437,17 +17530,6 @@ export namespace Prisma {
     not?: NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type ConsultationRequestNullableRelationFilter = {
     is?: ConsultationRequestWhereInput | null
     isNot?: ConsultationRequestWhereInput | null
@@ -17523,22 +17605,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -18022,6 +18088,14 @@ export namespace Prisma {
     connectOrCreate?: ConsultationRequestCreateOrConnectWithoutEmployeeInput | ConsultationRequestCreateOrConnectWithoutEmployeeInput[]
     createMany?: ConsultationRequestCreateManyEmployeeInputEnvelope
     connect?: ConsultationRequestWhereUniqueInput | ConsultationRequestWhereUniqueInput[]
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type UserUpdateOneRequiredWithoutEmployeeNestedInput = {
@@ -18516,14 +18590,6 @@ export namespace Prisma {
     set?: $Enums.AppointmentStatus
   }
 
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput = {
     create?: XOR<EmployeeCreateWithoutAppointmentsInput, EmployeeUncheckedCreateWithoutAppointmentsInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutAppointmentsInput
@@ -18798,6 +18864,33 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[]
@@ -18876,17 +18969,6 @@ export namespace Prisma {
     not?: NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
   }
 
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AppointmentStatus | EnumAppointmentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.AppointmentStatus[]
@@ -18895,22 +18977,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumConsultationStatusFilter<$PrismaModel = never> = {
@@ -18998,6 +19064,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19013,6 +19081,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19078,6 +19148,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19093,6 +19165,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19888,6 +19962,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19904,6 +19980,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19965,6 +20043,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19981,6 +20061,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20032,6 +20114,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20048,6 +20132,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20077,6 +20163,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20093,6 +20181,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20106,6 +20196,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20122,6 +20214,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20151,6 +20245,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20167,6 +20263,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20180,6 +20278,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20196,6 +20296,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20287,6 +20389,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20303,6 +20407,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20422,6 +20528,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20438,6 +20546,8 @@ export namespace Prisma {
     name: string
     bio?: string | null
     photoUrl?: string | null
+    materialCost?: Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20541,6 +20651,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20557,6 +20669,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
