@@ -66,8 +66,10 @@ function ServerTab({ initial }: { initial: SmtpSettings }) {
     setMessage(null);
     startTransition(async () => {
       const res = await updateSmtpSettingsAction(form);
-      if (res.ok) setMessage('Definições de SMTP guardadas.');
-      else setError(res.error);
+      if (res.ok) {
+        setForm(res.settings);
+        setMessage('Definições de SMTP guardadas.');
+      } else setError(res.error);
     });
   }
 
@@ -75,7 +77,7 @@ function ServerTab({ initial }: { initial: SmtpSettings }) {
     <div className="space-y-4 max-w-md">
       <p className="text-text-secondary text-sm">
         Conta do servidor de correio — não é o login do backoffice.
-        {initial.source === 'env' && ' Atualmente a usar os valores do ficheiro .env do servidor. Preenche e guarda para passar a usar estes campos.'}
+        {initial.source !== 'database' && ' Ainda não há valores gravados aqui. O que guardares fica na base e não volta a ser substituído pelos dados do servidor.'}
       </p>
       {error && <p className="text-red-400 text-sm">{error}</p>}
       {message && <p className="text-green-400 text-sm">{message}</p>}

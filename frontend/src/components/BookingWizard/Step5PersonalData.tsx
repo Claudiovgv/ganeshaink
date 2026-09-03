@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { api, Service, Employee, Appointment } from '@/lib/api';
+import { api, Service, Employee, Appointment, Category } from '@/lib/api';
 import { formatPrice } from '@/lib/utils';
 import Button from '../ui/Button';
 
@@ -10,14 +10,27 @@ interface Props {
   employee: Employee;
   date: string;
   time: string;
+  categories: Category[];
   onSuccess: (appointment: Appointment) => void;
   onBack: () => void;
 }
 
-export default function Step5PersonalData({ service, employee, date, time, onSuccess, onBack }: Props) {
+const EMAIL_OPTIONAL_ROOTS = new Set(['barbershop', 'nails']);
+
+function emailOptionalFor(service: Service, categories: Category[]) {
+  const slug = service.category.slug;
+  const parentSlug = service.category.parent?.slug;
+  if (EMAIL_OPTIONAL_ROOTS.has(slug) || (parentSlug && EMAIL_OPTIONAL_ROOTS.has(parentSlug))) return true;
+  return categories.some(
+    (cat) => EMAIL_OPTIONAL_ROOTS.has(cat.slug) && cat.children?.some((child) => child.slug === slug),
+  );
+}
+
+export default function Step5PersonalData({ service, employee, date, time, categories, onSuccess, onBack }: Props) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const emailOptional = emailOptionalFor(service, categories);
 
   const formattedDate = new Date(`${date}T${time}`).toLocaleDateString('pt-PT', {
     weekday: 'long', day: 'numeric', month: 'long',
@@ -25,7 +38,7 @@ export default function Step5PersonalData({ service, employee, date, time, onSuc
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!form.name || !form.email || !form.phone) {
+    if (!form.name || !form.phone || (!emailOptional && !form.email)) {
       setError('Preenche todos os campos obrigatórios.');
       return;
     }
@@ -34,7 +47,7 @@ export default function Step5PersonalData({ service, employee, date, time, onSuc
     try {
       const appt = await api.appointments.create({
         clientName: form.name,
-        clientEmail: form.email,
+        clientEmail: form.email.trim() || undefined,
         clientPhone: form.phone,
         employeeId: employee.id,
         serviceId: service.id,
@@ -91,15 +104,22 @@ export default function Step5PersonalData({ service, employee, date, time, onSuc
           />
         </div>
         <div>
-          <label className="block text-sm text-text-secondary mb-1">Email *</label>
+          <label className="block text-sm text-text-secondary mb-1">
+            Email{emailOptional ? '' : ' *'}
+          </label>
           <input
             type="email"
-            required
+            required={!emailOptional}
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             placeholder="o.teu@email.com"
             className="w-full bg-bg-card border border-gold-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-secondary focus:border-gold focus:outline-none"
           />
+          {emailOptional && (
+            <p className="text-text-secondary text-xs mt-1.5">
+              Para receberes a confirmação da marcação, indica o teu email.
+            </p>
+          )}
         </div>
         <div>
           <label className="block text-sm text-text-secondary mb-1">Telefone *</label>

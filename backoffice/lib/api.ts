@@ -236,7 +236,7 @@ export const api = {
   settings: {
     getSmtp: () => apiFetch<SmtpSettings>('/admin/settings/smtp'),
     updateSmtp: (data: Partial<SmtpSettings>) =>
-      apiFetch<{ message: string }>('/admin/settings/smtp', { method: 'PUT', body: JSON.stringify(data) }),
+      apiFetch<SmtpSettings>('/admin/settings/smtp', { method: 'PUT', body: JSON.stringify(data) }),
     testSmtp: (data: Partial<SmtpSettings> & { testEmail: string }) =>
       apiFetch<{ message: string }>('/admin/settings/smtp/test', { method: 'POST', body: JSON.stringify(data) }),
     getNotifications: () => apiFetch<NotificationMatrix>('/admin/settings/notifications'),

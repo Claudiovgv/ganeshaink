@@ -6,18 +6,33 @@ const { publicLimiter } = require('../middleware/rateLimit');
 const { addMinutes } = require('date-fns');
 const { notifyAppointmentCreated, notifyAppointmentStatusChanged, APPOINTMENT_INCLUDE } = require('../lib/notifications');
 
+const EMAIL_OPTIONAL_ROOTS = new Set(['barbershop', 'nails']);
+
+function placeholderEmail() {
+  return `sem-contacto+${uuidv4().slice(0, 8)}@ganeshaink.pt`;
+}
+
 router.post('/', publicLimiter, async (req, res) => {
   try {
     const { clientName, clientEmail, clientPhone, employeeId, serviceId, date, time, notes } = req.body;
 
-    if (!clientName || !clientEmail || !clientPhone || !employeeId || !serviceId || !date || !time) {
+    if (!clientName || !clientPhone || !employeeId || !serviceId || !date || !time) {
       return res.status(400).json({
-        error: 'Required fields: clientName, clientEmail, clientPhone, employeeId, serviceId, date, time',
+        error: 'Required fields: clientName, clientPhone, employeeId, serviceId, date, time',
       });
     }
 
-    const service = await prisma.service.findUnique({ where: { id: parseInt(serviceId) } });
+    const service = await prisma.service.findUnique({
+      where: { id: parseInt(serviceId) },
+      include: { category: { include: { parent: true } } },
+    });
     if (!service) return res.status(404).json({ error: 'Service not found' });
+
+    const rootSlug = service.category.parent?.slug || service.category.slug;
+    const email = typeof clientEmail === 'string' ? clientEmail.trim() : '';
+    if (!email && !EMAIL_OPTIONAL_ROOTS.has(rootSlug)) {
+      return res.status(400).json({ error: 'Required fields: clientEmail' });
+    }
 
     const employee = await prisma.employee.findUnique({ where: { id: parseInt(employeeId) } });
     if (!employee || !employee.isActive) return res.status(404).json({ error: 'Employee not found' });
@@ -42,7 +57,7 @@ router.post('/', publicLimiter, async (req, res) => {
     const appointment = await prisma.appointment.create({
       data: {
         clientName,
-        clientEmail,
+        clientEmail: email || placeholderEmail(),
         clientPhone,
         employeeId: parseInt(employeeId),
         serviceId: parseInt(serviceId),

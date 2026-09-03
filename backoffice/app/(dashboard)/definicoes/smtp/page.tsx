@@ -2,6 +2,7 @@ import { api } from '@/lib/api';
 import TopBar from '@/components/TopBar';
 import SmtpClient from './SmtpClient';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'SMTP — Definições' };
 
 export default async function SmtpPage() {

@@ -5,8 +5,9 @@ import Link from 'next/link';
 import type { Category, Service } from '@/lib/api';
 import { formatPrice, formatDuration } from '@/lib/utils';
 
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service, onBook }: { service: Service; onBook?: (service: Service) => void }) {
   const isConsultation = service.requiresConsultation;
+  const bookClass = 'text-xs bg-gold text-bg-primary px-3 py-1 rounded hover:bg-gold-light transition-colors font-semibold';
   return (
     <div className="bg-bg-section border border-gold-border rounded-lg p-6 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
@@ -27,10 +28,14 @@ function ServiceCard({ service }: { service: Service }) {
           >
             Pedir Consulta
           </Link>
+        ) : onBook ? (
+          <button type="button" onClick={() => onBook(service)} className={bookClass}>
+            Marcar
+          </button>
         ) : (
           <Link
             href={`/marcar?category=${service.category.slug}&service=${service.id}`}
-            className="text-xs bg-gold text-bg-primary px-3 py-1 rounded hover:bg-gold-light transition-colors font-semibold"
+            className={bookClass}
           >
             Marcar
           </Link>
@@ -114,7 +119,15 @@ interface CategoryGroup {
 // categoria, ou a ver os serviços de uma categoria/subcategoria.
 type View = { level: 'closed' } | { level: 'subcategories'; group: CategoryGroup } | { level: 'services'; title: string; direct: Service[]; parent?: CategoryGroup };
 
-export default function ServicosGrid({ services, categories }: { services: Service[]; categories: Category[] }) {
+export default function ServicosGrid({
+  services,
+  categories,
+  onBook,
+}: {
+  services: Service[];
+  categories: Category[];
+  onBook?: (service: Service) => void;
+}) {
   const [view, setView] = useState<View>({ level: 'closed' });
 
   const grouped = services.reduce((acc, s) => {
@@ -141,6 +154,11 @@ export default function ServicosGrid({ services, categories }: { services: Servi
     } else {
       setView({ level: 'services', title: group.category.name, direct: group.direct });
     }
+  }
+
+  function book(service: Service) {
+    setView({ level: 'closed' });
+    onBook?.(service);
   }
 
   return (
@@ -186,7 +204,7 @@ export default function ServicosGrid({ services, categories }: { services: Servi
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {view.direct.map((s) => (
-              <ServiceCard key={s.id} service={s} />
+              <ServiceCard key={s.id} service={s} onBook={onBook ? book : undefined} />
             ))}
           </div>
         </Modal>

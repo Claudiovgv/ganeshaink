@@ -254,7 +254,9 @@ export async function disable2FAAction(password: string) {
 // same pattern used by every other action that needs to surface a real error.
 export async function updateSmtpSettingsAction(data: import('./types').SmtpSettings) {
   try {
-    return { ok: true as const, message: (await api.settings.updateSmtp(data)).message };
+    const settings = await api.settings.updateSmtp(data);
+    revalidatePath('/definicoes/smtp');
+    return { ok: true as const, settings };
   } catch (err) {
     return { ok: false as const, error: (err as Error).message };
   }
@@ -273,7 +275,9 @@ export async function updateNotificationPreferencesAction(
   mailboxes?: { userId: number; notificationEmail: string }[],
 ) {
   try {
-    return { ok: true as const, matrix: await api.settings.updateNotifications({ preferences, mailboxes }) };
+    const matrix = await api.settings.updateNotifications({ preferences, mailboxes });
+    revalidatePath('/definicoes/smtp');
+    return { ok: true as const, matrix };
   } catch (err) {
     return { ok: false as const, error: (err as Error).message };
   }

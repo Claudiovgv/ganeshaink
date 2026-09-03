@@ -77,6 +77,22 @@ describe('Appointments (public)', () => {
         .send({ clientName: 'Only name' });
       expect(res.status).toBe(400);
     });
+
+    it('allows a barbershop booking without email and stores a placeholder', async () => {
+      const res = await request(app)
+        .post('/v1/appointments')
+        .send({
+          clientName: 'Sem Email',
+          clientPhone: '913333333',
+          employeeId: employee.id,
+          serviceId: service.id,
+          date: '2026-04-28',
+          time: '11:00',
+        });
+      expect(res.status).toBe(201);
+      expect(res.body.clientName).toBe('Sem Email');
+      expect(res.body.clientEmail).toMatch(/^sem-contacto\+/);
+    });
   });
 
   describe('GET /v1/appointments/:id', () => {

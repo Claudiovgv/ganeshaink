@@ -58,6 +58,7 @@ export interface Category {
   slug: string;
   sortOrder: number;
   children?: Category[];
+  parent?: { id: number; name: string; slug: string } | null;
 }
 
 export interface Service {
@@ -137,7 +138,7 @@ export const api = {
   appointments: {
     create: (data: {
       clientName: string;
-      clientEmail: string;
+      clientEmail?: string;
       clientPhone: string;
       employeeId: number;
       serviceId: number;

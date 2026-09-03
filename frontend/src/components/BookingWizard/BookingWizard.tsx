@@ -2,18 +2,17 @@
 
 import { useEffect, useReducer, useState } from 'react';
 import Step1Category from './Step1Category';
-import Step2Service from './Step2Service';
 import Step3Employee from './Step3Employee';
 import Step4DateTime from './Step4DateTime';
 import Step5PersonalData from './Step5PersonalData';
-import { api, Service, Employee, Appointment } from '@/lib/api';
+import { api, Service, Employee, Appointment, Category as ApiCategory } from '@/lib/api';
 
 // Categorias são geríveis no backoffice, por isso deixaram de ser um valor
 // fixo — este é sempre o slug (ex.: "barbershop"), vindo de GET /categories.
 export type Category = string;
 
 export interface BookingState {
-  step: 1 | 2 | 3 | 4 | 5 | 'success';
+  step: 1 | 3 | 4 | 5 | 'success';
   category: Category | null;
   service: Service | null;
   employee: Employee | null;
@@ -23,7 +22,6 @@ export interface BookingState {
 }
 
 type Action =
-  | { type: 'SET_CATEGORY'; payload: Category }
   | { type: 'SET_SERVICE'; payload: Service }
   | { type: 'SET_EMPLOYEE'; payload: Employee }
   | { type: 'SET_DATETIME'; payload: { date: string; time: string } }
@@ -44,10 +42,16 @@ const initialState: BookingState = {
 
 function reducer(state: BookingState, action: Action): BookingState {
   switch (action.type) {
-    case 'SET_CATEGORY':
-      return { ...state, category: action.payload, service: null, employee: null, date: null, time: null, step: 2 };
     case 'SET_SERVICE':
-      return { ...state, service: action.payload, employee: null, date: null, time: null, step: 3 };
+      return {
+        ...state,
+        category: action.payload.category.slug,
+        service: action.payload,
+        employee: null,
+        date: null,
+        time: null,
+        step: 3,
+      };
     case 'SET_EMPLOYEE':
       return { ...state, employee: action.payload, date: null, time: null, step: 4 };
     case 'SET_DATETIME':
@@ -59,8 +63,7 @@ function reducer(state: BookingState, action: Action): BookingState {
     case 'HYDRATE':
       return { ...state, category: action.payload.category, service: action.payload.service, step: 3 };
     case 'BACK':
-      if (state.step === 2) return { ...state, step: 1 };
-      if (state.step === 3) return { ...state, step: 2 };
+      if (state.step === 3) return { ...state, service: null, employee: null, date: null, time: null, step: 1 };
       if (state.step === 4) return { ...state, step: 3 };
       if (state.step === 5) return { ...state, step: 4 };
       return state;
@@ -71,9 +74,12 @@ function reducer(state: BookingState, action: Action): BookingState {
   }
 }
 
-const STEPS = ['Categoria', 'Serviço', 'Artista', 'Data & Hora', 'Dados'];
+const STEPS = ['Serviço', 'Artista', 'Data & Hora', 'Dados'];
+const STEP_INDEX: Record<number, number> = { 1: 1, 3: 2, 4: 3, 5: 4 };
 
 interface Props {
+  services: Service[];
+  categories: ApiCategory[];
   // Vêm de query params quando o utilizador já escolheu categoria/serviço
   // fora do wizard (ex.: grelha de serviços) e clica em "Marcar" — evita
   // fazê-lo recomeçar do Passo 1.
@@ -81,22 +87,28 @@ interface Props {
   initialServiceId?: number;
 }
 
-export default function BookingWizard({ initialCategory, initialServiceId }: Props) {
+export default function BookingWizard({ services, categories, initialCategory, initialServiceId }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [hydrating, setHydrating] = useState(!!(initialCategory && initialServiceId));
 
   useEffect(() => {
     if (!initialCategory || !initialServiceId) return;
     let cancelled = false;
+    const fromCatalog = services.find((s) => s.id === initialServiceId);
+    if (fromCatalog) {
+      dispatch({ type: 'HYDRATE', payload: { category: initialCategory, service: fromCatalog } });
+      setHydrating(false);
+      return;
+    }
     api.services.list(initialCategory)
-      .then((services) => {
+      .then((list) => {
         if (cancelled) return;
-        const service = services.find((s) => s.id === initialServiceId);
+        const service = list.find((s) => s.id === initialServiceId);
         if (service) dispatch({ type: 'HYDRATE', payload: { category: initialCategory, service } });
       })
       .finally(() => { if (!cancelled) setHydrating(false); });
     return () => { cancelled = true; };
-  }, [initialCategory, initialServiceId]);
+  }, [initialCategory, initialServiceId, services]);
 
   if (hydrating) {
     return <div className="max-w-2xl mx-auto px-4 py-24 text-center text-text-secondary">A carregar...</div>;
@@ -108,7 +120,10 @@ export default function BookingWizard({ initialCategory, initialServiceId }: Pro
         <div className="text-5xl mb-6">✅</div>
         <h2 className="font-display text-3xl font-bold mb-3 text-gold">Pedido de Marcação Recebido!</h2>
         <p className="text-text-secondary mb-2">
-          Fica pendente de confirmação pelo artista. Receberás um email assim que for confirmada.
+          Fica pendente de confirmação pelo artista.
+          {state.appointment.clientEmail && !state.appointment.clientEmail.startsWith('sem-contacto+')
+            ? ' Receberás um email assim que for confirmada.'
+            : ' Sem email não enviamos a confirmação — o estúdio trata do resto.'}
         </p>
         <div className="bg-bg-card border border-gold-border rounded-lg p-6 mt-8 text-left space-y-3">
           <p><span className="text-text-secondary text-sm">Serviço:</span> <span className="font-semibold">{state.appointment.service.name}</span></p>
@@ -128,10 +143,10 @@ export default function BookingWizard({ initialCategory, initialServiceId }: Pro
     );
   }
 
-  const currentStep = state.step as number;
+  const currentStep = STEP_INDEX[state.step as number] ?? 1;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
+    <div className={`${state.step === 1 ? 'max-w-7xl' : 'max-w-2xl'} mx-auto px-4 py-12`}>
       <div className="flex items-center gap-2 mb-10">
         {STEPS.map((label, i) => {
           const stepNum = i + 1;
@@ -160,13 +175,10 @@ export default function BookingWizard({ initialCategory, initialServiceId }: Pro
       </div>
 
       {state.step === 1 && (
-        <Step1Category onSelect={(cat) => dispatch({ type: 'SET_CATEGORY', payload: cat })} />
-      )}
-      {state.step === 2 && state.category && (
-        <Step2Service
-          category={state.category}
-          onSelect={(s) => dispatch({ type: 'SET_SERVICE', payload: s })}
-          onBack={() => dispatch({ type: 'BACK' })}
+        <Step1Category
+          services={services}
+          categories={categories}
+          onSelectService={(service) => dispatch({ type: 'SET_SERVICE', payload: service })}
         />
       )}
       {state.step === 3 && state.service && (
@@ -190,6 +202,7 @@ export default function BookingWizard({ initialCategory, initialServiceId }: Pro
           employee={state.employee}
           date={state.date}
           time={state.time}
+          categories={categories}
           onSuccess={(appt) => dispatch({ type: 'SET_APPOINTMENT', payload: appt })}
           onBack={() => dispatch({ type: 'BACK' })}
         />

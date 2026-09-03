@@ -9,20 +9,28 @@ const { templateForEvent } = require('../../lib/emailTemplates');
 router.use(authenticate, requirePermission('manage_settings'));
 
 const SMTP_KEYS = ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from'];
+const SMTP_PASS_MASK = '••••••••';
+
+async function readSmtpForm() {
+  const rows = await prisma.setting.findMany({ where: { key: { in: SMTP_KEYS } } });
+  const byKey = Object.fromEntries(rows.map((r) => [r.key, r.value]));
+  const hasSaved = rows.some((r) => r.value != null && String(r.value).trim() !== '');
+  return {
+    smtpHost: byKey.smtp_host ?? '',
+    smtpPort: byKey.smtp_port ?? '',
+    smtpUser: byKey.smtp_user ?? '',
+    smtpPass: byKey.smtp_pass ? SMTP_PASS_MASK : '',
+    smtpFrom: byKey.smtp_from ?? '',
+    source: hasSaved ? 'database' : 'env',
+  };
+}
 
 router.get('/smtp', async (req, res) => {
   try {
-    const rows = await prisma.setting.findMany({ where: { key: { in: SMTP_KEYS } } });
-    const byKey = Object.fromEntries(rows.map((r) => [r.key, r.value]));
-
-    res.json({
-      smtpHost: byKey.smtp_host ?? process.env.SMTP_HOST ?? '',
-      smtpPort: byKey.smtp_port ?? process.env.SMTP_PORT ?? '',
-      smtpUser: byKey.smtp_user ?? process.env.SMTP_USER ?? '',
-      smtpPass: byKey.smtp_pass || process.env.SMTP_PASS ? '••••••••' : '',
-      smtpFrom: byKey.smtp_from ?? process.env.SMTP_FROM ?? '',
-      source: byKey.smtp_host ? 'database' : 'env',
-    });
+    // Form values come only from the database. Env SMTP_* is a mailer fallback,
+    // not something to show (or overwrite) in the backoffice — production Node
+    // env has historically held the backoffice login, not the mailbox.
+    res.json(await readSmtpForm());
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -31,7 +39,6 @@ router.get('/smtp', async (req, res) => {
 router.put('/smtp', async (req, res) => {
   try {
     const { smtpHost, smtpPort, smtpUser, smtpPass, smtpFrom } = req.body;
-
     const updates = [
       ['smtp_host', smtpHost],
       ['smtp_port', smtpPort],
@@ -39,19 +46,23 @@ router.put('/smtp', async (req, res) => {
       ['smtp_from', smtpFrom],
     ];
     // Only overwrite the password if a new one was actually provided (not the masked placeholder)
-    if (smtpPass && smtpPass !== '••••••••') updates.push(['smtp_pass', smtpPass]);
+    if (smtpPass && smtpPass !== SMTP_PASS_MASK) updates.push(['smtp_pass', smtpPass]);
 
-    for (const [key, value] of updates) {
-      if (value === undefined) continue;
+    const writable = updates.filter(([, value]) => value !== undefined);
+    if (!writable.length) {
+      return res.status(400).json({ error: 'Nenhum campo SMTP foi enviado' });
+    }
+
+    for (const [key, value] of writable) {
       await prisma.setting.upsert({
         where: { key },
-        update: { value: String(value) },
-        create: { key, value: String(value) },
+        update: { value: String(value).trim() },
+        create: { key, value: String(value).trim() },
       });
     }
 
     await logEvent('info', 'settings', 'SMTP settings updated', { userId: req.user.id, ip: req.ip });
-    res.json({ message: 'SMTP settings saved' });
+    res.json({ message: 'SMTP settings saved', ...(await readSmtpForm()) });
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

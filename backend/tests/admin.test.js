@@ -398,6 +398,89 @@ describe('GET/PUT /v1/admin/settings/notifications', () => {
     expect(put.body.users.find((u) => u.id === adminUser.id).preferences.reminder_24h).toBe(true);
     await prisma.notificationPreference.deleteMany({ where: { userId: adminUser.id } });
   });
+
+  it('saves notification mailboxes and reads them back', async () => {
+    const put = await request(app)
+      .put('/v1/admin/settings/notifications')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        preferences: [],
+        mailboxes: [{ userId: adminUser.id, notificationEmail: 'admin-notify@ganeshaink.pt' }],
+      });
+    expect(put.status).toBe(200);
+    expect(put.body.users.find((u) => u.id === adminUser.id).notificationEmail).toBe('admin-notify@ganeshaink.pt');
+
+    const get = await request(app).get('/v1/admin/settings/notifications').set('Authorization', `Bearer ${adminToken}`);
+    expect(get.body.users.find((u) => u.id === adminUser.id).notificationEmail).toBe('admin-notify@ganeshaink.pt');
+
+    await prisma.user.update({ where: { id: adminUser.id }, data: { notificationEmail: null } });
+  });
+});
+
+describe('GET/PUT /v1/admin/settings/smtp', () => {
+  const SMTP_KEYS = ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from'];
+  const prevEnv = {};
+
+  beforeAll(() => {
+    for (const key of ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'SMTP_FROM']) {
+      prevEnv[key] = process.env[key];
+    }
+    process.env.SMTP_HOST = 'env-host.example';
+    process.env.SMTP_PORT = '587';
+    process.env.SMTP_USER = 'eduardo';
+    process.env.SMTP_PASS = 'env-secret';
+    process.env.SMTP_FROM = 'Env <env@example.com>';
+  });
+
+  afterAll(async () => {
+    await prisma.setting.deleteMany({ where: { key: { in: SMTP_KEYS } } });
+    for (const [key, value] of Object.entries(prevEnv)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  });
+
+  beforeEach(async () => {
+    await prisma.setting.deleteMany({ where: { key: { in: SMTP_KEYS } } });
+  });
+
+  it('does not fill the form from process.env when nothing is saved', async () => {
+    const res = await request(app).get('/v1/admin/settings/smtp').set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.smtpHost).toBe('');
+    expect(res.body.smtpPort).toBe('');
+    expect(res.body.smtpUser).toBe('');
+    expect(res.body.smtpPass).toBe('');
+    expect(res.body.smtpFrom).toBe('');
+  });
+
+  it('saves values and reads them back even when env has a different SMTP_USER', async () => {
+    const payload = {
+      smtpHost: 'mail.ganeshaink.pt',
+      smtpPort: '465',
+      smtpUser: 'noreply@ganeshaink.pt',
+      smtpPass: 'secret-pass',
+      smtpFrom: 'Ganesha Ink <noreply@ganeshaink.pt>',
+    };
+    const put = await request(app)
+      .put('/v1/admin/settings/smtp')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send(payload);
+    expect(put.status).toBe(200);
+    expect(put.body.smtpHost).toBe(payload.smtpHost);
+    expect(put.body.smtpPort).toBe(payload.smtpPort);
+    expect(put.body.smtpUser).toBe(payload.smtpUser);
+    expect(put.body.smtpFrom).toBe(payload.smtpFrom);
+    expect(put.body.smtpPass).toBe('••••••••');
+    expect(put.body.source).toBe('database');
+
+    const get = await request(app).get('/v1/admin/settings/smtp').set('Authorization', `Bearer ${adminToken}`);
+    expect(get.status).toBe(200);
+    expect(get.body.smtpUser).toBe('noreply@ganeshaink.pt');
+    expect(get.body.smtpHost).toBe('mail.ganeshaink.pt');
+    expect(get.body.smtpPort).toBe('465');
+    expect(get.body.source).toBe('database');
+  });
 });
 
 const TINY_PNG = Buffer.from(
