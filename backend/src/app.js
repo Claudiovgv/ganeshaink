@@ -50,12 +50,26 @@ app.set('trust proxy', 1);
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
+function withWww(url) {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.startsWith('www.') ? u.hostname.slice(4) : u.hostname;
+    return [`${u.protocol}//${host}`, `${u.protocol}//www.${host}`];
+  } catch {
+    return url ? [url] : [];
+  }
+}
+
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || 'http://localhost:3000',
-    process.env.BACKOFFICE_URL || 'http://localhost:3011',
+    ...withWww(process.env.FRONTEND_URL || 'http://localhost:3000'),
+    ...withWww(process.env.BACKOFFICE_URL || 'http://localhost:3011'),
+    'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:3011',
+    'https://ganeshaink.pt',
+    'https://www.ganeshaink.pt',
+    'https://admin.ganeshaink.pt',
   ],
   credentials: true,
 }));
