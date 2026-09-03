@@ -3,17 +3,22 @@ const prisma = require('../../config/database');
 const bcrypt = require('bcryptjs');
 const { authenticate, requirePermission } = require('../../middleware/auth');
 const { logEvent } = require('../../lib/logger');
+const { isDeliverableEmail } = require('../../lib/notifications');
+
+router.use(authenticate, requirePermission('manage_employees'));
+
+const EMPLOYEE_INCLUDE = {
+  user: { select: { id: true, email: true, role: true, notificationEmail: true } },
+  services: { orderBy: { sortOrder: 'asc' }, include: { service: { include: { category: { include: { parent: true } } } } } },
+  workSchedules: { where: { isActive: true } },
+};
 
 router.use(authenticate, requirePermission('manage_employees'));
 
 router.get('/', async (req, res) => {
   try {
     const employees = await prisma.employee.findMany({
-      include: {
-        user: { select: { id: true, email: true, role: true } },
-        services: { orderBy: { sortOrder: 'asc' }, include: { service: { include: { category: { include: { parent: true } } } } } },
-        workSchedules: { where: { isActive: true } },
-      },
+      include: EMPLOYEE_INCLUDE,
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     });
     res.json(employees);
@@ -43,8 +48,13 @@ router.put('/reorder', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, email, password, bio, role = 'employee', serviceIds } = req.body;
+    const { name, email, password, bio, role = 'employee', serviceIds, notificationEmail } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: 'name, email, password required' });
+
+    const mailbox = notificationEmail == null ? '' : String(notificationEmail).trim();
+    if (mailbox && !isDeliverableEmail(mailbox)) {
+      return res.status(400).json({ error: 'Email de notificação inválido' });
+    }
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) return res.status(409).json({ error: 'Email already in use' });
@@ -52,6 +62,7 @@ router.post('/', async (req, res) => {
     const user = await prisma.user.create({
       data: {
         name, email, password: await bcrypt.hash(password, 10), role,
+        notificationEmail: mailbox || null,
         employee: { create: { name, bio: bio || null, isActive: true } },
       },
       include: { employee: true },
@@ -64,8 +75,11 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const { password: _, ...safeUser } = user;
-    res.status(201).json(safeUser);
+    const employee = await prisma.employee.findUnique({
+      where: { id: user.employee.id },
+      include: EMPLOYEE_INCLUDE,
+    });
+    res.status(201).json(employee);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -74,7 +88,10 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, bio, isActive, serviceIds, materialCost, payoutPercent } = req.body;
+    const { name, bio, isActive, serviceIds, materialCost, studioPercent, notificationEmail } = req.body;
+
+    const existing = await prisma.employee.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ error: 'Funcionário não encontrado' });
 
     const updateData = {};
     if (name !== undefined) updateData.name = name;
@@ -82,9 +99,20 @@ router.put('/:id', async (req, res) => {
     if (isActive !== undefined) updateData.isActive = isActive;
     // Vazio/null limpa o valor (volta a "por configurar").
     if (materialCost !== undefined) updateData.materialCost = materialCost === '' || materialCost === null ? null : materialCost;
-    if (payoutPercent !== undefined) updateData.payoutPercent = payoutPercent === '' || payoutPercent === null ? null : payoutPercent;
+    if (studioPercent !== undefined) updateData.studioPercent = studioPercent === '' || studioPercent === null ? null : studioPercent;
 
-    const employee = await prisma.employee.update({ where: { id }, data: updateData });
+    await prisma.employee.update({ where: { id }, data: updateData });
+
+    if (notificationEmail !== undefined) {
+      const mailbox = notificationEmail == null ? '' : String(notificationEmail).trim();
+      if (mailbox && !isDeliverableEmail(mailbox)) {
+        return res.status(400).json({ error: 'Email de notificação inválido' });
+      }
+      await prisma.user.update({
+        where: { id: existing.userId },
+        data: { notificationEmail: mailbox || null },
+      });
+    }
 
     if (serviceIds !== undefined) {
       await prisma.employeeService.deleteMany({ where: { employeeId: id } });
@@ -95,6 +123,8 @@ router.put('/:id', async (req, res) => {
         });
       }
     }
+
+    const employee = await prisma.employee.findUnique({ where: { id }, include: EMPLOYEE_INCLUDE });
     res.json(employee);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });

@@ -40,6 +40,11 @@ const Icons: Record<string, JSX.Element> = {
       <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
     </svg>
   ),
+  'Cópia de marcações': (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+  ),
   Marcações: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
@@ -77,6 +82,12 @@ const Icons: Record<string, JSX.Element> = {
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
     </svg>
   ),
+  Parcerias: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  ),
   Blog: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -109,6 +120,11 @@ const Icons: Record<string, JSX.Element> = {
     </svg>
   ),
   SMTP: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+    </svg>
+  ),
+  'SMTP e notificações': (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
     </svg>
@@ -159,6 +175,7 @@ const ADMIN_NAV_ALL = [
     section: 'Marcações',
     items: [
       { href: '/marcacoes', label: 'Marcações', perm: 'manage_appointments' as AdminPermissionKey | null },
+      { href: '/copia-marcacoes', label: 'Cópia de marcações', perm: 'manage_appointments' as AdminPermissionKey | null },
       { href: '/consultas', label: 'Consultas', perm: 'manage_appointments' as AdminPermissionKey | null },
     ],
   },
@@ -171,13 +188,14 @@ const ADMIN_NAV_ALL = [
       { href: '/servicos', label: 'Serviços', perm: 'manage_services' as AdminPermissionKey | null },
       { href: '/categorias', label: 'Categorias', perm: 'manage_services' as AdminPermissionKey | null },
       { href: '/clientes', label: 'Clientes', perm: 'manage_clients' as AdminPermissionKey | null },
+      { href: '/parcerias', label: 'Parcerias', perm: 'manage_appointments' as AdminPermissionKey | null },
       { href: '/blog', label: 'Blog', perm: 'manage_blog' as AdminPermissionKey | null },
     ],
   },
   {
     section: 'Definições',
     items: [
-      { href: '/definicoes/smtp', label: 'SMTP', perm: 'manage_settings' as AdminPermissionKey | null },
+      { href: '/definicoes/smtp', label: 'SMTP e notificações', perm: 'manage_settings' as AdminPermissionKey | null },
       { href: '/definicoes/contas-barbearia', label: 'Contas Barbearia', perm: 'manage_settings' as AdminPermissionKey | null },
       { href: '/definicoes/tecnologia', label: 'Tecnologia', perm: 'manage_settings' as AdminPermissionKey | null },
     ],
@@ -233,6 +251,7 @@ const SUPERADMIN_NAV = [
     section: 'Marcações',
     items: [
       { href: '/marcacoes', label: 'Marcações' },
+      { href: '/copia-marcacoes', label: 'Cópia de marcações' },
       { href: '/consultas', label: 'Consultas' },
     ],
   },
@@ -245,13 +264,14 @@ const SUPERADMIN_NAV = [
       { href: '/servicos', label: 'Serviços' },
       { href: '/categorias', label: 'Categorias' },
       { href: '/clientes', label: 'Clientes' },
+      { href: '/parcerias', label: 'Parcerias' },
       { href: '/blog', label: 'Blog' },
     ],
   },
   {
     section: 'Definições',
     items: [
-      { href: '/definicoes/smtp', label: 'SMTP' },
+      { href: '/definicoes/smtp', label: 'SMTP e notificações' },
       { href: '/definicoes/contas-barbearia', label: 'Contas Barbearia' },
       { href: '/definicoes/tecnologia', label: 'Tecnologia' },
       { href: '/definicoes/logs', label: 'Log' },

@@ -69,4 +69,14 @@ async function sendTestMail(config, to) {
   });
 }
 
-module.exports = { sendMail, sendTestMail, getSmtpConfig };
+// Throws so the SMTP test-template action can show the real error in the backoffice.
+async function sendMailOrThrow({ to, subject, html }) {
+  const config = await getSmtpConfig();
+  if (!config.host || !config.user || !config.pass) {
+    throw new Error('Preenche pelo menos o servidor, utilizador e password antes de testar.');
+  }
+  const transporter = buildTransporter(config);
+  await transporter.sendMail({ from: config.from, to, subject, html, attachments: [LOGO_ATTACHMENT] });
+}
+
+module.exports = { sendMail, sendTestMail, sendMailOrThrow, getSmtpConfig };

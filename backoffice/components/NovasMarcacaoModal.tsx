@@ -1,6 +1,6 @@
 'use client';
-import { useState, useTransition, useEffect } from 'react';
-import type { Appointment, AppointmentConflict, Client, Employee, Service } from '@/lib/types';
+import { useState, useTransition } from 'react';
+import type { Appointment, AppointmentConflict, Client, Employee, Partnership, Service } from '@/lib/types';
 import Button from './Button';
 import { createAppointmentAction } from '@/lib/actions';
 import { formatLisbon } from '@/lib/timezone';
@@ -9,6 +9,7 @@ interface Props {
   employees: Employee[];
   services: Service[];
   clients: Client[];
+  partnerships: Partnership[];
   onClose: () => void;
   onCreated: (appt: Appointment) => void;
   // Pré-preenchido quando vem da página Clientes
@@ -23,7 +24,7 @@ const TIME_SLOTS = [
   '16:00', '16:30', '17:00', '17:30', '18:00', '18:30',
 ];
 
-export default function NovaMarcacaoModal({ employees, services, clients, onClose, onCreated, prefill }: Props) {
+export default function NovaMarcacaoModal({ employees, services, clients, partnerships, onClose, onCreated, prefill }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
   const [conflict, setConflict] = useState<AppointmentConflict | null>(null);
@@ -44,6 +45,8 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [notes, setNotes] = useState('');
+  const [partnershipId, setPartnershipId] = useState('');
+  const [extraFieldValue, setExtraFieldValue] = useState('');
 
   // Filtrar serviços pelo funcionário selecionado
   const employeeServices = employeeId
@@ -58,6 +61,11 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
       c.email.toLowerCase().includes(clientSearch.toLowerCase())
   );
 
+  const selectedPartnership = partnerships.find((p) => p.id === Number(partnershipId) && p.isActive !== false);
+  const selectedService = employeeServices.find((s) => s.id === Number(serviceId));
+  const discounted = selectedPartnership && selectedService
+    ? Math.round(Number(selectedService.price) * (1 - Number(selectedPartnership.percent) / 100) * 100) / 100
+    : null;
   const clientName = clientMode === 'existing' ? selectedClient?.name ?? '' : newClient.name;
   const clientEmail = clientMode === 'existing' ? selectedClient?.email ?? '' : newClient.email;
   const clientPhone = clientMode === 'existing' ? selectedClient?.phone ?? '' : newClient.phone;
@@ -74,6 +82,8 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
           date, time,
           notes: notes || undefined,
           force,
+          partnershipId: partnershipId ? Number(partnershipId) : null,
+          extraFieldValue: extraFieldValue || undefined,
         });
         if (!result.ok) {
           setConflict(result.conflict);
@@ -236,6 +246,36 @@ export default function NovaMarcacaoModal({ employees, services, clients, onClos
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Parceria (opcional, só interno)</label>
+            <select
+              value={partnershipId}
+              onChange={(e) => { setPartnershipId(e.target.value); setExtraFieldValue(''); }}
+              className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2.5 text-sm focus:border-gold focus:outline-none"
+            >
+              <option value="">Sem parceria</option>
+              {partnerships.filter((p) => p.isActive !== false).map((p) => (
+                <option key={p.id} value={p.id}>{p.name} ({Number(p.percent)}%)</option>
+              ))}
+            </select>
+            {selectedPartnership?.extraFieldLabel && (
+              <input
+                required
+                value={extraFieldValue}
+                onChange={(e) => setExtraFieldValue(e.target.value)}
+                placeholder={`${selectedPartnership.extraFieldLabel} *`}
+                className="w-full mt-2 bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none"
+              />
+            )}
+            {discounted != null && selectedService && (
+              <p className="text-sm mt-2">
+                <span className="text-text-secondary line-through mr-2">{Number(selectedService.price).toFixed(2)}€</span>
+                <span className="text-gold font-semibold">{discounted.toFixed(2)}€</span>
+                <span className="text-text-secondary text-xs"> com {selectedPartnership?.name}</span>
+              </p>
+            )}
           </div>
 
           {/* ── Data e Hora ── */}

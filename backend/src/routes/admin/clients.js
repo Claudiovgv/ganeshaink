@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     const { email } = req.query;
     const appointments = await prisma.appointment.findMany({
       where: email ? { clientEmail: email } : {},
-      include: { employee: { select: { id: true, name: true } }, service: true },
+      include: { employee: { select: { id: true, name: true } }, service: true, partnership: { select: { id: true, name: true } } },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -29,7 +29,11 @@ router.get('/', async (req, res) => {
       }
       clientMap[apt.clientEmail].appointments.push(apt);
     });
-    const clients = Object.values(clientMap).map((c) => ({ ...c, appointmentCount: c.appointments.length }));
+    const clients = Object.values(clientMap).map((c) => ({
+      ...c,
+      appointmentCount: c.appointments.length,
+      lastPartnership: c.appointments.find((a) => a.partnership)?.partnership?.name ?? null,
+    }));
     res.json(clients);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });

@@ -118,7 +118,9 @@ export default function ServicosGrid({ services, categories }: { services: Servi
   const [view, setView] = useState<View>({ level: 'closed' });
 
   const grouped = services.reduce((acc, s) => {
-    (acc[s.category.slug] ??= []).push(s);
+    const slug = s.category?.slug;
+    if (!slug) return acc;
+    (acc[slug] ??= []).push(s);
     return acc;
   }, {} as Record<string, Service[]>);
 

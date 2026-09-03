@@ -30,7 +30,10 @@ export default function ReorderList({ items, onSave, emptyMessage = 'Sem itens.'
   function handleSave() {
     startTransition(async () => {
       try {
-        await onSave(order.map((i) => i.id));
+        const result = await onSave(order.map((i) => i.id));
+        if (result && typeof result === 'object' && 'ok' in result && (result as { ok: boolean }).ok === false) {
+          throw new Error((result as { error?: string }).error || 'Não foi possível guardar a ordem.');
+        }
         setStatus('saved');
         setTimeout(() => setStatus('idle'), 2500);
       } catch (err) {

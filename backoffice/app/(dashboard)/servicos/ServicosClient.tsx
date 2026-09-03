@@ -113,7 +113,10 @@ export default function ServicosClient({ initial, role, myOrder, employees = [],
   }
 
   async function handleReorderCatalog(orderedIds: number[]) {
-    await reorderCatalogAction(orderedIds);
+    const res = await reorderCatalogAction(orderedIds);
+    if (res && typeof res === 'object' && 'ok' in res && res.ok === false) {
+      throw new Error(res.error);
+    }
     setServices((prev) => {
       const rest = prev.filter((s) => s.categoryId !== categoryId);
       const reordered = orderedIds

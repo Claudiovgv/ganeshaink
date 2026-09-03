@@ -56,7 +56,7 @@ function CategoryRow({
   const nServices = category._count?.services ?? 0;
 
   return (
-    <div className={`flex items-center gap-3 bg-bg-card border border-gold-border/30 rounded-lg px-4 py-3 ${indent ? 'ml-8' : ''}`}>
+    <div className={`flex flex-col sm:flex-row sm:items-center gap-3 bg-bg-card border border-gold-border/30 rounded-lg px-4 py-3 ${indent ? 'ml-4 sm:ml-8' : ''}`}>
       <div className="flex gap-1 flex-shrink-0">
         <button
           type="button" onClick={() => onMove(-1)} disabled={index === 0}
@@ -84,10 +84,10 @@ function CategoryRow({
             <Button size="sm" variant="outline" onClick={() => { setRenaming(false); setName(category.name); }}>Cancelar</Button>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
+        <div className="flex items-start sm:items-center gap-2 min-w-0">
             {indent && <span className="text-text-muted text-xs">↳</span>}
-            <span className={`text-sm ${category.isActive ? 'text-text-primary' : 'text-text-muted'}`}>{category.name}</span>
-            <span className="text-text-muted text-xs">/{category.slug}</span>
+            <span className={`text-sm break-words ${category.isActive ? 'text-text-primary' : 'text-text-muted'}`}>{category.name}</span>
+            <span className="text-text-muted text-xs hidden sm:inline">/{category.slug}</span>
             <span className="text-text-muted text-xs">· {nServices} serviço{nServices !== 1 ? 's' : ''}</span>
             {!category.isActive && <span className="text-amber-400 text-xs">Desativada</span>}
           </div>
@@ -96,7 +96,7 @@ function CategoryRow({
       </div>
 
       {!renaming && (
-        <div className="flex gap-2 flex-shrink-0">
+        <div className="flex flex-wrap gap-2 sm:flex-shrink-0">
           <Button size="sm" variant="outline" onClick={() => setRenaming(true)}>Renomear</Button>
           <Button size="sm" variant={category.isActive ? 'danger' : 'gold'} onClick={toggleActive} disabled={isPending}>
             {category.isActive ? 'Desativar' : 'Ativar'}
@@ -128,8 +128,8 @@ function NewCategoryForm({ parent, onCreated }: { parent?: Category; onCreated: 
   }
 
   return (
-    <div className={parent ? 'ml-8' : ''}>
-      <div className="flex items-center gap-2">
+    <div className={parent ? 'ml-4 sm:ml-8' : ''}>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}

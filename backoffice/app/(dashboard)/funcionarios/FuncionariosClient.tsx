@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import ReorderList from '@/components/ReorderList';
 import { createEmployeeAction, updateEmployeeAction, deleteEmployeeAction, reorderEmployeesAction } from '@/lib/actions';
 
-const emptyForm = { name: '', email: '', password: '', bio: '', role: 'employee', serviceIds: [] as number[] };
+const emptyForm = { name: '', email: '', password: '', bio: '', role: 'employee', notificationEmail: '', serviceIds: [] as number[] };
 type FormState = typeof emptyForm;
 
 function initials(name: string) {
@@ -82,6 +82,7 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
       password: '',
       bio: emp.bio ?? '',
       role: emp.user.role,
+      notificationEmail: emp.user.notificationEmail ?? '',
       serviceIds: emp.services.map((s) => s.service.id),
     });
   }
@@ -102,9 +103,16 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
         name: form.name,
         bio: form.bio,
         serviceIds: form.serviceIds,
+        notificationEmail: form.notificationEmail || null,
       }) as Employee;
       setEmployees((prev) => prev.map((e) => e.id === editing.id
-        ? { ...e, name: updated.name, bio: updated.bio, services: form.serviceIds.map((id) => ({ service: services.find((s) => s.id === id)! })) }
+        ? {
+            ...e,
+            name: updated.name,
+            bio: updated.bio,
+            services: form.serviceIds.map((id) => ({ service: services.find((s) => s.id === id)! })),
+            user: { ...e.user, notificationEmail: form.notificationEmail || null },
+          }
         : e));
       setEditing(null);
     });
@@ -143,7 +151,7 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
           </div>
           <div className="min-w-0">
             <p className="font-medium truncate">{e.name}</p>
-            <p className="text-text-muted text-xs truncate">{e.user.email}</p>
+            <p className="text-text-muted text-xs truncate">{e.user.notificationEmail || e.user.email}</p>
           </div>
         </div>
       ),
@@ -254,6 +262,17 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
                   </div>
                 </>
               )}
+              <div>
+                <label className="block text-xs text-text-secondary mb-1">Email para notificações</label>
+                <input
+                  type="email"
+                  placeholder="ex: eduardo@ganeshaink.pt"
+                  value={form.notificationEmail}
+                  onChange={(e) => setForm({ ...form, notificationEmail: e.target.value })}
+                  className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm placeholder-text-muted"
+                />
+                <p className="text-text-muted text-[11px] mt-1">Para onde chegam os emails de marcações. Pode ser diferente do login.</p>
+              </div>
               <div>
                 <label className="block text-xs text-text-secondary mb-1">Bio (opcional, aparece no site)</label>
                 <input

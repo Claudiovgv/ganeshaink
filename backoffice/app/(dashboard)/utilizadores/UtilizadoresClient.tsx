@@ -12,7 +12,7 @@ const ROLE_STYLE: Record<string, string> = {
   employee: 'text-text-secondary border-gold-border',
 };
 
-const emptyForm = { name: '', email: '', password: '', role: 'admin' };
+const emptyForm = { name: '', email: '', password: '', role: 'admin', notificationEmail: '' };
 
 function initials(name: string) {
   return name.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
@@ -35,7 +35,7 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
 
   function openEdit(u: User) {
     setEditing(u);
-    setForm({ name: u.name, email: u.email, password: '', role: u.role });
+    setForm({ name: u.name, email: u.email, password: '', role: u.role, notificationEmail: u.notificationEmail ?? '' });
     setError(null);
   }
 
@@ -57,7 +57,7 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
     setError(null);
     startTransition(async () => {
       try {
-        const updated = await updateUserAction(editing.id, { name: form.name, role: form.role });
+        const updated = await updateUserAction(editing.id, { name: form.name, role: form.role, notificationEmail: form.notificationEmail || null });
         setUsers((prev) => prev.map((u) => u.id === editing.id ? { ...u, ...updated } : u));
         setEditing(null);
       } catch (err) {
@@ -173,6 +173,16 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
                   </div>
                 </>
               )}
+              <div>
+                <label className="block text-xs text-text-secondary mb-1">Email para notificações</label>
+                <input
+                  type="email"
+                  placeholder="ex: webdev@ganeshaink.pt"
+                  value={form.notificationEmail}
+                  onChange={(e) => setForm({ ...form, notificationEmail: e.target.value })}
+                  className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm placeholder-text-muted"
+                />
+              </div>
               <div>
                 <label className="block text-xs text-text-secondary mb-1">Papel</label>
                 <select

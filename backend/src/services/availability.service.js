@@ -40,6 +40,9 @@ function getAvailableSlots(employee, dateStr, durationMin) {
   const workStart = lisboaTimeToUTC(dateStr, schedule.startTime);
   const workEnd = lisboaTimeToUTC(dateStr, schedule.endTime);
 
+  // Grelha de 15 min: um dia livre mostra 11:30, 11:45, 12:00… e não só
+  // horários saltados pela duração do serviço (ex.: cortes de 75 min).
+  const SLOT_STEP_MIN = 15;
   const slots = [];
   let current = workStart;
 
@@ -66,7 +69,7 @@ function getAvailableSlots(employee, dateStr, durationMin) {
       slots.push(format(zonedTime, 'HH:mm', { timeZone: TIMEZONE }));
     }
 
-    current = addMinutes(current, durationMin);
+    current = addMinutes(current, SLOT_STEP_MIN);
   }
 
   return slots;

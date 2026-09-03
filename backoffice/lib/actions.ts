@@ -77,13 +77,14 @@ export async function deleteAppointmentAction(id: number) {
 export async function createAppointmentAction(data: {
   clientName: string; clientEmail?: string; clientPhone?: string;
   employeeId: number; serviceId: number; date: string; time: string; notes?: string; force?: boolean;
+  partnershipId?: number | null; extraFieldValue?: string;
 }) {
   return api.appointments.create(data);
 }
 
 export async function updateAppointmentClientAction(
   id: number,
-  data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null },
+  data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null; partnershipId?: number | null; extraFieldValue?: string | null },
 ) {
   return api.appointments.updateClient(id, data);
 }
@@ -131,7 +132,12 @@ export async function deleteServiceAction(id: number) {
 }
 
 export async function reorderCatalogAction(serviceIds: number[]) {
-  return api.services.adminReorder(serviceIds);
+  try {
+    await api.services.adminReorder(serviceIds);
+    return { ok: true as const };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
 }
 
 export async function updateMyServiceOrderAction(serviceIds: number[]) {
@@ -207,6 +213,18 @@ export async function deleteAdminBlockAction(id: number) {
   await api.adminBlocks.remove(id);
 }
 
+export async function createPartnershipAction(data: { name: string; percent: number; extraFieldLabel?: string | null }) {
+  return api.partnerships.create(data);
+}
+
+export async function updatePartnershipAction(id: number, data: { name?: string; percent?: number; extraFieldLabel?: string | null; isActive?: boolean }) {
+  return api.partnerships.update(id, data);
+}
+
+export async function deletePartnershipAction(id: number) {
+  return api.partnerships.remove(id);
+}
+
 export async function updateProfileAction(data: object) {
   return api.profile.update(data);
 }
@@ -242,6 +260,25 @@ export async function testSmtpSettingsAction(data: import('./types').SmtpSetting
   }
 }
 
+export async function updateNotificationPreferencesAction(
+  preferences: { userId: number; eventType: string; enabled: boolean }[],
+  mailboxes?: { userId: number; notificationEmail: string }[],
+) {
+  try {
+    return { ok: true as const, matrix: await api.settings.updateNotifications({ preferences, mailboxes }) };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
+}
+
+export async function testSmtpTemplateAction(data: { eventType: string; testEmail: string; audience?: 'client' | 'staff' }) {
+  try {
+    return { ok: true as const, message: (await api.settings.testSmtpTemplate(data)).message };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
+}
+
 export async function fetchLogsAction(params: { level?: string; page?: number }) {
   return api.logs.list(params);
 }
@@ -250,7 +287,7 @@ export async function createUserAction(data: { name: string; email: string; pass
   return api.users.create(data);
 }
 
-export async function updateUserAction(id: number, data: { name?: string; role?: string }) {
+export async function updateUserAction(id: number, data: { name?: string; role?: string; notificationEmail?: string | null }) {
   return api.users.update(id, data);
 }
 
@@ -268,4 +305,16 @@ export async function fetchStatsAction(period: import('./types').StatsPeriod, of
 
 export async function fetchBarbershopStatsAction(period: import('./types').StatsPeriod, offset: number) {
   return api.stats.getBarbershop(period, offset);
+}
+
+export async function exportAppointmentsAction() {
+  return api.appointments.exportAll();
+}
+
+export async function importAppointmentsAction(appointments: import('./types').AppointmentExportRow[]) {
+  try {
+    return { ok: true as const, result: await api.appointments.importAll(appointments) };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
 }

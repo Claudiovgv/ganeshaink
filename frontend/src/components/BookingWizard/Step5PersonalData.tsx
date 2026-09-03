@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { api, Service, Employee, Appointment } from '@/lib/api';
-import { formatPrice, formatDuration } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 import Button from '../ui/Button';
 
 interface Props {

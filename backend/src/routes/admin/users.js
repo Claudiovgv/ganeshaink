@@ -9,7 +9,7 @@ router.use(authenticate, requireSuperadmin);
 router.get('/', async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      select: { id: true, name: true, email: true, role: true, twoFactorEnabled: true, createdAt: true, employee: { select: { id: true, isActive: true } } },
+      select: { id: true, name: true, email: true, notificationEmail: true, role: true, twoFactorEnabled: true, createdAt: true, employee: { select: { id: true, isActive: true } } },
       orderBy: { createdAt: 'asc' },
     });
     res.json(users);
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 
     const user = await prisma.user.create({
       data: { name, email, password: await bcrypt.hash(password, 10), role },
-      select: { id: true, name: true, email: true, role: true, twoFactorEnabled: true, createdAt: true },
+      select: { id: true, name: true, email: true, notificationEmail: true, role: true, twoFactorEnabled: true, createdAt: true },
     });
 
     logEvent('info', 'users', `Utilizador criado: ${email} (${role})`, { userId: req.user.id, ip: req.ip });
@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, role } = req.body;
+    const { name, role, notificationEmail } = req.body;
 
     if (id === req.user.id && role && role !== req.user.role) {
       return res.status(400).json({ error: 'Não podes alterar o teu próprio papel' });
@@ -54,11 +54,18 @@ router.put('/:id', async (req, res) => {
     const data = {};
     if (name !== undefined) data.name = name;
     if (role !== undefined) data.role = role;
+    if (notificationEmail !== undefined) {
+      const mailbox = notificationEmail == null ? '' : String(notificationEmail).trim();
+      if (mailbox && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mailbox)) {
+        return res.status(400).json({ error: 'Email de notificação inválido' });
+      }
+      data.notificationEmail = mailbox || null;
+    }
 
     const user = await prisma.user.update({
       where: { id },
       data,
-      select: { id: true, name: true, email: true, role: true, twoFactorEnabled: true, createdAt: true },
+      select: { id: true, name: true, email: true, notificationEmail: true, role: true, twoFactorEnabled: true, createdAt: true },
     });
 
     logEvent('info', 'users', `Utilizador atualizado: ${user.email}`, { userId: req.user.id, ip: req.ip });

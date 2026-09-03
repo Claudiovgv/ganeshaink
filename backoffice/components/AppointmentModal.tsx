@@ -29,6 +29,10 @@ export default function AppointmentModal({ appointment: apt, onClose }: Props) {
           <Row label="Artista" value={apt.employee.name} />
           <Row label="Horário" value={`${fmt(apt.startDatetime)} — ${fmt(apt.endDatetime)}`} />
           <Row label="Duração" value={`${apt.service.durationMin} min`} />
+          {apt.partnership && (
+            <Row label="Parceria" value={`${apt.partnership.name}${apt.extraFieldValue ? ` · ${apt.extraFieldValue}` : ''}`} />
+          )}
+          {apt.price != null && <Row label="Valor" value={`${Number(apt.price).toFixed(2)}€`} />}
           <div className="flex items-center justify-between py-1">
             <span className="text-text-secondary">Estado</span>
             <Badge status={apt.status} />

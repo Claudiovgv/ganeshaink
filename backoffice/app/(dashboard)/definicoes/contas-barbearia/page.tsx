@@ -36,7 +36,7 @@ export default async function ContasBarbeariaPage() {
       <TopBar title="Contas Barbearia" />
       <div className="p-6 max-w-2xl">
         <p className="text-text-secondary text-sm mb-4">
-          Valor de material por marcação e % da receita líquida que cada barbeiro recebe — usados na página Análise → Barbearia.
+          Valor de material por marcação e % da receita líquida que fica retida para o estúdio (o barbeiro recebe o resto) — usados na página Análise → Barbearia.
         </p>
         {barbers.length === 0
           ? <p className="text-text-secondary">Nenhum barbeiro ativo com serviços de Barbearia atribuídos.</p>

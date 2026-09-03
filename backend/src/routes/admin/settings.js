@@ -2,7 +2,9 @@ const router = require('express').Router();
 const prisma = require('../../config/database');
 const { authenticate, requirePermission } = require('../../middleware/auth');
 const { logEvent } = require('../../lib/logger');
-const { sendTestMail, getSmtpConfig } = require('../../lib/mailer');
+const { sendTestMail, sendMailOrThrow, getSmtpConfig } = require('../../lib/mailer');
+const { getNotificationMatrix, saveNotificationPreferences, EVENT_TYPES } = require('../../lib/notifications');
+const { templateForEvent } = require('../../lib/emailTemplates');
 
 router.use(authenticate, requirePermission('manage_settings'));
 
@@ -73,6 +75,39 @@ router.post('/smtp/test', async (req, res) => {
     await sendTestMail(config, testEmail);
     await logEvent('info', 'settings', `Email de teste SMTP enviado para ${testEmail}`, { userId: req.user.id, ip: req.ip });
     res.json({ message: `Email de teste enviado para ${testEmail}` });
+  } catch (err) {
+    res.status(422).json({ error: err.message || 'Falha ao enviar o email de teste' });
+  }
+});
+
+router.get('/notifications', async (req, res) => {
+  try {
+    res.json(await getNotificationMatrix());
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.put('/notifications', async (req, res) => {
+  try {
+    const matrix = await saveNotificationPreferences(req.body.preferences, req.body.mailboxes);
+    await logEvent('info', 'settings', 'Preferências de notificação actualizadas', { userId: req.user.id, ip: req.ip });
+    res.json(matrix);
+  } catch (err) {
+    res.status(400).json({ error: err.message || 'Não foi possível guardar as preferências' });
+  }
+});
+
+router.post('/smtp/test-template', async (req, res) => {
+  try {
+    const { eventType, testEmail, audience = 'client' } = req.body;
+    if (!testEmail) return res.status(400).json({ error: 'testEmail é obrigatório' });
+    if (!EVENT_TYPES.includes(eventType)) return res.status(400).json({ error: 'Tipo de email inválido' });
+    const template = templateForEvent(eventType, audience === 'staff' ? 'staff' : 'client');
+    if (!template) return res.status(400).json({ error: 'Tipo de email inválido' });
+    await sendMailOrThrow({ to: testEmail, subject: `[TESTE] ${template.subject}`, html: template.html });
+    await logEvent('info', 'settings', `Email de teste (${eventType}) enviado para ${testEmail}`, { userId: req.user.id, ip: req.ip });
+    res.json({ message: `Email de teste (${eventType}) enviado para ${testEmail}` });
   } catch (err) {
     res.status(422).json({ error: err.message || 'Falha ao enviar o email de teste' });
   }

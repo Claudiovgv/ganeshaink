@@ -39,27 +39,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const { name, categoryId, description, durationMin, price, requiresConsultation, isActive } = req.body;
-    const updateData = {};
-    if (name !== undefined) updateData.name = name;
-    if (categoryId !== undefined) updateData.categoryId = parseInt(categoryId);
-    if (description !== undefined) updateData.description = description;
-    if (durationMin !== undefined) updateData.durationMin = parseInt(durationMin);
-    if (price !== undefined) updateData.price = parseFloat(price);
-    if (requiresConsultation !== undefined) updateData.requiresConsultation = requiresConsultation;
-    if (isActive !== undefined) updateData.isActive = isActive;
-
-    const service = await prisma.service.update({ where: { id }, data: updateData, include: { category: { include: { parent: true } } } });
-    res.json(service);
-  } catch (err) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 // Ordem do catálogo público /servicos, dentro de cada categoria.
+// Tem de ficar ANTES de PUT /:id — senão "reorder" é lido como id.
 router.put('/reorder', async (req, res) => {
   try {
     const { serviceIds } = req.body;
@@ -76,6 +57,26 @@ router.put('/reorder', async (req, res) => {
       orderBy: [{ category: { sortOrder: 'asc' } }, { sortOrder: 'asc' }],
     });
     res.json(services);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { name, categoryId, description, durationMin, price, requiresConsultation, isActive } = req.body;
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (categoryId !== undefined) updateData.categoryId = parseInt(categoryId);
+    if (description !== undefined) updateData.description = description;
+    if (durationMin !== undefined) updateData.durationMin = parseInt(durationMin);
+    if (price !== undefined) updateData.price = parseFloat(price);
+    if (requiresConsultation !== undefined) updateData.requiresConsultation = requiresConsultation;
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    const service = await prisma.service.update({ where: { id }, data: updateData, include: { category: { include: { parent: true } } } });
+    res.json(service);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

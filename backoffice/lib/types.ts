@@ -8,6 +8,7 @@ export interface User {
   email: string;
   role: 'superadmin' | 'admin' | 'employee';
   twoFactorEnabled?: boolean;
+  notificationEmail?: string | null;
   permissions?: Partial<Record<AdminPermissionKey | EmployeePermissionKey, boolean>>;
   createdAt?: string;
   employee?: { id: number; isActive: boolean } | null;
@@ -19,9 +20,9 @@ export interface Employee {
   bio: string | null;
   photoUrl: string | null;
   materialCost: number | null;
-  payoutPercent: number | null;
+  studioPercent: number | null;
   isActive: boolean;
-  user: { id: number; email: string; role: string };
+  user: { id: number; email: string; role: string; notificationEmail?: string | null };
   services: { service: Service }[];
 }
 
@@ -63,6 +64,8 @@ export interface Appointment {
   notes: string | null;
   employee: { id: number; name: string };
   service: Service;
+  partnership: Partnership | null;
+  extraFieldValue: string | null;
   cancelToken: string;
 }
 
@@ -74,6 +77,19 @@ export interface AppointmentConflict {
 }
 
 export type CreateAppointmentResult = { ok: true; appointment: Appointment } | { ok: false; conflict: AppointmentConflict };
+
+export interface AppointmentExportRow {
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  employeeName: string;
+  serviceName: string;
+  startDatetime: string;
+  endDatetime: string;
+  status: AppointmentStatus;
+  price: number | string | null;
+  notes: string | null;
+}
 
 export type ConsultationStatus = 'pending' | 'scheduled' | 'rejected';
 
@@ -155,6 +171,27 @@ export interface SmtpSettings {
   source: 'database' | 'env';
 }
 
+export type NotificationEventType =
+  | 'new_appointment'
+  | 'appointment_confirmed'
+  | 'appointment_cancelled'
+  | 'appointment_completed'
+  | 'consultation_received'
+  | 'reminder_24h';
+
+export interface NotificationMatrix {
+  events: { id: NotificationEventType; label: string }[];
+  users: {
+    id: number;
+    name: string;
+    email: string;
+    notificationEmail: string;
+    mailbox: string | null;
+    role: string;
+    preferences: Record<NotificationEventType, boolean>;
+  }[];
+}
+
 export type LogLevel = 'info' | 'warning' | 'error' | 'security';
 
 export interface SystemLogEntry {
@@ -168,6 +205,16 @@ export interface SystemLogEntry {
   createdAt: string;
 }
 
+export interface Partnership {
+  id: number;
+  name: string;
+  percent: number;
+  extraFieldLabel: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+  _count?: { appointments: number };
+}
+
 export interface Client {
   id: number;
   name: string;
@@ -175,6 +222,7 @@ export interface Client {
   phone: string;
   nickname: string | null;
   appointmentCount: number;
+  lastPartnership?: string | null;
 }
 
 export type StatsPeriod = 'week' | 'month' | 'year';
@@ -212,8 +260,9 @@ export interface BarberStats {
   revenue: number;
   materialCost: number;
   netRevenue: number;
-  payoutPercent: number | null;
-  payoutAmount: number;
+  studioPercent: number | null;
+  studioAmount: number;
+  barberAmount: number;
   hasConfig: boolean;
 }
 
@@ -222,5 +271,5 @@ export interface BarbershopStatsResponse {
   offset: number;
   range: { start: string; end: string };
   barbers: BarberStats[];
-  totals: { count: number; revenue: number; materialCost: number; netRevenue: number; payoutAmount: number };
+  totals: { count: number; revenue: number; materialCost: number; netRevenue: number; studioAmount: number; barberAmount: number };
 }

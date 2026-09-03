@@ -130,6 +130,7 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   twoFactorSecret: 'twoFactorSecret',
   twoFactorEnabled: 'twoFactorEnabled',
+  notificationEmail: 'notificationEmail',
   createdAt: 'createdAt'
 };
 
@@ -140,7 +141,7 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   bio: 'bio',
   photoUrl: 'photoUrl',
   materialCost: 'materialCost',
-  payoutPercent: 'payoutPercent',
+  studioPercent: 'studioPercent',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt'
@@ -206,6 +207,9 @@ exports.Prisma.AppointmentScalarFieldEnum = {
   price: 'price',
   notes: 'notes',
   cancelToken: 'cancelToken',
+  reminderSentAt: 'reminderSentAt',
+  partnershipId: 'partnershipId',
+  extraFieldValue: 'extraFieldValue',
   createdAt: 'createdAt'
 };
 
@@ -237,10 +241,27 @@ exports.Prisma.BlogPostScalarFieldEnum = {
   isPublished: 'isPublished'
 };
 
+exports.Prisma.PartnershipScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  percent: 'percent',
+  extraFieldLabel: 'extraFieldLabel',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SettingScalarFieldEnum = {
   key: 'key',
   value: 'value',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.NotificationPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  eventType: 'eventType',
+  enabled: 'enabled'
 };
 
 exports.Prisma.ClientNicknameScalarFieldEnum = {
@@ -325,7 +346,9 @@ exports.Prisma.ModelName = {
   Appointment: 'Appointment',
   ConsultationRequest: 'ConsultationRequest',
   BlogPost: 'BlogPost',
+  Partnership: 'Partnership',
   Setting: 'Setting',
+  NotificationPreference: 'NotificationPreference',
   ClientNickname: 'ClientNickname',
   SystemLog: 'SystemLog'
 };

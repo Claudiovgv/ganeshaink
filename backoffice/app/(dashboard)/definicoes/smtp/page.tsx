@@ -17,13 +17,14 @@ export default async function SmtpPage() {
   }
 
   const settings = await api.settings.getSmtp().catch(() => null);
+  const matrix = await api.settings.getNotifications().catch(() => null);
 
   return (
     <div>
-      <TopBar title="SMTP" />
-      <div className="p-6 max-w-md">
-        {settings
-          ? <SmtpClient initial={settings} userEmail={user.email} />
+      <TopBar title="SMTP e notificações" />
+      <div className="p-6 max-w-5xl">
+        {settings && matrix
+          ? <SmtpClient initial={settings} initialMatrix={matrix} userEmail={user!.email} />
           : <p className="text-text-secondary">Não foi possível carregar as definições de SMTP.</p>
         }
       </div>

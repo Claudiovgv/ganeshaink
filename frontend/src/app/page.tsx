@@ -29,9 +29,9 @@ export default async function HomePage() {
           <Image
             src="/images/logo/ganesha-logo-gold-white.png"
             alt=""
-            width={2100}
-            height={2100}
-            className="object-contain opacity-[0.13] select-none"
+            width={640}
+            height={640}
+            className="object-contain opacity-[0.13] select-none w-[min(80vw,28rem)] h-auto"
           />
         </div>
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">

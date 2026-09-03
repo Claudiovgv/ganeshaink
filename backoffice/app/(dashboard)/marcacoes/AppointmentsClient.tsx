@@ -1,13 +1,13 @@
 'use client';
 import { useMemo, useState, useTransition, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import type { Appointment, Client, Employee, Service } from '@/lib/types';
+import type { Appointment, Client, Employee, Partnership, Service } from '@/lib/types';
 import DataTable from '@/components/DataTable';
 import Badge from '@/components/Badge';
 import Button from '@/components/Button';
 import NovaMarcacaoModal from '@/components/NovasMarcacaoModal';
 import EditAppointmentModal from '@/components/EditAppointmentModal';
-import { updateAppointmentStatusAction } from '@/lib/actions';
+import { updateAppointmentStatusAction, deleteAppointmentAction } from '@/lib/actions';
 import { formatLisbon } from '@/lib/timezone';
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
   employees: Employee[];
   services: Service[];
   clients: Client[];
+  partnerships: Partnership[];
 }
 
 function normalize(s: string) {
@@ -30,7 +31,7 @@ const STATUS_OPTIONS: { value: Appointment['status'] | ''; label: string }[] = [
   { value: 'cancelled', label: 'Cancelada' },
 ];
 
-export default function AppointmentsClient({ initial, employees, services, clients }: Props) {
+export default function AppointmentsClient({ initial, employees, services, clients, partnerships }: Props) {
   const [appointments, setAppointments] = useState(initial);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<Appointment | null>(null);
@@ -68,6 +69,19 @@ export default function AppointmentsClient({ initial, employees, services, clien
     });
   }
 
+  function handleDelete(a: Appointment) {
+    if (!confirm(`Apagar a marcação de ${a.clientName} (${formatLisbon(a.startDatetime, 'dd/MM/yyyy HH:mm')})? Esta ação não pode ser desfeita.`)) return;
+    setStatusError('');
+    startTransition(async () => {
+      try {
+        await deleteAppointmentAction(a.id);
+        setAppointments((prev) => prev.filter((x) => x.id !== a.id));
+      } catch (err) {
+        setStatusError((err as Error).message);
+      }
+    });
+  }
+
   function handleCreated(appt: Appointment) {
     setAppointments((prev) => [...prev, appt].sort((a, b) => a.startDatetime.localeCompare(b.startDatetime)));
   }
@@ -82,7 +96,7 @@ export default function AppointmentsClient({ initial, employees, services, clien
       if (employeeFilter && String(a.employee.id) !== employeeFilter) return false;
       if (statusFilter && a.status !== statusFilter) return false;
       if (!q) return true;
-      const haystack = normalize(`${a.clientName} ${a.clientPhone} ${a.service.name} ${a.employee.name}`);
+      const haystack = normalize(`${a.clientName} ${a.clientPhone} ${a.service.name} ${a.employee.name} ${a.partnership?.name ?? ''}`);
       return haystack.includes(q);
     });
   }, [appointments, search, employeeFilter, statusFilter]);
@@ -131,6 +145,9 @@ export default function AppointmentsClient({ initial, employees, services, clien
           <span className="inline-block mt-0.5 text-xs text-gold border border-gold-border rounded px-1.5 py-0.5">
             {a.employee.name}
           </span>
+          {a.partnership && (
+            <p className="text-xs text-text-secondary mt-0.5">{a.partnership.name}{a.extraFieldValue ? ` · ${a.extraFieldValue}` : ''}</p>
+          )}
         </div>
       ),
     },
@@ -153,6 +170,7 @@ export default function AppointmentsClient({ initial, employees, services, clien
             </>
           )}
           <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setEditing(a); }}>Editar</Button>
+          <Button size="sm" variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(a); }} disabled={isPending}>Apagar</Button>
         </div>
       ),
     },
@@ -223,6 +241,7 @@ export default function AppointmentsClient({ initial, employees, services, clien
           employees={employees}
           services={services}
           clients={clients}
+          partnerships={partnerships}
           prefill={prefill.clientName ? prefill : undefined}
           onClose={() => setShowModal(false)}
           onCreated={handleCreated}
@@ -232,6 +251,7 @@ export default function AppointmentsClient({ initial, employees, services, clien
       {editing && (
         <EditAppointmentModal
           appointment={editing}
+          partnerships={partnerships}
           onClose={() => setEditing(null)}
           onUpdated={handleUpdated}
         />

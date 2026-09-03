@@ -5,6 +5,7 @@ import { api, Category as ApiCategory } from '@/lib/api';
 import { Category } from './BookingWizard';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import Button from '../ui/Button';
 
 // Tatuagem e piercing exigem sempre consulta prévia — regra de negócio fixa,
 // não algo que se defina ao criar uma categoria nova no backoffice.
@@ -18,10 +19,18 @@ export default function Step1Category({ onSelect }: { onSelect: (cat: Category) 
   const [error, setError] = useState('');
 
   useEffect(() => {
+    let cancelled = false;
     api.categories.list()
-      .then(setCategories)
-      .catch(() => setError('Erro ao carregar categorias.'))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (!cancelled) setCategories(data);
+      })
+      .catch(() => {
+        if (!cancelled) setError('Erro ao carregar categorias. Confirma a ligação e tenta outra vez.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -30,7 +39,21 @@ export default function Step1Category({ onSelect }: { onSelect: (cat: Category) 
       <p className="text-text-secondary text-sm mb-8">Selecciona o tipo de serviço que procuras.</p>
 
       {loading && <LoadingSpinner />}
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && (
+        <div className="space-y-3 mb-6">
+          <p className="text-red-400 text-sm">{error}</p>
+          <Button type="button" variant="ghost" onClick={() => {
+            setLoading(true);
+            setError('');
+            api.categories.list()
+              .then(setCategories)
+              .catch(() => setError('Erro ao carregar categorias. Confirma a ligação e tenta outra vez.'))
+              .finally(() => setLoading(false));
+          }}>
+            Tentar outra vez
+          </Button>
+        </div>
+      )}
 
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

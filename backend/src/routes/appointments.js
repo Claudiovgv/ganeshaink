@@ -4,8 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const { lisboaTimeToUTC } = require('../services/availability.service');
 const { publicLimiter } = require('../middleware/rateLimit');
 const { addMinutes } = require('date-fns');
-const { sendMail } = require('../lib/mailer');
-const { appointmentReceivedEmail, appointmentStatusChangedEmail } = require('../lib/emailTemplates');
+const { notifyAppointmentCreated, notifyAppointmentStatusChanged, APPOINTMENT_INCLUDE } = require('../lib/notifications');
 
 router.post('/', publicLimiter, async (req, res) => {
   try {
@@ -53,11 +52,10 @@ router.post('/', publicLimiter, async (req, res) => {
         notes: notes || null,
         cancelToken: uuidv4(),
       },
-      include: { employee: { select: { id: true, name: true } }, service: true },
+      include: APPOINTMENT_INCLUDE,
     });
 
-    const { subject, html } = appointmentReceivedEmail(appointment);
-    sendMail({ to: appointment.clientEmail, subject, html });
+    notifyAppointmentCreated(appointment);
 
     res.status(201).json(appointment);
   } catch (err) {
@@ -106,11 +104,10 @@ router.delete('/:id', async (req, res) => {
     const updated = await prisma.appointment.update({
       where: { id },
       data: { status: 'cancelled' },
-      include: { employee: { select: { id: true, name: true } }, service: true },
+      include: APPOINTMENT_INCLUDE,
     });
 
-    const { subject, html } = appointmentStatusChangedEmail(updated);
-    sendMail({ to: updated.clientEmail, subject, html });
+    notifyAppointmentStatusChanged(updated, appointment.status);
 
     const { cancelToken: _, ...safe } = updated;
     res.json(safe);

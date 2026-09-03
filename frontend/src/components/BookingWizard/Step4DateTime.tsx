@@ -12,13 +12,23 @@ interface Props {
   onBack: () => void;
 }
 
+function lisbonYmd(d: Date) {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Lisbon',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(d);
+}
+
 function getDateOptions() {
   const options: { value: string; label: string }[] = [];
+  const now = new Date();
   for (let i = 1; i <= 30; i++) {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    const value = d.toISOString().split('T')[0];
-    const label = d.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' });
+    const d = new Date(now);
+    d.setDate(now.getDate() + i);
+    const value = lisbonYmd(d);
+    const label = d.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Lisbon' });
     options.push({ value, label });
   }
   return options;

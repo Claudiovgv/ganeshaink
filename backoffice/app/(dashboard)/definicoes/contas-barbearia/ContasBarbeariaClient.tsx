@@ -8,7 +8,7 @@ interface Row {
   employeeId: number;
   name: string;
   materialCost: string;
-  payoutPercent: string;
+  studioPercent: string;
 }
 
 export default function ContasBarbeariaClient({ initial }: { initial: Employee[] }) {
@@ -17,14 +17,14 @@ export default function ContasBarbeariaClient({ initial }: { initial: Employee[]
       employeeId: e.id,
       name: e.name,
       materialCost: e.materialCost != null ? String(e.materialCost) : '',
-      payoutPercent: e.payoutPercent != null ? String(e.payoutPercent) : '',
+      studioPercent: e.studioPercent != null ? String(e.studioPercent) : '',
     }))
   );
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  function updateRow(employeeId: number, field: 'materialCost' | 'payoutPercent', value: string) {
+  function updateRow(employeeId: number, field: 'materialCost' | 'studioPercent', value: string) {
     setRows((prev) => prev.map((r) => (r.employeeId === employeeId ? { ...r, [field]: value } : r)));
   }
 
@@ -35,7 +35,7 @@ export default function ContasBarbeariaClient({ initial }: { initial: Employee[]
       try {
         await Promise.all(
           rows.map((r) =>
-            updateEmployeeAction(r.employeeId, { materialCost: r.materialCost, payoutPercent: r.payoutPercent })
+            updateEmployeeAction(r.employeeId, { materialCost: r.materialCost, studioPercent: r.studioPercent })
           )
         );
         setMessage('Valores guardados.');
@@ -56,7 +56,7 @@ export default function ContasBarbeariaClient({ initial }: { initial: Employee[]
             <tr className="border-b border-gold-border/30 bg-bg-section">
               <th className="text-left px-4 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Barbeiro</th>
               <th className="text-left px-4 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Valor material (€)</th>
-              <th className="text-left px-4 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">% Barbeiro</th>
+              <th className="text-left px-4 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">% Estúdio</th>
             </tr>
           </thead>
           <tbody>
@@ -80,8 +80,8 @@ export default function ContasBarbeariaClient({ initial }: { initial: Employee[]
                     step="1"
                     min="0"
                     max="100"
-                    value={r.payoutPercent}
-                    onChange={(e) => updateRow(r.employeeId, 'payoutPercent', e.target.value)}
+                    value={r.studioPercent}
+                    onChange={(e) => updateRow(r.employeeId, 'studioPercent', e.target.value)}
                     placeholder="30"
                     className="w-24 bg-bg-primary border border-gold-border rounded px-2 py-1.5 text-sm focus:border-gold focus:outline-none"
                   />
@@ -91,6 +91,10 @@ export default function ContasBarbeariaClient({ initial }: { initial: Employee[]
           </tbody>
         </table>
       </div>
+
+      <p className="text-text-muted text-xs">
+        % Estúdio = a parte da receita líquida (já sem material) que fica retida para o estúdio. O barbeiro recebe o resto.
+      </p>
 
       <Button onClick={handleSave} disabled={isPending} loading={isPending}>Guardar</Button>
     </div>

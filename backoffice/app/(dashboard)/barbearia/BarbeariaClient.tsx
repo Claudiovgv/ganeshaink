@@ -99,7 +99,7 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
         </div>
         <div className="bg-bg-card border border-gold-border rounded-lg p-4">
           <p className="text-text-muted text-xs uppercase tracking-wider mb-1">Total barbeiros</p>
-          <p className="text-2xl font-display font-bold text-text-primary">{money(data.totals.payoutAmount)}</p>
+          <p className="text-2xl font-display font-bold text-text-primary">{money(data.totals.barberAmount)}</p>
         </div>
       </div>
 
@@ -127,7 +127,7 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
               tab === 'payout' ? 'text-gold border-b-2 border-gold' : 'text-text-secondary hover:text-text-primary'
             }`}
           >
-            % Barbeiro
+            Estúdio &amp; Barbeiro
           </button>
         </div>
 
@@ -164,8 +164,9 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
               <tr className="border-b border-gold-border/30 bg-bg-section">
                 <th className="text-left px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Barbeiro</th>
                 <th className="text-right px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Receita líquida</th>
-                <th className="text-right px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">%</th>
-                <th className="text-right px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Valor a pagar</th>
+                <th className="text-right px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">% Estúdio</th>
+                <th className="text-right px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Estúdio</th>
+                <th className="text-right px-5 py-2 text-text-secondary font-medium text-xs uppercase tracking-wider">Barbeiro</th>
               </tr>
             </thead>
             <tbody>
@@ -174,10 +175,13 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
                   <td className="px-5 py-2.5 text-text-primary">{b.name}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">{money(b.netRevenue)}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">
-                    {b.hasConfig ? `${b.payoutPercent}%` : '—'}
+                    {b.hasConfig ? `${b.studioPercent}%` : '—'}
+                  </td>
+                  <td className="px-5 py-2.5 text-text-secondary text-right">
+                    {b.hasConfig ? money(b.studioAmount) : '—'}
                   </td>
                   <td className="px-5 py-2.5 text-gold text-right font-medium">
-                    {b.hasConfig ? money(b.payoutAmount) : '—'}
+                    {b.hasConfig ? money(b.barberAmount) : '—'}
                   </td>
                 </tr>
               ))}

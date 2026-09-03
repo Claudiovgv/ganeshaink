@@ -210,12 +210,12 @@ describe('Appointment price override affects stats revenue', () => {
 });
 
 describe('GET /v1/admin/stats/barbershop', () => {
-  it('computes material cost and barber payout from configured employee values', async () => {
+  it('computes material cost and barber payout (barber gets the rest after the studio cut) from configured employee values', async () => {
     const category = await ensureCategory('barbershop', 'Barbearia');
     const barberUser = await prisma.user.create({
       data: {
         name: 'Barbershop Stats Test', email: 'barbershop-stats-test@test.com', password: await bcrypt.hash('pass123', 10), role: 'employee',
-        employee: { create: { name: 'Barbershop Stats Test', isActive: true, materialCost: '1.00', payoutPercent: '30' } },
+        employee: { create: { name: 'Barbershop Stats Test', isActive: true, materialCost: '1.00', studioPercent: '30' } },
       },
       include: { employee: true },
     });
@@ -242,7 +242,8 @@ describe('GET /v1/admin/stats/barbershop', () => {
     expect(entry.revenue).toBe(40);
     expect(entry.materialCost).toBe(2);
     expect(entry.netRevenue).toBe(38);
-    expect(entry.payoutAmount).toBeCloseTo(11.4);
+    expect(entry.studioAmount).toBeCloseTo(11.4); // 38 x 30% fica para o estúdio
+    expect(entry.barberAmount).toBeCloseTo(26.6); // resto vai para o barbeiro
     expect(entry.hasConfig).toBe(true);
 
     await prisma.appointment.deleteMany({ where: { id: { in: [apt1.id, apt2.id] } } });
@@ -277,7 +278,8 @@ describe('GET /v1/admin/stats/barbershop', () => {
     expect(entry).toBeDefined();
     expect(entry.hasConfig).toBe(false);
     expect(entry.materialCost).toBe(0);
-    expect(entry.payoutAmount).toBe(0);
+    expect(entry.studioAmount).toBe(0);
+    expect(entry.barberAmount).toBe(0);
 
     await prisma.appointment.delete({ where: { id: apt.id } });
     await prisma.service.delete({ where: { id: svc.id } });
@@ -301,7 +303,8 @@ describe('POST /v1/admin/employees', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .send({ name: 'New Emp', email: 'new-emp-admin@test.com', password: 'pass123' });
     expect(res.status).toBe(201);
-    expect(res.body.employee).toBeDefined();
+    expect(res.body.user.email).toBe('new-emp-admin@test.com');
+    expect(res.body.name).toBe('New Emp');
     // cleanup
     await prisma.employee.deleteMany({ where: { user: { email: 'new-emp-admin@test.com' } } });
     await prisma.user.deleteMany({ where: { email: 'new-emp-admin@test.com' } });
@@ -309,22 +312,22 @@ describe('POST /v1/admin/employees', () => {
 });
 
 describe('PUT /v1/admin/employees/:id (config Barbearia)', () => {
-  it('admin can set and clear materialCost and payoutPercent', async () => {
+  it('admin can set and clear materialCost and studioPercent', async () => {
     const res = await request(app)
       .put(`/v1/admin/employees/${employee.id}`)
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ materialCost: '1.50', payoutPercent: '35' });
+      .send({ materialCost: '1.50', studioPercent: '35' });
     expect(res.status).toBe(200);
     expect(Number(res.body.materialCost)).toBe(1.5);
-    expect(Number(res.body.payoutPercent)).toBe(35);
+    expect(Number(res.body.studioPercent)).toBe(35);
 
     const cleared = await request(app)
       .put(`/v1/admin/employees/${employee.id}`)
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ materialCost: '', payoutPercent: '' });
+      .send({ materialCost: '', studioPercent: '' });
     expect(cleared.status).toBe(200);
     expect(cleared.body.materialCost).toBeNull();
-    expect(cleared.body.payoutPercent).toBeNull();
+    expect(cleared.body.studioPercent).toBeNull();
   });
 });
 
@@ -337,6 +340,17 @@ describe('POST /v1/admin/services', () => {
     expect(res.status).toBe(201);
     expect(res.body.name).toBe('New Service Test');
     await prisma.service.delete({ where: { id: res.body.id } });
+  });
+});
+
+describe('PUT /v1/admin/services/reorder', () => {
+  it('saves catalog order instead of treating "reorder" as a service id', async () => {
+    const res = await request(app)
+      .put('/v1/admin/services/reorder')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ serviceIds: [service.id] });
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
   });
 });
 
@@ -361,5 +375,27 @@ describe('DELETE /v1/admin/services/:id', () => {
     expect(res.body.error).toMatch(/Desative/);
     const stillThere = await prisma.service.findUnique({ where: { id: service.id } });
     expect(stillThere).not.toBeNull();
+  });
+});
+
+describe('GET/PUT /v1/admin/settings/notifications', () => {
+  it('returns the event list and users with default-off preferences', async () => {
+    const res = await request(app).get('/v1/admin/settings/notifications').set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.events.map((e) => e.id)).toContain('new_appointment');
+    expect(res.body.events.map((e) => e.id)).toContain('reminder_24h');
+    const row = res.body.users.find((u) => u.id === adminUser.id);
+    expect(row).toBeTruthy();
+    expect(row.preferences.new_appointment).toBe(false);
+  });
+
+  it('saves a preference and reads it back', async () => {
+    const put = await request(app)
+      .put('/v1/admin/settings/notifications')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ preferences: [{ userId: adminUser.id, eventType: 'reminder_24h', enabled: true }] });
+    expect(put.status).toBe(200);
+    expect(put.body.users.find((u) => u.id === adminUser.id).preferences.reminder_24h).toBe(true);
+    await prisma.notificationPreference.deleteMany({ where: { userId: adminUser.id } });
   });
 });

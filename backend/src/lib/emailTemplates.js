@@ -113,4 +113,119 @@ function consultationReceivedEmail(consultation) {
   };
 }
 
-module.exports = { appointmentConfirmedEmail, appointmentReceivedEmail, appointmentStatusChangedEmail, consultationReceivedEmail };
+function reminderEmail(appointment) {
+  return {
+    subject: 'Lembrete da tua marcação — Ganesha Ink',
+    html: layout('A tua marcação é amanhã', `
+      ${paragraph(`Olá <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong>,`)}
+      ${paragraph('Este é um lembrete da tua marcação na Ganesha Ink:')}
+      ${appointmentDetails(appointment)}
+      ${paragraph('Se precisares de alterar ou cancelar, contacta-nos com antecedência.')}
+    `),
+  };
+}
+
+function staffNewAppointmentEmail(appointment) {
+  return {
+    subject: `Nova marcação — ${appointment.clientName}`,
+    html: layout('Nova marcação no estúdio', `
+      ${paragraph(`<strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong> fez uma marcação.`)}
+      ${appointmentDetails(appointment)}
+      ${paragraph(`Contacto: ${appointment.clientEmail} · ${appointment.clientPhone}`)}
+    `),
+  };
+}
+
+function staffStatusChangedEmail(appointment) {
+  const STATUS_LABEL = { confirmed: 'confirmada', cancelled: 'cancelada', completed: 'concluída', pending: 'pendente' };
+  const label = STATUS_LABEL[appointment.status] || appointment.status;
+  return {
+    subject: `Marcação ${label} — ${appointment.clientName}`,
+    html: layout(`Marcação ${label}`, `
+      ${paragraph(`A marcação de <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong> foi ${label}.`)}
+      ${appointmentDetails(appointment)}
+    `),
+  };
+}
+
+function staffConsultationReceivedEmail(consultation) {
+  const pro = consultation.employee?.name || 'Não atribuído';
+  return {
+    subject: `Pedido de consulta — ${consultation.clientName}`,
+    html: layout('Novo pedido de consulta', `
+      ${paragraph(`<strong style="color:${COLORS.textPrimary};">${consultation.clientName}</strong> pediu uma consulta para <strong style="color:${COLORS.gold};">${consultation.service.name}</strong> (${pro}).`)}
+      ${paragraph(consultation.description || '')}
+      ${paragraph(`Contacto: ${consultation.clientEmail} · ${consultation.clientPhone}`)}
+    `),
+  };
+}
+
+function staffReminderEmail(appointment) {
+  return {
+    subject: `Lembrete — ${appointment.clientName} amanhã`,
+    html: layout('Lembrete de marcação', `
+      ${paragraph(`A marcação de <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong> é dentro de 24 horas.`)}
+      ${appointmentDetails(appointment)}
+    `),
+  };
+}
+
+function sampleAppointment() {
+  const start = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  return {
+    clientName: 'Cliente Exemplo',
+    clientEmail: 'cliente@exemplo.com',
+    clientPhone: '910000000',
+    startDatetime: start,
+    status: 'confirmed',
+    employee: { name: 'Profissional Exemplo' },
+    service: { name: 'Corte clássico' },
+  };
+}
+
+function sampleConsultation() {
+  return {
+    clientName: 'Cliente Exemplo',
+    clientEmail: 'cliente@exemplo.com',
+    clientPhone: '910000000',
+    description: 'Gostava de marcar uma consulta para avaliar o trabalho.',
+    service: { name: 'Tatuagem' },
+    employee: { name: 'Profissional Exemplo' },
+  };
+}
+
+function templateForEvent(eventType, audience = 'client') {
+  const appointment = sampleAppointment();
+  const consultation = sampleConsultation();
+  if (eventType === 'consultation_received') {
+    return audience === 'staff' ? staffConsultationReceivedEmail(consultation) : consultationReceivedEmail(consultation);
+  }
+  const staff = audience === 'staff';
+  switch (eventType) {
+    case 'new_appointment':
+      return staff ? staffNewAppointmentEmail(appointment) : appointmentReceivedEmail(appointment);
+    case 'appointment_confirmed':
+      return staff ? staffStatusChangedEmail({ ...appointment, status: 'confirmed' }) : appointmentConfirmedEmail(appointment);
+    case 'appointment_cancelled':
+      return staff ? staffStatusChangedEmail({ ...appointment, status: 'cancelled' }) : appointmentStatusChangedEmail({ ...appointment, status: 'cancelled' });
+    case 'appointment_completed':
+      return staff ? staffStatusChangedEmail({ ...appointment, status: 'completed' }) : appointmentStatusChangedEmail({ ...appointment, status: 'completed' });
+    case 'reminder_24h':
+      return staff ? staffReminderEmail(appointment) : reminderEmail(appointment);
+    default:
+      return null;
+  }
+}
+
+module.exports = {
+  appointmentConfirmedEmail,
+  appointmentReceivedEmail,
+  appointmentStatusChangedEmail,
+  consultationReceivedEmail,
+  reminderEmail,
+  staffNewAppointmentEmail,
+  staffStatusChangedEmail,
+  staffConsultationReceivedEmail,
+  staffReminderEmail,
+  templateForEvent,
+};

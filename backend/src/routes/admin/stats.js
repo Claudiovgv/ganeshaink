@@ -97,8 +97,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /v1/admin/stats/barbershop — receita, custo de material e valor a
-// pagar por barbeiro. Usado pela página Análise > Barbearia.
+// GET /v1/admin/stats/barbershop — receita, custo de material e o que fica
+// para o estúdio vs. o que o barbeiro recebe. Usado pela página Análise >
+// Barbearia.
 router.get('/barbershop', async (req, res) => {
   try {
     const { period = 'month', offset = '0' } = req.query;
@@ -115,7 +116,7 @@ router.get('/barbershop', async (req, res) => {
       period, offset: parseInt(offset, 10) || 0,
       range: { start: start.toISOString(), end: end.toISOString() },
       barbers: [],
-      totals: { count: 0, revenue: 0, materialCost: 0, netRevenue: 0, payoutAmount: 0 },
+      totals: { count: 0, revenue: 0, materialCost: 0, netRevenue: 0, studioAmount: 0, barberAmount: 0 },
     };
     if (!barbershop) return res.json(emptyResponse);
 
@@ -132,7 +133,7 @@ router.get('/barbershop', async (req, res) => {
       },
       include: {
         service: { select: { price: true } },
-        employee: { select: { id: true, name: true, materialCost: true, payoutPercent: true } },
+        employee: { select: { id: true, name: true, materialCost: true, studioPercent: true } },
       },
     });
 
@@ -148,18 +149,21 @@ router.get('/barbershop', async (req, res) => {
           count: 0,
           revenue: 0,
           materialCostPerUnit: e.materialCost !== null ? Number(e.materialCost) : null,
-          payoutPercent: e.payoutPercent !== null ? Number(e.payoutPercent) : null,
+          studioPercent: e.studioPercent !== null ? Number(e.studioPercent) : null,
         };
       }
       byEmployee[e.id].count += 1;
       byEmployee[e.id].revenue += priceOf(a);
     }
 
+    // A % configurada é o que fica retido para o estúdio — o barbeiro recebe
+    // o resto da receita líquida (receita - material).
     const barbers = Object.values(byEmployee).map((b) => {
-      const hasConfig = b.materialCostPerUnit !== null && b.payoutPercent !== null;
+      const hasConfig = b.materialCostPerUnit !== null && b.studioPercent !== null;
       const materialCost = b.count * (b.materialCostPerUnit ?? 0);
       const netRevenue = b.revenue - materialCost;
-      const payoutAmount = netRevenue * ((b.payoutPercent ?? 0) / 100);
+      const studioAmount = netRevenue * ((b.studioPercent ?? 0) / 100);
+      const barberAmount = netRevenue - studioAmount;
       return {
         employeeId: b.employeeId,
         name: b.name,
@@ -167,8 +171,9 @@ router.get('/barbershop', async (req, res) => {
         revenue: b.revenue,
         materialCost,
         netRevenue,
-        payoutPercent: b.payoutPercent,
-        payoutAmount,
+        studioPercent: b.studioPercent,
+        studioAmount,
+        barberAmount: hasConfig ? barberAmount : 0,
         hasConfig,
       };
     }).sort((a, b) => b.revenue - a.revenue);
@@ -178,8 +183,9 @@ router.get('/barbershop', async (req, res) => {
       revenue: acc.revenue + b.revenue,
       materialCost: acc.materialCost + b.materialCost,
       netRevenue: acc.netRevenue + b.netRevenue,
-      payoutAmount: acc.payoutAmount + b.payoutAmount,
-    }), { count: 0, revenue: 0, materialCost: 0, netRevenue: 0, payoutAmount: 0 });
+      studioAmount: acc.studioAmount + b.studioAmount,
+      barberAmount: acc.barberAmount + b.barberAmount,
+    }), { count: 0, revenue: 0, materialCost: 0, netRevenue: 0, studioAmount: 0, barberAmount: 0 });
 
     res.json({
       period, offset: parseInt(offset, 10) || 0,

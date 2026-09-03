@@ -1,7 +1,6 @@
 const { fromZonedTime } = require('date-fns-tz');
 const prisma = require('../config/database');
-const { sendMail } = require('./mailer');
-const { appointmentStatusChangedEmail } = require('./emailTemplates');
+const { notifyAppointmentStatusChanged } = require('./notifications');
 
 const TIMEZONE = 'Europe/Lisbon';
 
@@ -51,9 +50,12 @@ async function createBlock({ employeeId, type, reason, startDatetime, endDatetim
     });
 
     for (const apt of appointments) {
-      const updated = await prisma.appointment.update({ where: { id: apt.id }, data: { status: 'cancelled' } });
-      const { subject, html } = appointmentStatusChangedEmail({ ...apt, status: updated.status });
-      sendMail({ to: apt.clientEmail, subject, html });
+      const updated = await prisma.appointment.update({
+        where: { id: apt.id },
+        data: { status: 'cancelled' },
+        include: { service: true, employee: { select: { id: true, name: true, userId: true } } },
+      });
+      notifyAppointmentStatusChanged(updated, apt.status);
     }
   }
 

@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import type {
   AdminPermissionKey, Appointment, BlogPost, BarbershopStatsResponse, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
-  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, StatsPeriod, StatsResponse, SystemLogEntry,
-  TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay,
+  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, NotificationMatrix, Partnership, StatsPeriod, StatsResponse, SystemLogEntry,
+  TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay, AppointmentExportRow,
 } from './types';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002/v1';
@@ -74,10 +74,16 @@ export const api = {
     },
     updateStatus: (id: number, status: string) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }),
-    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null }) =>
+    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null; partnershipId?: number | null; extraFieldValue?: string | null }) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     remove: (id: number) =>
       apiFetch<{ message: string }>(`/admin/appointments/${id}`, { method: 'DELETE' }),
+    exportAll: () => apiFetch<{ exportedAt: string; count: number; appointments: AppointmentExportRow[] }>('/admin/appointments/export'),
+    importAll: (appointments: AppointmentExportRow[]) =>
+      apiFetch<{ created: number; skipped: number; errors: string[]; total: number }>(
+        '/admin/appointments/import',
+        { method: 'POST', body: JSON.stringify({ appointments }) },
+      ),
     myList: (params?: { date?: string }) => {
       const q = new URLSearchParams(
         Object.entries(params ?? {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
@@ -199,6 +205,14 @@ export const api = {
       apiFetch<{ message: string }>('/admin/settings/smtp', { method: 'PUT', body: JSON.stringify(data) }),
     testSmtp: (data: Partial<SmtpSettings> & { testEmail: string }) =>
       apiFetch<{ message: string }>('/admin/settings/smtp/test', { method: 'POST', body: JSON.stringify(data) }),
+    getNotifications: () => apiFetch<NotificationMatrix>('/admin/settings/notifications'),
+    updateNotifications: (data: {
+      preferences: { userId: number; eventType: string; enabled: boolean }[];
+      mailboxes?: { userId: number; notificationEmail: string }[];
+    }) =>
+      apiFetch<NotificationMatrix>('/admin/settings/notifications', { method: 'PUT', body: JSON.stringify(data) }),
+    testSmtpTemplate: (data: { eventType: string; testEmail: string; audience?: 'client' | 'staff' }) =>
+      apiFetch<{ message: string }>('/admin/settings/smtp/test-template', { method: 'POST', body: JSON.stringify(data) }),
   },
   logs: {
     list: (params?: { level?: string; page?: number }) => {
@@ -210,11 +224,20 @@ export const api = {
       );
     },
   },
+  partnerships: {
+    list: () => apiFetch<Partnership[]>('/admin/partnerships'),
+    create: (data: { name: string; percent: number; extraFieldLabel?: string | null }) =>
+      apiFetch<Partnership>('/admin/partnerships', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: number, data: { name?: string; percent?: number; extraFieldLabel?: string | null; isActive?: boolean }) =>
+      apiFetch<Partnership>(`/admin/partnerships/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/partnerships/${id}`, { method: 'DELETE' }),
+  },
   users: {
     list: () => apiFetch<User[]>('/admin/users'),
     create: (data: { name: string; email: string; password: string; role: string }) =>
       apiFetch<User>('/admin/users', { method: 'POST', body: JSON.stringify(data) }),
-    update: (id: number, data: { name?: string; role?: string }) =>
+    update: (id: number, data: { name?: string; role?: string; notificationEmail?: string | null }) =>
       apiFetch<User>(`/admin/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     remove: (id: number) =>
       apiFetch<{ message: string }>(`/admin/users/${id}`, { method: 'DELETE' }),

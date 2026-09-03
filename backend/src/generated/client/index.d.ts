@@ -64,10 +64,20 @@ export type ConsultationRequest = $Result.DefaultSelection<Prisma.$ConsultationR
  */
 export type BlogPost = $Result.DefaultSelection<Prisma.$BlogPostPayload>
 /**
+ * Model Partnership
+ * 
+ */
+export type Partnership = $Result.DefaultSelection<Prisma.$PartnershipPayload>
+/**
  * Model Setting
  * 
  */
 export type Setting = $Result.DefaultSelection<Prisma.$SettingPayload>
+/**
+ * Model NotificationPreference
+ * 
+ */
+export type NotificationPreference = $Result.DefaultSelection<Prisma.$NotificationPreferencePayload>
 /**
  * Model ClientNickname
  * 
@@ -376,6 +386,16 @@ export class PrismaClient<
   get blogPost(): Prisma.BlogPostDelegate<ExtArgs>;
 
   /**
+   * `prisma.partnership`: Exposes CRUD operations for the **Partnership** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Partnerships
+    * const partnerships = await prisma.partnership.findMany()
+    * ```
+    */
+  get partnership(): Prisma.PartnershipDelegate<ExtArgs>;
+
+  /**
    * `prisma.setting`: Exposes CRUD operations for the **Setting** model.
     * Example usage:
     * ```ts
@@ -384,6 +404,16 @@ export class PrismaClient<
     * ```
     */
   get setting(): Prisma.SettingDelegate<ExtArgs>;
+
+  /**
+   * `prisma.notificationPreference`: Exposes CRUD operations for the **NotificationPreference** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NotificationPreferences
+    * const notificationPreferences = await prisma.notificationPreference.findMany()
+    * ```
+    */
+  get notificationPreference(): Prisma.NotificationPreferenceDelegate<ExtArgs>;
 
   /**
    * `prisma.clientNickname`: Exposes CRUD operations for the **ClientNickname** model.
@@ -855,7 +885,9 @@ export namespace Prisma {
     Appointment: 'Appointment',
     ConsultationRequest: 'ConsultationRequest',
     BlogPost: 'BlogPost',
+    Partnership: 'Partnership',
     Setting: 'Setting',
+    NotificationPreference: 'NotificationPreference',
     ClientNickname: 'ClientNickname',
     SystemLog: 'SystemLog'
   };
@@ -873,7 +905,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "employee" | "service" | "category" | "employeeService" | "workSchedule" | "timeBlock" | "appointment" | "consultationRequest" | "blogPost" | "setting" | "clientNickname" | "systemLog"
+      modelProps: "user" | "employee" | "service" | "category" | "employeeService" | "workSchedule" | "timeBlock" | "appointment" | "consultationRequest" | "blogPost" | "partnership" | "setting" | "notificationPreference" | "clientNickname" | "systemLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1537,6 +1569,72 @@ export namespace Prisma {
           }
         }
       }
+      Partnership: {
+        payload: Prisma.$PartnershipPayload<ExtArgs>
+        fields: Prisma.PartnershipFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PartnershipFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PartnershipFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>
+          }
+          findFirst: {
+            args: Prisma.PartnershipFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PartnershipFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>
+          }
+          findMany: {
+            args: Prisma.PartnershipFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>[]
+          }
+          create: {
+            args: Prisma.PartnershipCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>
+          }
+          createMany: {
+            args: Prisma.PartnershipCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PartnershipDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>
+          }
+          update: {
+            args: Prisma.PartnershipUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>
+          }
+          deleteMany: {
+            args: Prisma.PartnershipDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PartnershipUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PartnershipUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartnershipPayload>
+          }
+          aggregate: {
+            args: Prisma.PartnershipAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePartnership>
+          }
+          groupBy: {
+            args: Prisma.PartnershipGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PartnershipGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PartnershipCountArgs<ExtArgs>
+            result: $Utils.Optional<PartnershipCountAggregateOutputType> | number
+          }
+        }
+      }
       Setting: {
         payload: Prisma.$SettingPayload<ExtArgs>
         fields: Prisma.SettingFieldRefs
@@ -1600,6 +1698,72 @@ export namespace Prisma {
           count: {
             args: Prisma.SettingCountArgs<ExtArgs>
             result: $Utils.Optional<SettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      NotificationPreference: {
+        payload: Prisma.$NotificationPreferencePayload<ExtArgs>
+        fields: Prisma.NotificationPreferenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NotificationPreferenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NotificationPreferenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>
+          }
+          findFirst: {
+            args: Prisma.NotificationPreferenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NotificationPreferenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>
+          }
+          findMany: {
+            args: Prisma.NotificationPreferenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>[]
+          }
+          create: {
+            args: Prisma.NotificationPreferenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>
+          }
+          createMany: {
+            args: Prisma.NotificationPreferenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.NotificationPreferenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>
+          }
+          update: {
+            args: Prisma.NotificationPreferenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>
+          }
+          deleteMany: {
+            args: Prisma.NotificationPreferenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NotificationPreferenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.NotificationPreferenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPreferencePayload>
+          }
+          aggregate: {
+            args: Prisma.NotificationPreferenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotificationPreference>
+          }
+          groupBy: {
+            args: Prisma.NotificationPreferenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NotificationPreferenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NotificationPreferenceCountArgs<ExtArgs>
+            result: $Utils.Optional<NotificationPreferenceCountAggregateOutputType> | number
           }
         }
       }
@@ -1897,10 +2061,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     blogPosts: number
+    notificationPreferences: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blogPosts?: boolean | UserCountOutputTypeCountBlogPostsArgs
+    notificationPreferences?: boolean | UserCountOutputTypeCountNotificationPreferencesArgs
   }
 
   // Custom InputTypes
@@ -1919,6 +2085,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBlogPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BlogPostWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotificationPreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationPreferenceWhereInput
   }
 
 
@@ -2079,6 +2252,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type PartnershipCountOutputType
+   */
+
+  export type PartnershipCountOutputType = {
+    appointments: number
+  }
+
+  export type PartnershipCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    appointments?: boolean | PartnershipCountOutputTypeCountAppointmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PartnershipCountOutputType without action
+   */
+  export type PartnershipCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartnershipCountOutputType
+     */
+    select?: PartnershipCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PartnershipCountOutputType without action
+   */
+  export type PartnershipCountOutputTypeCountAppointmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AppointmentWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -2110,6 +2314,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     twoFactorSecret: string | null
     twoFactorEnabled: boolean | null
+    notificationEmail: string | null
     createdAt: Date | null
   }
 
@@ -2121,6 +2326,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     twoFactorSecret: string | null
     twoFactorEnabled: boolean | null
+    notificationEmail: string | null
     createdAt: Date | null
   }
 
@@ -2132,6 +2338,7 @@ export namespace Prisma {
     role: number
     twoFactorSecret: number
     twoFactorEnabled: number
+    notificationEmail: number
     createdAt: number
     _all: number
   }
@@ -2153,6 +2360,7 @@ export namespace Prisma {
     role?: true
     twoFactorSecret?: true
     twoFactorEnabled?: true
+    notificationEmail?: true
     createdAt?: true
   }
 
@@ -2164,6 +2372,7 @@ export namespace Prisma {
     role?: true
     twoFactorSecret?: true
     twoFactorEnabled?: true
+    notificationEmail?: true
     createdAt?: true
   }
 
@@ -2175,6 +2384,7 @@ export namespace Prisma {
     role?: true
     twoFactorSecret?: true
     twoFactorEnabled?: true
+    notificationEmail?: true
     createdAt?: true
     _all?: true
   }
@@ -2273,6 +2483,7 @@ export namespace Prisma {
     role: $Enums.Role
     twoFactorSecret: string | null
     twoFactorEnabled: boolean
+    notificationEmail: string | null
     createdAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
@@ -2303,9 +2514,11 @@ export namespace Prisma {
     role?: boolean
     twoFactorSecret?: boolean
     twoFactorEnabled?: boolean
+    notificationEmail?: boolean
     createdAt?: boolean
     employee?: boolean | User$employeeArgs<ExtArgs>
     blogPosts?: boolean | User$blogPostsArgs<ExtArgs>
+    notificationPreferences?: boolean | User$notificationPreferencesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2318,12 +2531,14 @@ export namespace Prisma {
     role?: boolean
     twoFactorSecret?: boolean
     twoFactorEnabled?: boolean
+    notificationEmail?: boolean
     createdAt?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employee?: boolean | User$employeeArgs<ExtArgs>
     blogPosts?: boolean | User$blogPostsArgs<ExtArgs>
+    notificationPreferences?: boolean | User$notificationPreferencesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2332,6 +2547,7 @@ export namespace Prisma {
     objects: {
       employee: Prisma.$EmployeePayload<ExtArgs> | null
       blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
+      notificationPreferences: Prisma.$NotificationPreferencePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2341,6 +2557,7 @@ export namespace Prisma {
       role: $Enums.Role
       twoFactorSecret: string | null
       twoFactorEnabled: boolean
+      notificationEmail: string | null
       createdAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -2684,6 +2901,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     employee<T extends User$employeeArgs<ExtArgs> = {}>(args?: Subset<T, User$employeeArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     blogPosts<T extends User$blogPostsArgs<ExtArgs> = {}>(args?: Subset<T, User$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany"> | Null>
+    notificationPreferences<T extends User$notificationPreferencesArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationPreferencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2720,6 +2938,7 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'Role'>
     readonly twoFactorSecret: FieldRef<"User", 'String'>
     readonly twoFactorEnabled: FieldRef<"User", 'Boolean'>
+    readonly notificationEmail: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
   }
     
@@ -3055,6 +3274,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.notificationPreferences
+   */
+  export type User$notificationPreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    where?: NotificationPreferenceWhereInput
+    orderBy?: NotificationPreferenceOrderByWithRelationInput | NotificationPreferenceOrderByWithRelationInput[]
+    cursor?: NotificationPreferenceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationPreferenceScalarFieldEnum | NotificationPreferenceScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3085,7 +3324,7 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     materialCost: Decimal | null
-    payoutPercent: Decimal | null
+    studioPercent: Decimal | null
     sortOrder: number | null
   }
 
@@ -3093,7 +3332,7 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     materialCost: Decimal | null
-    payoutPercent: Decimal | null
+    studioPercent: Decimal | null
     sortOrder: number | null
   }
 
@@ -3104,7 +3343,7 @@ export namespace Prisma {
     bio: string | null
     photoUrl: string | null
     materialCost: Decimal | null
-    payoutPercent: Decimal | null
+    studioPercent: Decimal | null
     isActive: boolean | null
     sortOrder: number | null
     createdAt: Date | null
@@ -3117,7 +3356,7 @@ export namespace Prisma {
     bio: string | null
     photoUrl: string | null
     materialCost: Decimal | null
-    payoutPercent: Decimal | null
+    studioPercent: Decimal | null
     isActive: boolean | null
     sortOrder: number | null
     createdAt: Date | null
@@ -3130,7 +3369,7 @@ export namespace Prisma {
     bio: number
     photoUrl: number
     materialCost: number
-    payoutPercent: number
+    studioPercent: number
     isActive: number
     sortOrder: number
     createdAt: number
@@ -3142,7 +3381,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     materialCost?: true
-    payoutPercent?: true
+    studioPercent?: true
     sortOrder?: true
   }
 
@@ -3150,7 +3389,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     materialCost?: true
-    payoutPercent?: true
+    studioPercent?: true
     sortOrder?: true
   }
 
@@ -3161,7 +3400,7 @@ export namespace Prisma {
     bio?: true
     photoUrl?: true
     materialCost?: true
-    payoutPercent?: true
+    studioPercent?: true
     isActive?: true
     sortOrder?: true
     createdAt?: true
@@ -3174,7 +3413,7 @@ export namespace Prisma {
     bio?: true
     photoUrl?: true
     materialCost?: true
-    payoutPercent?: true
+    studioPercent?: true
     isActive?: true
     sortOrder?: true
     createdAt?: true
@@ -3187,7 +3426,7 @@ export namespace Prisma {
     bio?: true
     photoUrl?: true
     materialCost?: true
-    payoutPercent?: true
+    studioPercent?: true
     isActive?: true
     sortOrder?: true
     createdAt?: true
@@ -3287,7 +3526,7 @@ export namespace Prisma {
     bio: string | null
     photoUrl: string | null
     materialCost: Decimal | null
-    payoutPercent: Decimal | null
+    studioPercent: Decimal | null
     isActive: boolean
     sortOrder: number
     createdAt: Date
@@ -3319,7 +3558,7 @@ export namespace Prisma {
     bio?: boolean
     photoUrl?: boolean
     materialCost?: boolean
-    payoutPercent?: boolean
+    studioPercent?: boolean
     isActive?: boolean
     sortOrder?: boolean
     createdAt?: boolean
@@ -3340,7 +3579,7 @@ export namespace Prisma {
     bio?: boolean
     photoUrl?: boolean
     materialCost?: boolean
-    payoutPercent?: boolean
+    studioPercent?: boolean
     isActive?: boolean
     sortOrder?: boolean
     createdAt?: boolean
@@ -3373,7 +3612,7 @@ export namespace Prisma {
       bio: string | null
       photoUrl: string | null
       materialCost: Prisma.Decimal | null
-      payoutPercent: Prisma.Decimal | null
+      studioPercent: Prisma.Decimal | null
       isActive: boolean
       sortOrder: number
       createdAt: Date
@@ -3758,7 +3997,7 @@ export namespace Prisma {
     readonly bio: FieldRef<"Employee", 'String'>
     readonly photoUrl: FieldRef<"Employee", 'String'>
     readonly materialCost: FieldRef<"Employee", 'Decimal'>
-    readonly payoutPercent: FieldRef<"Employee", 'Decimal'>
+    readonly studioPercent: FieldRef<"Employee", 'Decimal'>
     readonly isActive: FieldRef<"Employee", 'Boolean'>
     readonly sortOrder: FieldRef<"Employee", 'Int'>
     readonly createdAt: FieldRef<"Employee", 'DateTime'>
@@ -9021,6 +9260,7 @@ export namespace Prisma {
     employeeId: number | null
     serviceId: number | null
     price: Decimal | null
+    partnershipId: number | null
   }
 
   export type AppointmentSumAggregateOutputType = {
@@ -9028,6 +9268,7 @@ export namespace Prisma {
     employeeId: number | null
     serviceId: number | null
     price: Decimal | null
+    partnershipId: number | null
   }
 
   export type AppointmentMinAggregateOutputType = {
@@ -9043,6 +9284,9 @@ export namespace Prisma {
     price: Decimal | null
     notes: string | null
     cancelToken: string | null
+    reminderSentAt: Date | null
+    partnershipId: number | null
+    extraFieldValue: string | null
     createdAt: Date | null
   }
 
@@ -9059,6 +9303,9 @@ export namespace Prisma {
     price: Decimal | null
     notes: string | null
     cancelToken: string | null
+    reminderSentAt: Date | null
+    partnershipId: number | null
+    extraFieldValue: string | null
     createdAt: Date | null
   }
 
@@ -9075,6 +9322,9 @@ export namespace Prisma {
     price: number
     notes: number
     cancelToken: number
+    reminderSentAt: number
+    partnershipId: number
+    extraFieldValue: number
     createdAt: number
     _all: number
   }
@@ -9085,6 +9335,7 @@ export namespace Prisma {
     employeeId?: true
     serviceId?: true
     price?: true
+    partnershipId?: true
   }
 
   export type AppointmentSumAggregateInputType = {
@@ -9092,6 +9343,7 @@ export namespace Prisma {
     employeeId?: true
     serviceId?: true
     price?: true
+    partnershipId?: true
   }
 
   export type AppointmentMinAggregateInputType = {
@@ -9107,6 +9359,9 @@ export namespace Prisma {
     price?: true
     notes?: true
     cancelToken?: true
+    reminderSentAt?: true
+    partnershipId?: true
+    extraFieldValue?: true
     createdAt?: true
   }
 
@@ -9123,6 +9378,9 @@ export namespace Prisma {
     price?: true
     notes?: true
     cancelToken?: true
+    reminderSentAt?: true
+    partnershipId?: true
+    extraFieldValue?: true
     createdAt?: true
   }
 
@@ -9139,6 +9397,9 @@ export namespace Prisma {
     price?: true
     notes?: true
     cancelToken?: true
+    reminderSentAt?: true
+    partnershipId?: true
+    extraFieldValue?: true
     createdAt?: true
     _all?: true
   }
@@ -9242,6 +9503,9 @@ export namespace Prisma {
     price: Decimal | null
     notes: string | null
     cancelToken: string | null
+    reminderSentAt: Date | null
+    partnershipId: number | null
+    extraFieldValue: string | null
     createdAt: Date
     _count: AppointmentCountAggregateOutputType | null
     _avg: AppointmentAvgAggregateOutputType | null
@@ -9277,9 +9541,13 @@ export namespace Prisma {
     price?: boolean
     notes?: boolean
     cancelToken?: boolean
+    reminderSentAt?: boolean
+    partnershipId?: boolean
+    extraFieldValue?: boolean
     createdAt?: boolean
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
+    partnership?: boolean | Appointment$partnershipArgs<ExtArgs>
     consultation?: boolean | Appointment$consultationArgs<ExtArgs>
   }, ExtArgs["result"]["appointment"]>
 
@@ -9297,12 +9565,16 @@ export namespace Prisma {
     price?: boolean
     notes?: boolean
     cancelToken?: boolean
+    reminderSentAt?: boolean
+    partnershipId?: boolean
+    extraFieldValue?: boolean
     createdAt?: boolean
   }
 
   export type AppointmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
+    partnership?: boolean | Appointment$partnershipArgs<ExtArgs>
     consultation?: boolean | Appointment$consultationArgs<ExtArgs>
   }
 
@@ -9311,6 +9583,7 @@ export namespace Prisma {
     objects: {
       employee: Prisma.$EmployeePayload<ExtArgs>
       service: Prisma.$ServicePayload<ExtArgs>
+      partnership: Prisma.$PartnershipPayload<ExtArgs> | null
       consultation: Prisma.$ConsultationRequestPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -9326,6 +9599,9 @@ export namespace Prisma {
       price: Prisma.Decimal | null
       notes: string | null
       cancelToken: string | null
+      reminderSentAt: Date | null
+      partnershipId: number | null
+      extraFieldValue: string | null
       createdAt: Date
     }, ExtArgs["result"]["appointment"]>
     composites: {}
@@ -9669,6 +9945,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     employee<T extends EmployeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EmployeeDefaultArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    partnership<T extends Appointment$partnershipArgs<ExtArgs> = {}>(args?: Subset<T, Appointment$partnershipArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     consultation<T extends Appointment$consultationArgs<ExtArgs> = {}>(args?: Subset<T, Appointment$consultationArgs<ExtArgs>>): Prisma__ConsultationRequestClient<$Result.GetResult<Prisma.$ConsultationRequestPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9711,6 +9988,9 @@ export namespace Prisma {
     readonly price: FieldRef<"Appointment", 'Decimal'>
     readonly notes: FieldRef<"Appointment", 'String'>
     readonly cancelToken: FieldRef<"Appointment", 'String'>
+    readonly reminderSentAt: FieldRef<"Appointment", 'DateTime'>
+    readonly partnershipId: FieldRef<"Appointment", 'Int'>
+    readonly extraFieldValue: FieldRef<"Appointment", 'String'>
     readonly createdAt: FieldRef<"Appointment", 'DateTime'>
   }
     
@@ -10008,6 +10288,21 @@ export namespace Prisma {
      * Filter which Appointments to delete
      */
     where?: AppointmentWhereInput
+  }
+
+  /**
+   * Appointment.partnership
+   */
+  export type Appointment$partnershipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    where?: PartnershipWhereInput
   }
 
   /**
@@ -12049,6 +12344,971 @@ export namespace Prisma {
 
 
   /**
+   * Model Partnership
+   */
+
+  export type AggregatePartnership = {
+    _count: PartnershipCountAggregateOutputType | null
+    _avg: PartnershipAvgAggregateOutputType | null
+    _sum: PartnershipSumAggregateOutputType | null
+    _min: PartnershipMinAggregateOutputType | null
+    _max: PartnershipMaxAggregateOutputType | null
+  }
+
+  export type PartnershipAvgAggregateOutputType = {
+    id: number | null
+    percent: Decimal | null
+    sortOrder: number | null
+  }
+
+  export type PartnershipSumAggregateOutputType = {
+    id: number | null
+    percent: Decimal | null
+    sortOrder: number | null
+  }
+
+  export type PartnershipMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    percent: Decimal | null
+    extraFieldLabel: string | null
+    isActive: boolean | null
+    sortOrder: number | null
+    createdAt: Date | null
+  }
+
+  export type PartnershipMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    percent: Decimal | null
+    extraFieldLabel: string | null
+    isActive: boolean | null
+    sortOrder: number | null
+    createdAt: Date | null
+  }
+
+  export type PartnershipCountAggregateOutputType = {
+    id: number
+    name: number
+    percent: number
+    extraFieldLabel: number
+    isActive: number
+    sortOrder: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PartnershipAvgAggregateInputType = {
+    id?: true
+    percent?: true
+    sortOrder?: true
+  }
+
+  export type PartnershipSumAggregateInputType = {
+    id?: true
+    percent?: true
+    sortOrder?: true
+  }
+
+  export type PartnershipMinAggregateInputType = {
+    id?: true
+    name?: true
+    percent?: true
+    extraFieldLabel?: true
+    isActive?: true
+    sortOrder?: true
+    createdAt?: true
+  }
+
+  export type PartnershipMaxAggregateInputType = {
+    id?: true
+    name?: true
+    percent?: true
+    extraFieldLabel?: true
+    isActive?: true
+    sortOrder?: true
+    createdAt?: true
+  }
+
+  export type PartnershipCountAggregateInputType = {
+    id?: true
+    name?: true
+    percent?: true
+    extraFieldLabel?: true
+    isActive?: true
+    sortOrder?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PartnershipAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Partnership to aggregate.
+     */
+    where?: PartnershipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Partnerships to fetch.
+     */
+    orderBy?: PartnershipOrderByWithRelationInput | PartnershipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PartnershipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Partnerships from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Partnerships.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Partnerships
+    **/
+    _count?: true | PartnershipCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PartnershipAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PartnershipSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PartnershipMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PartnershipMaxAggregateInputType
+  }
+
+  export type GetPartnershipAggregateType<T extends PartnershipAggregateArgs> = {
+        [P in keyof T & keyof AggregatePartnership]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePartnership[P]>
+      : GetScalarType<T[P], AggregatePartnership[P]>
+  }
+
+
+
+
+  export type PartnershipGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PartnershipWhereInput
+    orderBy?: PartnershipOrderByWithAggregationInput | PartnershipOrderByWithAggregationInput[]
+    by: PartnershipScalarFieldEnum[] | PartnershipScalarFieldEnum
+    having?: PartnershipScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PartnershipCountAggregateInputType | true
+    _avg?: PartnershipAvgAggregateInputType
+    _sum?: PartnershipSumAggregateInputType
+    _min?: PartnershipMinAggregateInputType
+    _max?: PartnershipMaxAggregateInputType
+  }
+
+  export type PartnershipGroupByOutputType = {
+    id: number
+    name: string
+    percent: Decimal
+    extraFieldLabel: string | null
+    isActive: boolean
+    sortOrder: number
+    createdAt: Date
+    _count: PartnershipCountAggregateOutputType | null
+    _avg: PartnershipAvgAggregateOutputType | null
+    _sum: PartnershipSumAggregateOutputType | null
+    _min: PartnershipMinAggregateOutputType | null
+    _max: PartnershipMaxAggregateOutputType | null
+  }
+
+  type GetPartnershipGroupByPayload<T extends PartnershipGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PartnershipGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PartnershipGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PartnershipGroupByOutputType[P]>
+            : GetScalarType<T[P], PartnershipGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PartnershipSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    percent?: boolean
+    extraFieldLabel?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    appointments?: boolean | Partnership$appointmentsArgs<ExtArgs>
+    _count?: boolean | PartnershipCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["partnership"]>
+
+
+  export type PartnershipSelectScalar = {
+    id?: boolean
+    name?: boolean
+    percent?: boolean
+    extraFieldLabel?: boolean
+    isActive?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+  }
+
+  export type PartnershipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    appointments?: boolean | Partnership$appointmentsArgs<ExtArgs>
+    _count?: boolean | PartnershipCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PartnershipPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Partnership"
+    objects: {
+      appointments: Prisma.$AppointmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      percent: Prisma.Decimal
+      extraFieldLabel: string | null
+      isActive: boolean
+      sortOrder: number
+      createdAt: Date
+    }, ExtArgs["result"]["partnership"]>
+    composites: {}
+  }
+
+  type PartnershipGetPayload<S extends boolean | null | undefined | PartnershipDefaultArgs> = $Result.GetResult<Prisma.$PartnershipPayload, S>
+
+  type PartnershipCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PartnershipFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PartnershipCountAggregateInputType | true
+    }
+
+  export interface PartnershipDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Partnership'], meta: { name: 'Partnership' } }
+    /**
+     * Find zero or one Partnership that matches the filter.
+     * @param {PartnershipFindUniqueArgs} args - Arguments to find a Partnership
+     * @example
+     * // Get one Partnership
+     * const partnership = await prisma.partnership.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PartnershipFindUniqueArgs>(args: SelectSubset<T, PartnershipFindUniqueArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Partnership that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PartnershipFindUniqueOrThrowArgs} args - Arguments to find a Partnership
+     * @example
+     * // Get one Partnership
+     * const partnership = await prisma.partnership.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PartnershipFindUniqueOrThrowArgs>(args: SelectSubset<T, PartnershipFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Partnership that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipFindFirstArgs} args - Arguments to find a Partnership
+     * @example
+     * // Get one Partnership
+     * const partnership = await prisma.partnership.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PartnershipFindFirstArgs>(args?: SelectSubset<T, PartnershipFindFirstArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Partnership that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipFindFirstOrThrowArgs} args - Arguments to find a Partnership
+     * @example
+     * // Get one Partnership
+     * const partnership = await prisma.partnership.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PartnershipFindFirstOrThrowArgs>(args?: SelectSubset<T, PartnershipFindFirstOrThrowArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Partnerships that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Partnerships
+     * const partnerships = await prisma.partnership.findMany()
+     * 
+     * // Get first 10 Partnerships
+     * const partnerships = await prisma.partnership.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const partnershipWithIdOnly = await prisma.partnership.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PartnershipFindManyArgs>(args?: SelectSubset<T, PartnershipFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Partnership.
+     * @param {PartnershipCreateArgs} args - Arguments to create a Partnership.
+     * @example
+     * // Create one Partnership
+     * const Partnership = await prisma.partnership.create({
+     *   data: {
+     *     // ... data to create a Partnership
+     *   }
+     * })
+     * 
+     */
+    create<T extends PartnershipCreateArgs>(args: SelectSubset<T, PartnershipCreateArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Partnerships.
+     * @param {PartnershipCreateManyArgs} args - Arguments to create many Partnerships.
+     * @example
+     * // Create many Partnerships
+     * const partnership = await prisma.partnership.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PartnershipCreateManyArgs>(args?: SelectSubset<T, PartnershipCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Partnership.
+     * @param {PartnershipDeleteArgs} args - Arguments to delete one Partnership.
+     * @example
+     * // Delete one Partnership
+     * const Partnership = await prisma.partnership.delete({
+     *   where: {
+     *     // ... filter to delete one Partnership
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PartnershipDeleteArgs>(args: SelectSubset<T, PartnershipDeleteArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Partnership.
+     * @param {PartnershipUpdateArgs} args - Arguments to update one Partnership.
+     * @example
+     * // Update one Partnership
+     * const partnership = await prisma.partnership.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PartnershipUpdateArgs>(args: SelectSubset<T, PartnershipUpdateArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Partnerships.
+     * @param {PartnershipDeleteManyArgs} args - Arguments to filter Partnerships to delete.
+     * @example
+     * // Delete a few Partnerships
+     * const { count } = await prisma.partnership.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PartnershipDeleteManyArgs>(args?: SelectSubset<T, PartnershipDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Partnerships.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Partnerships
+     * const partnership = await prisma.partnership.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PartnershipUpdateManyArgs>(args: SelectSubset<T, PartnershipUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Partnership.
+     * @param {PartnershipUpsertArgs} args - Arguments to update or create a Partnership.
+     * @example
+     * // Update or create a Partnership
+     * const partnership = await prisma.partnership.upsert({
+     *   create: {
+     *     // ... data to create a Partnership
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Partnership we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PartnershipUpsertArgs>(args: SelectSubset<T, PartnershipUpsertArgs<ExtArgs>>): Prisma__PartnershipClient<$Result.GetResult<Prisma.$PartnershipPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Partnerships.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipCountArgs} args - Arguments to filter Partnerships to count.
+     * @example
+     * // Count the number of Partnerships
+     * const count = await prisma.partnership.count({
+     *   where: {
+     *     // ... the filter for the Partnerships we want to count
+     *   }
+     * })
+    **/
+    count<T extends PartnershipCountArgs>(
+      args?: Subset<T, PartnershipCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PartnershipCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Partnership.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PartnershipAggregateArgs>(args: Subset<T, PartnershipAggregateArgs>): Prisma.PrismaPromise<GetPartnershipAggregateType<T>>
+
+    /**
+     * Group by Partnership.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartnershipGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PartnershipGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PartnershipGroupByArgs['orderBy'] }
+        : { orderBy?: PartnershipGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PartnershipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPartnershipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Partnership model
+   */
+  readonly fields: PartnershipFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Partnership.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PartnershipClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    appointments<T extends Partnership$appointmentsArgs<ExtArgs> = {}>(args?: Subset<T, Partnership$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Partnership model
+   */ 
+  interface PartnershipFieldRefs {
+    readonly id: FieldRef<"Partnership", 'Int'>
+    readonly name: FieldRef<"Partnership", 'String'>
+    readonly percent: FieldRef<"Partnership", 'Decimal'>
+    readonly extraFieldLabel: FieldRef<"Partnership", 'String'>
+    readonly isActive: FieldRef<"Partnership", 'Boolean'>
+    readonly sortOrder: FieldRef<"Partnership", 'Int'>
+    readonly createdAt: FieldRef<"Partnership", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Partnership findUnique
+   */
+  export type PartnershipFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * Filter, which Partnership to fetch.
+     */
+    where: PartnershipWhereUniqueInput
+  }
+
+  /**
+   * Partnership findUniqueOrThrow
+   */
+  export type PartnershipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * Filter, which Partnership to fetch.
+     */
+    where: PartnershipWhereUniqueInput
+  }
+
+  /**
+   * Partnership findFirst
+   */
+  export type PartnershipFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * Filter, which Partnership to fetch.
+     */
+    where?: PartnershipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Partnerships to fetch.
+     */
+    orderBy?: PartnershipOrderByWithRelationInput | PartnershipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Partnerships.
+     */
+    cursor?: PartnershipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Partnerships from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Partnerships.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Partnerships.
+     */
+    distinct?: PartnershipScalarFieldEnum | PartnershipScalarFieldEnum[]
+  }
+
+  /**
+   * Partnership findFirstOrThrow
+   */
+  export type PartnershipFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * Filter, which Partnership to fetch.
+     */
+    where?: PartnershipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Partnerships to fetch.
+     */
+    orderBy?: PartnershipOrderByWithRelationInput | PartnershipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Partnerships.
+     */
+    cursor?: PartnershipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Partnerships from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Partnerships.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Partnerships.
+     */
+    distinct?: PartnershipScalarFieldEnum | PartnershipScalarFieldEnum[]
+  }
+
+  /**
+   * Partnership findMany
+   */
+  export type PartnershipFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * Filter, which Partnerships to fetch.
+     */
+    where?: PartnershipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Partnerships to fetch.
+     */
+    orderBy?: PartnershipOrderByWithRelationInput | PartnershipOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Partnerships.
+     */
+    cursor?: PartnershipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Partnerships from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Partnerships.
+     */
+    skip?: number
+    distinct?: PartnershipScalarFieldEnum | PartnershipScalarFieldEnum[]
+  }
+
+  /**
+   * Partnership create
+   */
+  export type PartnershipCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Partnership.
+     */
+    data: XOR<PartnershipCreateInput, PartnershipUncheckedCreateInput>
+  }
+
+  /**
+   * Partnership createMany
+   */
+  export type PartnershipCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Partnerships.
+     */
+    data: PartnershipCreateManyInput | PartnershipCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Partnership update
+   */
+  export type PartnershipUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Partnership.
+     */
+    data: XOR<PartnershipUpdateInput, PartnershipUncheckedUpdateInput>
+    /**
+     * Choose, which Partnership to update.
+     */
+    where: PartnershipWhereUniqueInput
+  }
+
+  /**
+   * Partnership updateMany
+   */
+  export type PartnershipUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Partnerships.
+     */
+    data: XOR<PartnershipUpdateManyMutationInput, PartnershipUncheckedUpdateManyInput>
+    /**
+     * Filter which Partnerships to update
+     */
+    where?: PartnershipWhereInput
+  }
+
+  /**
+   * Partnership upsert
+   */
+  export type PartnershipUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Partnership to update in case it exists.
+     */
+    where: PartnershipWhereUniqueInput
+    /**
+     * In case the Partnership found by the `where` argument doesn't exist, create a new Partnership with this data.
+     */
+    create: XOR<PartnershipCreateInput, PartnershipUncheckedCreateInput>
+    /**
+     * In case the Partnership was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PartnershipUpdateInput, PartnershipUncheckedUpdateInput>
+  }
+
+  /**
+   * Partnership delete
+   */
+  export type PartnershipDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+    /**
+     * Filter which Partnership to delete.
+     */
+    where: PartnershipWhereUniqueInput
+  }
+
+  /**
+   * Partnership deleteMany
+   */
+  export type PartnershipDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Partnerships to delete
+     */
+    where?: PartnershipWhereInput
+  }
+
+  /**
+   * Partnership.appointments
+   */
+  export type Partnership$appointmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Appointment
+     */
+    select?: AppointmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppointmentInclude<ExtArgs> | null
+    where?: AppointmentWhereInput
+    orderBy?: AppointmentOrderByWithRelationInput | AppointmentOrderByWithRelationInput[]
+    cursor?: AppointmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AppointmentScalarFieldEnum | AppointmentScalarFieldEnum[]
+  }
+
+  /**
+   * Partnership without action
+   */
+  export type PartnershipDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Partnership
+     */
+    select?: PartnershipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartnershipInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Setting
    */
 
@@ -12855,6 +14115,912 @@ export namespace Prisma {
      * Select specific fields to fetch from the Setting
      */
     select?: SettingSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NotificationPreference
+   */
+
+  export type AggregateNotificationPreference = {
+    _count: NotificationPreferenceCountAggregateOutputType | null
+    _avg: NotificationPreferenceAvgAggregateOutputType | null
+    _sum: NotificationPreferenceSumAggregateOutputType | null
+    _min: NotificationPreferenceMinAggregateOutputType | null
+    _max: NotificationPreferenceMaxAggregateOutputType | null
+  }
+
+  export type NotificationPreferenceAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type NotificationPreferenceSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type NotificationPreferenceMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    eventType: string | null
+    enabled: boolean | null
+  }
+
+  export type NotificationPreferenceMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    eventType: string | null
+    enabled: boolean | null
+  }
+
+  export type NotificationPreferenceCountAggregateOutputType = {
+    id: number
+    userId: number
+    eventType: number
+    enabled: number
+    _all: number
+  }
+
+
+  export type NotificationPreferenceAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type NotificationPreferenceSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type NotificationPreferenceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    eventType?: true
+    enabled?: true
+  }
+
+  export type NotificationPreferenceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    eventType?: true
+    enabled?: true
+  }
+
+  export type NotificationPreferenceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    eventType?: true
+    enabled?: true
+    _all?: true
+  }
+
+  export type NotificationPreferenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NotificationPreference to aggregate.
+     */
+    where?: NotificationPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationPreferences to fetch.
+     */
+    orderBy?: NotificationPreferenceOrderByWithRelationInput | NotificationPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NotificationPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NotificationPreferences
+    **/
+    _count?: true | NotificationPreferenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NotificationPreferenceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NotificationPreferenceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationPreferenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationPreferenceMaxAggregateInputType
+  }
+
+  export type GetNotificationPreferenceAggregateType<T extends NotificationPreferenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotificationPreference]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotificationPreference[P]>
+      : GetScalarType<T[P], AggregateNotificationPreference[P]>
+  }
+
+
+
+
+  export type NotificationPreferenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationPreferenceWhereInput
+    orderBy?: NotificationPreferenceOrderByWithAggregationInput | NotificationPreferenceOrderByWithAggregationInput[]
+    by: NotificationPreferenceScalarFieldEnum[] | NotificationPreferenceScalarFieldEnum
+    having?: NotificationPreferenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationPreferenceCountAggregateInputType | true
+    _avg?: NotificationPreferenceAvgAggregateInputType
+    _sum?: NotificationPreferenceSumAggregateInputType
+    _min?: NotificationPreferenceMinAggregateInputType
+    _max?: NotificationPreferenceMaxAggregateInputType
+  }
+
+  export type NotificationPreferenceGroupByOutputType = {
+    id: number
+    userId: number
+    eventType: string
+    enabled: boolean
+    _count: NotificationPreferenceCountAggregateOutputType | null
+    _avg: NotificationPreferenceAvgAggregateOutputType | null
+    _sum: NotificationPreferenceSumAggregateOutputType | null
+    _min: NotificationPreferenceMinAggregateOutputType | null
+    _max: NotificationPreferenceMaxAggregateOutputType | null
+  }
+
+  type GetNotificationPreferenceGroupByPayload<T extends NotificationPreferenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificationPreferenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationPreferenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationPreferenceGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationPreferenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationPreferenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventType?: boolean
+    enabled?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notificationPreference"]>
+
+
+  export type NotificationPreferenceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    eventType?: boolean
+    enabled?: boolean
+  }
+
+  export type NotificationPreferenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $NotificationPreferencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NotificationPreference"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      eventType: string
+      enabled: boolean
+    }, ExtArgs["result"]["notificationPreference"]>
+    composites: {}
+  }
+
+  type NotificationPreferenceGetPayload<S extends boolean | null | undefined | NotificationPreferenceDefaultArgs> = $Result.GetResult<Prisma.$NotificationPreferencePayload, S>
+
+  type NotificationPreferenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<NotificationPreferenceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: NotificationPreferenceCountAggregateInputType | true
+    }
+
+  export interface NotificationPreferenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NotificationPreference'], meta: { name: 'NotificationPreference' } }
+    /**
+     * Find zero or one NotificationPreference that matches the filter.
+     * @param {NotificationPreferenceFindUniqueArgs} args - Arguments to find a NotificationPreference
+     * @example
+     * // Get one NotificationPreference
+     * const notificationPreference = await prisma.notificationPreference.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NotificationPreferenceFindUniqueArgs>(args: SelectSubset<T, NotificationPreferenceFindUniqueArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one NotificationPreference that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {NotificationPreferenceFindUniqueOrThrowArgs} args - Arguments to find a NotificationPreference
+     * @example
+     * // Get one NotificationPreference
+     * const notificationPreference = await prisma.notificationPreference.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NotificationPreferenceFindUniqueOrThrowArgs>(args: SelectSubset<T, NotificationPreferenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first NotificationPreference that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceFindFirstArgs} args - Arguments to find a NotificationPreference
+     * @example
+     * // Get one NotificationPreference
+     * const notificationPreference = await prisma.notificationPreference.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NotificationPreferenceFindFirstArgs>(args?: SelectSubset<T, NotificationPreferenceFindFirstArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first NotificationPreference that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceFindFirstOrThrowArgs} args - Arguments to find a NotificationPreference
+     * @example
+     * // Get one NotificationPreference
+     * const notificationPreference = await prisma.notificationPreference.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NotificationPreferenceFindFirstOrThrowArgs>(args?: SelectSubset<T, NotificationPreferenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more NotificationPreferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NotificationPreferences
+     * const notificationPreferences = await prisma.notificationPreference.findMany()
+     * 
+     * // Get first 10 NotificationPreferences
+     * const notificationPreferences = await prisma.notificationPreference.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationPreferenceWithIdOnly = await prisma.notificationPreference.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NotificationPreferenceFindManyArgs>(args?: SelectSubset<T, NotificationPreferenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a NotificationPreference.
+     * @param {NotificationPreferenceCreateArgs} args - Arguments to create a NotificationPreference.
+     * @example
+     * // Create one NotificationPreference
+     * const NotificationPreference = await prisma.notificationPreference.create({
+     *   data: {
+     *     // ... data to create a NotificationPreference
+     *   }
+     * })
+     * 
+     */
+    create<T extends NotificationPreferenceCreateArgs>(args: SelectSubset<T, NotificationPreferenceCreateArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many NotificationPreferences.
+     * @param {NotificationPreferenceCreateManyArgs} args - Arguments to create many NotificationPreferences.
+     * @example
+     * // Create many NotificationPreferences
+     * const notificationPreference = await prisma.notificationPreference.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NotificationPreferenceCreateManyArgs>(args?: SelectSubset<T, NotificationPreferenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a NotificationPreference.
+     * @param {NotificationPreferenceDeleteArgs} args - Arguments to delete one NotificationPreference.
+     * @example
+     * // Delete one NotificationPreference
+     * const NotificationPreference = await prisma.notificationPreference.delete({
+     *   where: {
+     *     // ... filter to delete one NotificationPreference
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NotificationPreferenceDeleteArgs>(args: SelectSubset<T, NotificationPreferenceDeleteArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one NotificationPreference.
+     * @param {NotificationPreferenceUpdateArgs} args - Arguments to update one NotificationPreference.
+     * @example
+     * // Update one NotificationPreference
+     * const notificationPreference = await prisma.notificationPreference.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NotificationPreferenceUpdateArgs>(args: SelectSubset<T, NotificationPreferenceUpdateArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more NotificationPreferences.
+     * @param {NotificationPreferenceDeleteManyArgs} args - Arguments to filter NotificationPreferences to delete.
+     * @example
+     * // Delete a few NotificationPreferences
+     * const { count } = await prisma.notificationPreference.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NotificationPreferenceDeleteManyArgs>(args?: SelectSubset<T, NotificationPreferenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NotificationPreferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NotificationPreferences
+     * const notificationPreference = await prisma.notificationPreference.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NotificationPreferenceUpdateManyArgs>(args: SelectSubset<T, NotificationPreferenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one NotificationPreference.
+     * @param {NotificationPreferenceUpsertArgs} args - Arguments to update or create a NotificationPreference.
+     * @example
+     * // Update or create a NotificationPreference
+     * const notificationPreference = await prisma.notificationPreference.upsert({
+     *   create: {
+     *     // ... data to create a NotificationPreference
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NotificationPreference we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NotificationPreferenceUpsertArgs>(args: SelectSubset<T, NotificationPreferenceUpsertArgs<ExtArgs>>): Prisma__NotificationPreferenceClient<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of NotificationPreferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceCountArgs} args - Arguments to filter NotificationPreferences to count.
+     * @example
+     * // Count the number of NotificationPreferences
+     * const count = await prisma.notificationPreference.count({
+     *   where: {
+     *     // ... the filter for the NotificationPreferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationPreferenceCountArgs>(
+      args?: Subset<T, NotificationPreferenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationPreferenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NotificationPreference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationPreferenceAggregateArgs>(args: Subset<T, NotificationPreferenceAggregateArgs>): Prisma.PrismaPromise<GetNotificationPreferenceAggregateType<T>>
+
+    /**
+     * Group by NotificationPreference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationPreferenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationPreferenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationPreferenceGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationPreferenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationPreferenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationPreferenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NotificationPreference model
+   */
+  readonly fields: NotificationPreferenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NotificationPreference.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NotificationPreferenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NotificationPreference model
+   */ 
+  interface NotificationPreferenceFieldRefs {
+    readonly id: FieldRef<"NotificationPreference", 'Int'>
+    readonly userId: FieldRef<"NotificationPreference", 'Int'>
+    readonly eventType: FieldRef<"NotificationPreference", 'String'>
+    readonly enabled: FieldRef<"NotificationPreference", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NotificationPreference findUnique
+   */
+  export type NotificationPreferenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationPreference to fetch.
+     */
+    where: NotificationPreferenceWhereUniqueInput
+  }
+
+  /**
+   * NotificationPreference findUniqueOrThrow
+   */
+  export type NotificationPreferenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationPreference to fetch.
+     */
+    where: NotificationPreferenceWhereUniqueInput
+  }
+
+  /**
+   * NotificationPreference findFirst
+   */
+  export type NotificationPreferenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationPreference to fetch.
+     */
+    where?: NotificationPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationPreferences to fetch.
+     */
+    orderBy?: NotificationPreferenceOrderByWithRelationInput | NotificationPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NotificationPreferences.
+     */
+    cursor?: NotificationPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NotificationPreferences.
+     */
+    distinct?: NotificationPreferenceScalarFieldEnum | NotificationPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * NotificationPreference findFirstOrThrow
+   */
+  export type NotificationPreferenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationPreference to fetch.
+     */
+    where?: NotificationPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationPreferences to fetch.
+     */
+    orderBy?: NotificationPreferenceOrderByWithRelationInput | NotificationPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NotificationPreferences.
+     */
+    cursor?: NotificationPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NotificationPreferences.
+     */
+    distinct?: NotificationPreferenceScalarFieldEnum | NotificationPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * NotificationPreference findMany
+   */
+  export type NotificationPreferenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationPreferences to fetch.
+     */
+    where?: NotificationPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationPreferences to fetch.
+     */
+    orderBy?: NotificationPreferenceOrderByWithRelationInput | NotificationPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NotificationPreferences.
+     */
+    cursor?: NotificationPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationPreferences.
+     */
+    skip?: number
+    distinct?: NotificationPreferenceScalarFieldEnum | NotificationPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * NotificationPreference create
+   */
+  export type NotificationPreferenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NotificationPreference.
+     */
+    data: XOR<NotificationPreferenceCreateInput, NotificationPreferenceUncheckedCreateInput>
+  }
+
+  /**
+   * NotificationPreference createMany
+   */
+  export type NotificationPreferenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NotificationPreferences.
+     */
+    data: NotificationPreferenceCreateManyInput | NotificationPreferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * NotificationPreference update
+   */
+  export type NotificationPreferenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NotificationPreference.
+     */
+    data: XOR<NotificationPreferenceUpdateInput, NotificationPreferenceUncheckedUpdateInput>
+    /**
+     * Choose, which NotificationPreference to update.
+     */
+    where: NotificationPreferenceWhereUniqueInput
+  }
+
+  /**
+   * NotificationPreference updateMany
+   */
+  export type NotificationPreferenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NotificationPreferences.
+     */
+    data: XOR<NotificationPreferenceUpdateManyMutationInput, NotificationPreferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which NotificationPreferences to update
+     */
+    where?: NotificationPreferenceWhereInput
+  }
+
+  /**
+   * NotificationPreference upsert
+   */
+  export type NotificationPreferenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NotificationPreference to update in case it exists.
+     */
+    where: NotificationPreferenceWhereUniqueInput
+    /**
+     * In case the NotificationPreference found by the `where` argument doesn't exist, create a new NotificationPreference with this data.
+     */
+    create: XOR<NotificationPreferenceCreateInput, NotificationPreferenceUncheckedCreateInput>
+    /**
+     * In case the NotificationPreference was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NotificationPreferenceUpdateInput, NotificationPreferenceUncheckedUpdateInput>
+  }
+
+  /**
+   * NotificationPreference delete
+   */
+  export type NotificationPreferenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter which NotificationPreference to delete.
+     */
+    where: NotificationPreferenceWhereUniqueInput
+  }
+
+  /**
+   * NotificationPreference deleteMany
+   */
+  export type NotificationPreferenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NotificationPreferences to delete
+     */
+    where?: NotificationPreferenceWhereInput
+  }
+
+  /**
+   * NotificationPreference without action
+   */
+  export type NotificationPreferenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationPreference
+     */
+    select?: NotificationPreferenceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationPreferenceInclude<ExtArgs> | null
   }
 
 
@@ -14634,6 +16800,7 @@ export namespace Prisma {
     role: 'role',
     twoFactorSecret: 'twoFactorSecret',
     twoFactorEnabled: 'twoFactorEnabled',
+    notificationEmail: 'notificationEmail',
     createdAt: 'createdAt'
   };
 
@@ -14647,7 +16814,7 @@ export namespace Prisma {
     bio: 'bio',
     photoUrl: 'photoUrl',
     materialCost: 'materialCost',
-    payoutPercent: 'payoutPercent',
+    studioPercent: 'studioPercent',
     isActive: 'isActive',
     sortOrder: 'sortOrder',
     createdAt: 'createdAt'
@@ -14731,6 +16898,9 @@ export namespace Prisma {
     price: 'price',
     notes: 'notes',
     cancelToken: 'cancelToken',
+    reminderSentAt: 'reminderSentAt',
+    partnershipId: 'partnershipId',
+    extraFieldValue: 'extraFieldValue',
     createdAt: 'createdAt'
   };
 
@@ -14771,6 +16941,19 @@ export namespace Prisma {
   export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
 
 
+  export const PartnershipScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    percent: 'percent',
+    extraFieldLabel: 'extraFieldLabel',
+    isActive: 'isActive',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt'
+  };
+
+  export type PartnershipScalarFieldEnum = (typeof PartnershipScalarFieldEnum)[keyof typeof PartnershipScalarFieldEnum]
+
+
   export const SettingScalarFieldEnum: {
     key: 'key',
     value: 'value',
@@ -14778,6 +16961,16 @@ export namespace Prisma {
   };
 
   export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
+
+
+  export const NotificationPreferenceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    eventType: 'eventType',
+    enabled: 'enabled'
+  };
+
+  export type NotificationPreferenceScalarFieldEnum = (typeof NotificationPreferenceScalarFieldEnum)[keyof typeof NotificationPreferenceScalarFieldEnum]
 
 
   export const ClientNicknameScalarFieldEnum: {
@@ -14940,9 +17133,11 @@ export namespace Prisma {
     role?: EnumRoleFilter<"User"> | $Enums.Role
     twoFactorSecret?: StringNullableFilter<"User"> | string | null
     twoFactorEnabled?: BoolFilter<"User"> | boolean
+    notificationEmail?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     employee?: XOR<EmployeeNullableRelationFilter, EmployeeWhereInput> | null
     blogPosts?: BlogPostListRelationFilter
+    notificationPreferences?: NotificationPreferenceListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14953,9 +17148,11 @@ export namespace Prisma {
     role?: SortOrder
     twoFactorSecret?: SortOrderInput | SortOrder
     twoFactorEnabled?: SortOrder
+    notificationEmail?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     employee?: EmployeeOrderByWithRelationInput
     blogPosts?: BlogPostOrderByRelationAggregateInput
+    notificationPreferences?: NotificationPreferenceOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -14969,9 +17166,11 @@ export namespace Prisma {
     role?: EnumRoleFilter<"User"> | $Enums.Role
     twoFactorSecret?: StringNullableFilter<"User"> | string | null
     twoFactorEnabled?: BoolFilter<"User"> | boolean
+    notificationEmail?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     employee?: XOR<EmployeeNullableRelationFilter, EmployeeWhereInput> | null
     blogPosts?: BlogPostListRelationFilter
+    notificationPreferences?: NotificationPreferenceListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -14982,6 +17181,7 @@ export namespace Prisma {
     role?: SortOrder
     twoFactorSecret?: SortOrderInput | SortOrder
     twoFactorEnabled?: SortOrder
+    notificationEmail?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
@@ -15001,6 +17201,7 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     twoFactorSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
     twoFactorEnabled?: BoolWithAggregatesFilter<"User"> | boolean
+    notificationEmail?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -15014,7 +17215,7 @@ export namespace Prisma {
     bio?: StringNullableFilter<"Employee"> | string | null
     photoUrl?: StringNullableFilter<"Employee"> | string | null
     materialCost?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Employee"> | boolean
     sortOrder?: IntFilter<"Employee"> | number
     createdAt?: DateTimeFilter<"Employee"> | Date | string
@@ -15033,7 +17234,7 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     photoUrl?: SortOrderInput | SortOrder
     materialCost?: SortOrderInput | SortOrder
-    payoutPercent?: SortOrderInput | SortOrder
+    studioPercent?: SortOrderInput | SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -15055,7 +17256,7 @@ export namespace Prisma {
     bio?: StringNullableFilter<"Employee"> | string | null
     photoUrl?: StringNullableFilter<"Employee"> | string | null
     materialCost?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Employee"> | boolean
     sortOrder?: IntFilter<"Employee"> | number
     createdAt?: DateTimeFilter<"Employee"> | Date | string
@@ -15074,7 +17275,7 @@ export namespace Prisma {
     bio?: SortOrderInput | SortOrder
     photoUrl?: SortOrderInput | SortOrder
     materialCost?: SortOrderInput | SortOrder
-    payoutPercent?: SortOrderInput | SortOrder
+    studioPercent?: SortOrderInput | SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -15095,7 +17296,7 @@ export namespace Prisma {
     bio?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     photoUrl?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     materialCost?: DecimalNullableWithAggregatesFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: DecimalNullableWithAggregatesFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: DecimalNullableWithAggregatesFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolWithAggregatesFilter<"Employee"> | boolean
     sortOrder?: IntWithAggregatesFilter<"Employee"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
@@ -15456,9 +17657,13 @@ export namespace Prisma {
     price?: DecimalNullableFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     cancelToken?: StringNullableFilter<"Appointment"> | string | null
+    reminderSentAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
+    partnershipId?: IntNullableFilter<"Appointment"> | number | null
+    extraFieldValue?: StringNullableFilter<"Appointment"> | string | null
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
     employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
     service?: XOR<ServiceRelationFilter, ServiceWhereInput>
+    partnership?: XOR<PartnershipNullableRelationFilter, PartnershipWhereInput> | null
     consultation?: XOR<ConsultationRequestNullableRelationFilter, ConsultationRequestWhereInput> | null
   }
 
@@ -15475,9 +17680,13 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     cancelToken?: SortOrderInput | SortOrder
+    reminderSentAt?: SortOrderInput | SortOrder
+    partnershipId?: SortOrderInput | SortOrder
+    extraFieldValue?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     employee?: EmployeeOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
+    partnership?: PartnershipOrderByWithRelationInput
     consultation?: ConsultationRequestOrderByWithRelationInput
   }
 
@@ -15497,9 +17706,13 @@ export namespace Prisma {
     status?: EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
     price?: DecimalNullableFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
+    reminderSentAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
+    partnershipId?: IntNullableFilter<"Appointment"> | number | null
+    extraFieldValue?: StringNullableFilter<"Appointment"> | string | null
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
     employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
     service?: XOR<ServiceRelationFilter, ServiceWhereInput>
+    partnership?: XOR<PartnershipNullableRelationFilter, PartnershipWhereInput> | null
     consultation?: XOR<ConsultationRequestNullableRelationFilter, ConsultationRequestWhereInput> | null
   }, "id" | "cancelToken">
 
@@ -15516,6 +17729,9 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     cancelToken?: SortOrderInput | SortOrder
+    reminderSentAt?: SortOrderInput | SortOrder
+    partnershipId?: SortOrderInput | SortOrder
+    extraFieldValue?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: AppointmentCountOrderByAggregateInput
     _avg?: AppointmentAvgOrderByAggregateInput
@@ -15540,6 +17756,9 @@ export namespace Prisma {
     price?: DecimalNullableWithAggregatesFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     cancelToken?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
+    reminderSentAt?: DateTimeNullableWithAggregatesFilter<"Appointment"> | Date | string | null
+    partnershipId?: IntNullableWithAggregatesFilter<"Appointment"> | number | null
+    extraFieldValue?: StringNullableWithAggregatesFilter<"Appointment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   }
 
@@ -15723,6 +17942,73 @@ export namespace Prisma {
     isPublished?: BoolWithAggregatesFilter<"BlogPost"> | boolean
   }
 
+  export type PartnershipWhereInput = {
+    AND?: PartnershipWhereInput | PartnershipWhereInput[]
+    OR?: PartnershipWhereInput[]
+    NOT?: PartnershipWhereInput | PartnershipWhereInput[]
+    id?: IntFilter<"Partnership"> | number
+    name?: StringFilter<"Partnership"> | string
+    percent?: DecimalFilter<"Partnership"> | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: StringNullableFilter<"Partnership"> | string | null
+    isActive?: BoolFilter<"Partnership"> | boolean
+    sortOrder?: IntFilter<"Partnership"> | number
+    createdAt?: DateTimeFilter<"Partnership"> | Date | string
+    appointments?: AppointmentListRelationFilter
+  }
+
+  export type PartnershipOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    percent?: SortOrder
+    extraFieldLabel?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    appointments?: AppointmentOrderByRelationAggregateInput
+  }
+
+  export type PartnershipWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: PartnershipWhereInput | PartnershipWhereInput[]
+    OR?: PartnershipWhereInput[]
+    NOT?: PartnershipWhereInput | PartnershipWhereInput[]
+    name?: StringFilter<"Partnership"> | string
+    percent?: DecimalFilter<"Partnership"> | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: StringNullableFilter<"Partnership"> | string | null
+    isActive?: BoolFilter<"Partnership"> | boolean
+    sortOrder?: IntFilter<"Partnership"> | number
+    createdAt?: DateTimeFilter<"Partnership"> | Date | string
+    appointments?: AppointmentListRelationFilter
+  }, "id">
+
+  export type PartnershipOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    percent?: SortOrder
+    extraFieldLabel?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    _count?: PartnershipCountOrderByAggregateInput
+    _avg?: PartnershipAvgOrderByAggregateInput
+    _max?: PartnershipMaxOrderByAggregateInput
+    _min?: PartnershipMinOrderByAggregateInput
+    _sum?: PartnershipSumOrderByAggregateInput
+  }
+
+  export type PartnershipScalarWhereWithAggregatesInput = {
+    AND?: PartnershipScalarWhereWithAggregatesInput | PartnershipScalarWhereWithAggregatesInput[]
+    OR?: PartnershipScalarWhereWithAggregatesInput[]
+    NOT?: PartnershipScalarWhereWithAggregatesInput | PartnershipScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Partnership"> | number
+    name?: StringWithAggregatesFilter<"Partnership"> | string
+    percent?: DecimalWithAggregatesFilter<"Partnership"> | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: StringNullableWithAggregatesFilter<"Partnership"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Partnership"> | boolean
+    sortOrder?: IntWithAggregatesFilter<"Partnership"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Partnership"> | Date | string
+  }
+
   export type SettingWhereInput = {
     AND?: SettingWhereInput | SettingWhereInput[]
     OR?: SettingWhereInput[]
@@ -15763,6 +18049,59 @@ export namespace Prisma {
     key?: StringWithAggregatesFilter<"Setting"> | string
     value?: StringNullableWithAggregatesFilter<"Setting"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"Setting"> | Date | string
+  }
+
+  export type NotificationPreferenceWhereInput = {
+    AND?: NotificationPreferenceWhereInput | NotificationPreferenceWhereInput[]
+    OR?: NotificationPreferenceWhereInput[]
+    NOT?: NotificationPreferenceWhereInput | NotificationPreferenceWhereInput[]
+    id?: IntFilter<"NotificationPreference"> | number
+    userId?: IntFilter<"NotificationPreference"> | number
+    eventType?: StringFilter<"NotificationPreference"> | string
+    enabled?: BoolFilter<"NotificationPreference"> | boolean
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type NotificationPreferenceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    enabled?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type NotificationPreferenceWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    userId_eventType?: NotificationPreferenceUserIdEventTypeCompoundUniqueInput
+    AND?: NotificationPreferenceWhereInput | NotificationPreferenceWhereInput[]
+    OR?: NotificationPreferenceWhereInput[]
+    NOT?: NotificationPreferenceWhereInput | NotificationPreferenceWhereInput[]
+    userId?: IntFilter<"NotificationPreference"> | number
+    eventType?: StringFilter<"NotificationPreference"> | string
+    enabled?: BoolFilter<"NotificationPreference"> | boolean
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "userId_eventType">
+
+  export type NotificationPreferenceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    enabled?: SortOrder
+    _count?: NotificationPreferenceCountOrderByAggregateInput
+    _avg?: NotificationPreferenceAvgOrderByAggregateInput
+    _max?: NotificationPreferenceMaxOrderByAggregateInput
+    _min?: NotificationPreferenceMinOrderByAggregateInput
+    _sum?: NotificationPreferenceSumOrderByAggregateInput
+  }
+
+  export type NotificationPreferenceScalarWhereWithAggregatesInput = {
+    AND?: NotificationPreferenceScalarWhereWithAggregatesInput | NotificationPreferenceScalarWhereWithAggregatesInput[]
+    OR?: NotificationPreferenceScalarWhereWithAggregatesInput[]
+    NOT?: NotificationPreferenceScalarWhereWithAggregatesInput | NotificationPreferenceScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"NotificationPreference"> | number
+    userId?: IntWithAggregatesFilter<"NotificationPreference"> | number
+    eventType?: StringWithAggregatesFilter<"NotificationPreference"> | string
+    enabled?: BoolWithAggregatesFilter<"NotificationPreference"> | boolean
   }
 
   export type ClientNicknameWhereInput = {
@@ -15890,9 +18229,11 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
     employee?: EmployeeCreateNestedOneWithoutUserInput
     blogPosts?: BlogPostCreateNestedManyWithoutAuthorInput
+    notificationPreferences?: NotificationPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -15903,9 +18244,11 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
     employee?: EmployeeUncheckedCreateNestedOneWithoutUserInput
     blogPosts?: BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+    notificationPreferences?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -15915,9 +18258,11 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneWithoutUserNestedInput
     blogPosts?: BlogPostUpdateManyWithoutAuthorNestedInput
+    notificationPreferences?: NotificationPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -15928,9 +18273,11 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUncheckedUpdateOneWithoutUserNestedInput
     blogPosts?: BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+    notificationPreferences?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15941,6 +18288,7 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
   }
 
@@ -15951,6 +18299,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15962,6 +18311,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15970,7 +18320,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -15989,7 +18339,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -16005,7 +18355,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16024,7 +18374,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16042,7 +18392,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -16053,7 +18403,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16066,7 +18416,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16413,9 +18763,12 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     employee: EmployeeCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
+    partnership?: PartnershipCreateNestedOneWithoutAppointmentsInput
     consultation?: ConsultationRequestCreateNestedOneWithoutScheduledAppointmentInput
   }
 
@@ -16432,6 +18785,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     consultation?: ConsultationRequestUncheckedCreateNestedOneWithoutScheduledAppointmentInput
   }
@@ -16446,9 +18802,12 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
+    partnership?: PartnershipUpdateOneWithoutAppointmentsNestedInput
     consultation?: ConsultationRequestUpdateOneWithoutScheduledAppointmentNestedInput
   }
 
@@ -16465,6 +18824,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     consultation?: ConsultationRequestUncheckedUpdateOneWithoutScheduledAppointmentNestedInput
   }
@@ -16482,6 +18844,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
   }
 
@@ -16495,6 +18860,8 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -16511,6 +18878,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -16700,6 +19070,77 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type PartnershipCreateInput = {
+    name: string
+    percent: Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    appointments?: AppointmentCreateNestedManyWithoutPartnershipInput
+  }
+
+  export type PartnershipUncheckedCreateInput = {
+    id?: number
+    name: string
+    percent: Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+    appointments?: AppointmentUncheckedCreateNestedManyWithoutPartnershipInput
+  }
+
+  export type PartnershipUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    percent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appointments?: AppointmentUpdateManyWithoutPartnershipNestedInput
+  }
+
+  export type PartnershipUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    percent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appointments?: AppointmentUncheckedUpdateManyWithoutPartnershipNestedInput
+  }
+
+  export type PartnershipCreateManyInput = {
+    id?: number
+    name: string
+    percent: Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+  }
+
+  export type PartnershipUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    percent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartnershipUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    percent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SettingCreateInput = {
     key: string
     value?: string | null
@@ -16740,6 +19181,51 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     value?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationPreferenceCreateInput = {
+    eventType: string
+    enabled?: boolean
+    user: UserCreateNestedOneWithoutNotificationPreferencesInput
+  }
+
+  export type NotificationPreferenceUncheckedCreateInput = {
+    id?: number
+    userId: number
+    eventType: string
+    enabled?: boolean
+  }
+
+  export type NotificationPreferenceUpdateInput = {
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutNotificationPreferencesNestedInput
+  }
+
+  export type NotificationPreferenceUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type NotificationPreferenceCreateManyInput = {
+    id?: number
+    userId: number
+    eventType: string
+    enabled?: boolean
+  }
+
+  export type NotificationPreferenceUpdateManyMutationInput = {
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type NotificationPreferenceUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ClientNicknameCreateInput = {
@@ -16935,12 +19421,22 @@ export namespace Prisma {
     none?: BlogPostWhereInput
   }
 
+  export type NotificationPreferenceListRelationFilter = {
+    every?: NotificationPreferenceWhereInput
+    some?: NotificationPreferenceWhereInput
+    none?: NotificationPreferenceWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type BlogPostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationPreferenceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16952,6 +19448,7 @@ export namespace Prisma {
     role?: SortOrder
     twoFactorSecret?: SortOrder
     twoFactorEnabled?: SortOrder
+    notificationEmail?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -16967,6 +19464,7 @@ export namespace Prisma {
     role?: SortOrder
     twoFactorSecret?: SortOrder
     twoFactorEnabled?: SortOrder
+    notificationEmail?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -16978,6 +19476,7 @@ export namespace Prisma {
     role?: SortOrder
     twoFactorSecret?: SortOrder
     twoFactorEnabled?: SortOrder
+    notificationEmail?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -17140,7 +19639,7 @@ export namespace Prisma {
     bio?: SortOrder
     photoUrl?: SortOrder
     materialCost?: SortOrder
-    payoutPercent?: SortOrder
+    studioPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -17150,7 +19649,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     materialCost?: SortOrder
-    payoutPercent?: SortOrder
+    studioPercent?: SortOrder
     sortOrder?: SortOrder
   }
 
@@ -17161,7 +19660,7 @@ export namespace Prisma {
     bio?: SortOrder
     photoUrl?: SortOrder
     materialCost?: SortOrder
-    payoutPercent?: SortOrder
+    studioPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -17174,7 +19673,7 @@ export namespace Prisma {
     bio?: SortOrder
     photoUrl?: SortOrder
     materialCost?: SortOrder
-    payoutPercent?: SortOrder
+    studioPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
@@ -17184,7 +19683,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     materialCost?: SortOrder
-    payoutPercent?: SortOrder
+    studioPercent?: SortOrder
     sortOrder?: SortOrder
   }
 
@@ -17530,6 +20029,22 @@ export namespace Prisma {
     not?: NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type PartnershipNullableRelationFilter = {
+    is?: PartnershipWhereInput | null
+    isNot?: PartnershipWhereInput | null
+  }
+
   export type ConsultationRequestNullableRelationFilter = {
     is?: ConsultationRequestWhereInput | null
     isNot?: ConsultationRequestWhereInput | null
@@ -17548,6 +20063,9 @@ export namespace Prisma {
     price?: SortOrder
     notes?: SortOrder
     cancelToken?: SortOrder
+    reminderSentAt?: SortOrder
+    partnershipId?: SortOrder
+    extraFieldValue?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -17556,6 +20074,7 @@ export namespace Prisma {
     employeeId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    partnershipId?: SortOrder
   }
 
   export type AppointmentMaxOrderByAggregateInput = {
@@ -17571,6 +20090,9 @@ export namespace Prisma {
     price?: SortOrder
     notes?: SortOrder
     cancelToken?: SortOrder
+    reminderSentAt?: SortOrder
+    partnershipId?: SortOrder
+    extraFieldValue?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -17587,6 +20109,9 @@ export namespace Prisma {
     price?: SortOrder
     notes?: SortOrder
     cancelToken?: SortOrder
+    reminderSentAt?: SortOrder
+    partnershipId?: SortOrder
+    extraFieldValue?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -17595,6 +20120,7 @@ export namespace Prisma {
     employeeId?: SortOrder
     serviceId?: SortOrder
     price?: SortOrder
+    partnershipId?: SortOrder
   }
 
   export type EnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -17605,6 +20131,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -17730,17 +20270,6 @@ export namespace Prisma {
     _max?: NestedEnumConsultationStatusFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type BlogPostCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -17793,18 +20322,46 @@ export namespace Prisma {
     authorId?: SortOrder
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  export type PartnershipCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    percent?: SortOrder
+    extraFieldLabel?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PartnershipAvgOrderByAggregateInput = {
+    id?: SortOrder
+    percent?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type PartnershipMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    percent?: SortOrder
+    extraFieldLabel?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PartnershipMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    percent?: SortOrder
+    extraFieldLabel?: SortOrder
+    isActive?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PartnershipSumOrderByAggregateInput = {
+    id?: SortOrder
+    percent?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type SettingCountOrderByAggregateInput = {
@@ -17823,6 +20380,42 @@ export namespace Prisma {
     key?: SortOrder
     value?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type NotificationPreferenceUserIdEventTypeCompoundUniqueInput = {
+    userId: number
+    eventType: string
+  }
+
+  export type NotificationPreferenceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    enabled?: SortOrder
+  }
+
+  export type NotificationPreferenceAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type NotificationPreferenceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    enabled?: SortOrder
+  }
+
+  export type NotificationPreferenceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventType?: SortOrder
+    enabled?: SortOrder
+  }
+
+  export type NotificationPreferenceSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
   }
 
   export type ClientNicknameCountOrderByAggregateInput = {
@@ -17925,6 +20518,13 @@ export namespace Prisma {
     connect?: BlogPostWhereUniqueInput | BlogPostWhereUniqueInput[]
   }
 
+  export type NotificationPreferenceCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationPreferenceCreateWithoutUserInput, NotificationPreferenceUncheckedCreateWithoutUserInput> | NotificationPreferenceCreateWithoutUserInput[] | NotificationPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationPreferenceCreateOrConnectWithoutUserInput | NotificationPreferenceCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationPreferenceCreateManyUserInputEnvelope
+    connect?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+  }
+
   export type EmployeeUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<EmployeeCreateWithoutUserInput, EmployeeUncheckedCreateWithoutUserInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutUserInput
@@ -17936,6 +20536,13 @@ export namespace Prisma {
     connectOrCreate?: BlogPostCreateOrConnectWithoutAuthorInput | BlogPostCreateOrConnectWithoutAuthorInput[]
     createMany?: BlogPostCreateManyAuthorInputEnvelope
     connect?: BlogPostWhereUniqueInput | BlogPostWhereUniqueInput[]
+  }
+
+  export type NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationPreferenceCreateWithoutUserInput, NotificationPreferenceUncheckedCreateWithoutUserInput> | NotificationPreferenceCreateWithoutUserInput[] | NotificationPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationPreferenceCreateOrConnectWithoutUserInput | NotificationPreferenceCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationPreferenceCreateManyUserInputEnvelope
+    connect?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -17982,6 +20589,20 @@ export namespace Prisma {
     deleteMany?: BlogPostScalarWhereInput | BlogPostScalarWhereInput[]
   }
 
+  export type NotificationPreferenceUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationPreferenceCreateWithoutUserInput, NotificationPreferenceUncheckedCreateWithoutUserInput> | NotificationPreferenceCreateWithoutUserInput[] | NotificationPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationPreferenceCreateOrConnectWithoutUserInput | NotificationPreferenceCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationPreferenceUpsertWithWhereUniqueWithoutUserInput | NotificationPreferenceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationPreferenceCreateManyUserInputEnvelope
+    set?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    disconnect?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    delete?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    connect?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    update?: NotificationPreferenceUpdateWithWhereUniqueWithoutUserInput | NotificationPreferenceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationPreferenceUpdateManyWithWhereWithoutUserInput | NotificationPreferenceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationPreferenceScalarWhereInput | NotificationPreferenceScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -18012,6 +20633,20 @@ export namespace Prisma {
     update?: BlogPostUpdateWithWhereUniqueWithoutAuthorInput | BlogPostUpdateWithWhereUniqueWithoutAuthorInput[]
     updateMany?: BlogPostUpdateManyWithWhereWithoutAuthorInput | BlogPostUpdateManyWithWhereWithoutAuthorInput[]
     deleteMany?: BlogPostScalarWhereInput | BlogPostScalarWhereInput[]
+  }
+
+  export type NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationPreferenceCreateWithoutUserInput, NotificationPreferenceUncheckedCreateWithoutUserInput> | NotificationPreferenceCreateWithoutUserInput[] | NotificationPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationPreferenceCreateOrConnectWithoutUserInput | NotificationPreferenceCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationPreferenceUpsertWithWhereUniqueWithoutUserInput | NotificationPreferenceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationPreferenceCreateManyUserInputEnvelope
+    set?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    disconnect?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    delete?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    connect?: NotificationPreferenceWhereUniqueInput | NotificationPreferenceWhereUniqueInput[]
+    update?: NotificationPreferenceUpdateWithWhereUniqueWithoutUserInput | NotificationPreferenceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationPreferenceUpdateManyWithWhereWithoutUserInput | NotificationPreferenceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationPreferenceScalarWhereInput | NotificationPreferenceScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutEmployeeInput = {
@@ -18574,6 +21209,12 @@ export namespace Prisma {
     connect?: ServiceWhereUniqueInput
   }
 
+  export type PartnershipCreateNestedOneWithoutAppointmentsInput = {
+    create?: XOR<PartnershipCreateWithoutAppointmentsInput, PartnershipUncheckedCreateWithoutAppointmentsInput>
+    connectOrCreate?: PartnershipCreateOrConnectWithoutAppointmentsInput
+    connect?: PartnershipWhereUniqueInput
+  }
+
   export type ConsultationRequestCreateNestedOneWithoutScheduledAppointmentInput = {
     create?: XOR<ConsultationRequestCreateWithoutScheduledAppointmentInput, ConsultationRequestUncheckedCreateWithoutScheduledAppointmentInput>
     connectOrCreate?: ConsultationRequestCreateOrConnectWithoutScheduledAppointmentInput
@@ -18590,6 +21231,10 @@ export namespace Prisma {
     set?: $Enums.AppointmentStatus
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput = {
     create?: XOR<EmployeeCreateWithoutAppointmentsInput, EmployeeUncheckedCreateWithoutAppointmentsInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutAppointmentsInput
@@ -18604,6 +21249,16 @@ export namespace Prisma {
     upsert?: ServiceUpsertWithoutAppointmentsInput
     connect?: ServiceWhereUniqueInput
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutAppointmentsInput, ServiceUpdateWithoutAppointmentsInput>, ServiceUncheckedUpdateWithoutAppointmentsInput>
+  }
+
+  export type PartnershipUpdateOneWithoutAppointmentsNestedInput = {
+    create?: XOR<PartnershipCreateWithoutAppointmentsInput, PartnershipUncheckedCreateWithoutAppointmentsInput>
+    connectOrCreate?: PartnershipCreateOrConnectWithoutAppointmentsInput
+    upsert?: PartnershipUpsertWithoutAppointmentsInput
+    disconnect?: PartnershipWhereInput | boolean
+    delete?: PartnershipWhereInput | boolean
+    connect?: PartnershipWhereUniqueInput
+    update?: XOR<XOR<PartnershipUpdateToOneWithWhereWithoutAppointmentsInput, PartnershipUpdateWithoutAppointmentsInput>, PartnershipUncheckedUpdateWithoutAppointmentsInput>
   }
 
   export type ConsultationRequestUpdateOneWithoutScheduledAppointmentNestedInput = {
@@ -18682,16 +21337,68 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type UserUpdateOneRequiredWithoutBlogPostsNestedInput = {
     create?: XOR<UserCreateWithoutBlogPostsInput, UserUncheckedCreateWithoutBlogPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBlogPostsInput
     upsert?: UserUpsertWithoutBlogPostsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBlogPostsInput, UserUpdateWithoutBlogPostsInput>, UserUncheckedUpdateWithoutBlogPostsInput>
+  }
+
+  export type AppointmentCreateNestedManyWithoutPartnershipInput = {
+    create?: XOR<AppointmentCreateWithoutPartnershipInput, AppointmentUncheckedCreateWithoutPartnershipInput> | AppointmentCreateWithoutPartnershipInput[] | AppointmentUncheckedCreateWithoutPartnershipInput[]
+    connectOrCreate?: AppointmentCreateOrConnectWithoutPartnershipInput | AppointmentCreateOrConnectWithoutPartnershipInput[]
+    createMany?: AppointmentCreateManyPartnershipInputEnvelope
+    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+  }
+
+  export type AppointmentUncheckedCreateNestedManyWithoutPartnershipInput = {
+    create?: XOR<AppointmentCreateWithoutPartnershipInput, AppointmentUncheckedCreateWithoutPartnershipInput> | AppointmentCreateWithoutPartnershipInput[] | AppointmentUncheckedCreateWithoutPartnershipInput[]
+    connectOrCreate?: AppointmentCreateOrConnectWithoutPartnershipInput | AppointmentCreateOrConnectWithoutPartnershipInput[]
+    createMany?: AppointmentCreateManyPartnershipInputEnvelope
+    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+  }
+
+  export type AppointmentUpdateManyWithoutPartnershipNestedInput = {
+    create?: XOR<AppointmentCreateWithoutPartnershipInput, AppointmentUncheckedCreateWithoutPartnershipInput> | AppointmentCreateWithoutPartnershipInput[] | AppointmentUncheckedCreateWithoutPartnershipInput[]
+    connectOrCreate?: AppointmentCreateOrConnectWithoutPartnershipInput | AppointmentCreateOrConnectWithoutPartnershipInput[]
+    upsert?: AppointmentUpsertWithWhereUniqueWithoutPartnershipInput | AppointmentUpsertWithWhereUniqueWithoutPartnershipInput[]
+    createMany?: AppointmentCreateManyPartnershipInputEnvelope
+    set?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    disconnect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    delete?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    update?: AppointmentUpdateWithWhereUniqueWithoutPartnershipInput | AppointmentUpdateWithWhereUniqueWithoutPartnershipInput[]
+    updateMany?: AppointmentUpdateManyWithWhereWithoutPartnershipInput | AppointmentUpdateManyWithWhereWithoutPartnershipInput[]
+    deleteMany?: AppointmentScalarWhereInput | AppointmentScalarWhereInput[]
+  }
+
+  export type AppointmentUncheckedUpdateManyWithoutPartnershipNestedInput = {
+    create?: XOR<AppointmentCreateWithoutPartnershipInput, AppointmentUncheckedCreateWithoutPartnershipInput> | AppointmentCreateWithoutPartnershipInput[] | AppointmentUncheckedCreateWithoutPartnershipInput[]
+    connectOrCreate?: AppointmentCreateOrConnectWithoutPartnershipInput | AppointmentCreateOrConnectWithoutPartnershipInput[]
+    upsert?: AppointmentUpsertWithWhereUniqueWithoutPartnershipInput | AppointmentUpsertWithWhereUniqueWithoutPartnershipInput[]
+    createMany?: AppointmentCreateManyPartnershipInputEnvelope
+    set?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    disconnect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    delete?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    connect?: AppointmentWhereUniqueInput | AppointmentWhereUniqueInput[]
+    update?: AppointmentUpdateWithWhereUniqueWithoutPartnershipInput | AppointmentUpdateWithWhereUniqueWithoutPartnershipInput[]
+    updateMany?: AppointmentUpdateManyWithWhereWithoutPartnershipInput | AppointmentUpdateManyWithWhereWithoutPartnershipInput[]
+    deleteMany?: AppointmentScalarWhereInput | AppointmentScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutNotificationPreferencesInput = {
+    create?: XOR<UserCreateWithoutNotificationPreferencesInput, UserUncheckedCreateWithoutNotificationPreferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationPreferencesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutNotificationPreferencesNestedInput = {
+    create?: XOR<UserCreateWithoutNotificationPreferencesInput, UserUncheckedCreateWithoutNotificationPreferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationPreferencesInput
+    upsert?: UserUpsertWithoutNotificationPreferencesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationPreferencesInput, UserUpdateWithoutNotificationPreferencesInput>, UserUncheckedUpdateWithoutNotificationPreferencesInput>
   }
 
   export type EnumLogLevelFieldUpdateOperationsInput = {
@@ -18969,6 +21676,17 @@ export namespace Prisma {
     not?: NestedEnumAppointmentStatusFilter<$PrismaModel> | $Enums.AppointmentStatus
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AppointmentStatus | EnumAppointmentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.AppointmentStatus[]
@@ -18977,6 +21695,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAppointmentStatusFilter<$PrismaModel>
     _max?: NestedEnumAppointmentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumConsultationStatusFilter<$PrismaModel = never> = {
@@ -19018,31 +21750,6 @@ export namespace Prisma {
     _max?: NestedEnumConsultationStatusFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedEnumLogLevelFilter<$PrismaModel = never> = {
     equals?: $Enums.LogLevel | EnumLogLevelFieldRefInput<$PrismaModel>
     in?: $Enums.LogLevel[]
@@ -19065,7 +21772,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19082,7 +21789,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19133,6 +21840,27 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NotificationPreferenceCreateWithoutUserInput = {
+    eventType: string
+    enabled?: boolean
+  }
+
+  export type NotificationPreferenceUncheckedCreateWithoutUserInput = {
+    id?: number
+    eventType: string
+    enabled?: boolean
+  }
+
+  export type NotificationPreferenceCreateOrConnectWithoutUserInput = {
+    where: NotificationPreferenceWhereUniqueInput
+    create: XOR<NotificationPreferenceCreateWithoutUserInput, NotificationPreferenceUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationPreferenceCreateManyUserInputEnvelope = {
+    data: NotificationPreferenceCreateManyUserInput | NotificationPreferenceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type EmployeeUpsertWithoutUserInput = {
     update: XOR<EmployeeUpdateWithoutUserInput, EmployeeUncheckedUpdateWithoutUserInput>
     create: XOR<EmployeeCreateWithoutUserInput, EmployeeUncheckedCreateWithoutUserInput>
@@ -19149,7 +21877,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19166,7 +21894,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19210,6 +21938,32 @@ export namespace Prisma {
     isPublished?: BoolFilter<"BlogPost"> | boolean
   }
 
+  export type NotificationPreferenceUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationPreferenceWhereUniqueInput
+    update: XOR<NotificationPreferenceUpdateWithoutUserInput, NotificationPreferenceUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationPreferenceCreateWithoutUserInput, NotificationPreferenceUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationPreferenceUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationPreferenceWhereUniqueInput
+    data: XOR<NotificationPreferenceUpdateWithoutUserInput, NotificationPreferenceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationPreferenceUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationPreferenceScalarWhereInput
+    data: XOR<NotificationPreferenceUpdateManyMutationInput, NotificationPreferenceUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationPreferenceScalarWhereInput = {
+    AND?: NotificationPreferenceScalarWhereInput | NotificationPreferenceScalarWhereInput[]
+    OR?: NotificationPreferenceScalarWhereInput[]
+    NOT?: NotificationPreferenceScalarWhereInput | NotificationPreferenceScalarWhereInput[]
+    id?: IntFilter<"NotificationPreference"> | number
+    userId?: IntFilter<"NotificationPreference"> | number
+    eventType?: StringFilter<"NotificationPreference"> | string
+    enabled?: BoolFilter<"NotificationPreference"> | boolean
+  }
+
   export type UserCreateWithoutEmployeeInput = {
     name: string
     email: string
@@ -19217,8 +21971,10 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
     blogPosts?: BlogPostCreateNestedManyWithoutAuthorInput
+    notificationPreferences?: NotificationPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmployeeInput = {
@@ -19229,8 +21985,10 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
     blogPosts?: BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+    notificationPreferences?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmployeeInput = {
@@ -19320,8 +22078,11 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     service: ServiceCreateNestedOneWithoutAppointmentsInput
+    partnership?: PartnershipCreateNestedOneWithoutAppointmentsInput
     consultation?: ConsultationRequestCreateNestedOneWithoutScheduledAppointmentInput
   }
 
@@ -19337,6 +22098,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     consultation?: ConsultationRequestUncheckedCreateNestedOneWithoutScheduledAppointmentInput
   }
@@ -19404,8 +22168,10 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     blogPosts?: BlogPostUpdateManyWithoutAuthorNestedInput
+    notificationPreferences?: NotificationPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmployeeInput = {
@@ -19416,8 +22182,10 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     blogPosts?: BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
+    notificationPreferences?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EmployeeServiceUpsertWithWhereUniqueWithoutEmployeeInput = {
@@ -19534,6 +22302,9 @@ export namespace Prisma {
     price?: DecimalNullableFilter<"Appointment"> | Decimal | DecimalJsLike | number | string | null
     notes?: StringNullableFilter<"Appointment"> | string | null
     cancelToken?: StringNullableFilter<"Appointment"> | string | null
+    reminderSentAt?: DateTimeNullableFilter<"Appointment"> | Date | string | null
+    partnershipId?: IntNullableFilter<"Appointment"> | number | null
+    extraFieldValue?: StringNullableFilter<"Appointment"> | string | null
     createdAt?: DateTimeFilter<"Appointment"> | Date | string
   }
 
@@ -19626,8 +22397,11 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     employee: EmployeeCreateNestedOneWithoutAppointmentsInput
+    partnership?: PartnershipCreateNestedOneWithoutAppointmentsInput
     consultation?: ConsultationRequestCreateNestedOneWithoutScheduledAppointmentInput
   }
 
@@ -19643,6 +22417,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     consultation?: ConsultationRequestUncheckedCreateNestedOneWithoutScheduledAppointmentInput
   }
@@ -19963,7 +22740,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -19981,7 +22758,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20044,7 +22821,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20062,7 +22839,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20115,7 +22892,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20133,7 +22910,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20164,7 +22941,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20182,7 +22959,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20197,7 +22974,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20215,7 +22992,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20246,7 +23023,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20264,7 +23041,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20279,7 +23056,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20297,7 +23074,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20342,6 +23119,30 @@ export namespace Prisma {
   export type ServiceCreateOrConnectWithoutAppointmentsInput = {
     where: ServiceWhereUniqueInput
     create: XOR<ServiceCreateWithoutAppointmentsInput, ServiceUncheckedCreateWithoutAppointmentsInput>
+  }
+
+  export type PartnershipCreateWithoutAppointmentsInput = {
+    name: string
+    percent: Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+  }
+
+  export type PartnershipUncheckedCreateWithoutAppointmentsInput = {
+    id?: number
+    name: string
+    percent: Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: string | null
+    isActive?: boolean
+    sortOrder?: number
+    createdAt?: Date | string
+  }
+
+  export type PartnershipCreateOrConnectWithoutAppointmentsInput = {
+    where: PartnershipWhereUniqueInput
+    create: XOR<PartnershipCreateWithoutAppointmentsInput, PartnershipUncheckedCreateWithoutAppointmentsInput>
   }
 
   export type ConsultationRequestCreateWithoutScheduledAppointmentInput = {
@@ -20390,7 +23191,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20408,7 +23209,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20454,6 +23255,36 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     employees?: EmployeeServiceUncheckedUpdateManyWithoutServiceNestedInput
     consultations?: ConsultationRequestUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type PartnershipUpsertWithoutAppointmentsInput = {
+    update: XOR<PartnershipUpdateWithoutAppointmentsInput, PartnershipUncheckedUpdateWithoutAppointmentsInput>
+    create: XOR<PartnershipCreateWithoutAppointmentsInput, PartnershipUncheckedCreateWithoutAppointmentsInput>
+    where?: PartnershipWhereInput
+  }
+
+  export type PartnershipUpdateToOneWithWhereWithoutAppointmentsInput = {
+    where?: PartnershipWhereInput
+    data: XOR<PartnershipUpdateWithoutAppointmentsInput, PartnershipUncheckedUpdateWithoutAppointmentsInput>
+  }
+
+  export type PartnershipUpdateWithoutAppointmentsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    percent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartnershipUncheckedUpdateWithoutAppointmentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    percent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFieldLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConsultationRequestUpsertWithoutScheduledAppointmentInput = {
@@ -20529,7 +23360,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20547,7 +23378,7 @@ export namespace Prisma {
     bio?: string | null
     photoUrl?: string | null
     materialCost?: Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: Decimal | DecimalJsLike | number | string | null
+    studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
     createdAt?: Date | string
@@ -20572,9 +23403,12 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
     employee: EmployeeCreateNestedOneWithoutAppointmentsInput
     service: ServiceCreateNestedOneWithoutAppointmentsInput
+    partnership?: PartnershipCreateNestedOneWithoutAppointmentsInput
   }
 
   export type AppointmentUncheckedCreateWithoutConsultationInput = {
@@ -20590,6 +23424,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
   }
 
@@ -20652,7 +23489,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20670,7 +23507,7 @@ export namespace Prisma {
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     materialCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    payoutPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20701,9 +23538,12 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
+    partnership?: PartnershipUpdateOneWithoutAppointmentsNestedInput
   }
 
   export type AppointmentUncheckedUpdateWithoutConsultationInput = {
@@ -20719,6 +23559,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20729,8 +23572,10 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
     employee?: EmployeeCreateNestedOneWithoutUserInput
+    notificationPreferences?: NotificationPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBlogPostsInput = {
@@ -20741,8 +23586,10 @@ export namespace Prisma {
     role?: $Enums.Role
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
+    notificationEmail?: string | null
     createdAt?: Date | string
     employee?: EmployeeUncheckedCreateNestedOneWithoutUserInput
+    notificationPreferences?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBlogPostsInput = {
@@ -20768,8 +23615,10 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneWithoutUserNestedInput
+    notificationPreferences?: NotificationPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlogPostsInput = {
@@ -20780,8 +23629,143 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUncheckedUpdateOneWithoutUserNestedInput
+    notificationPreferences?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AppointmentCreateWithoutPartnershipInput = {
+    clientName: string
+    clientEmail: string
+    clientPhone: string
+    startDatetime: Date | string
+    endDatetime: Date | string
+    status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
+    createdAt?: Date | string
+    employee: EmployeeCreateNestedOneWithoutAppointmentsInput
+    service: ServiceCreateNestedOneWithoutAppointmentsInput
+    consultation?: ConsultationRequestCreateNestedOneWithoutScheduledAppointmentInput
+  }
+
+  export type AppointmentUncheckedCreateWithoutPartnershipInput = {
+    id?: number
+    clientName: string
+    clientEmail: string
+    clientPhone: string
+    employeeId: number
+    serviceId: number
+    startDatetime: Date | string
+    endDatetime: Date | string
+    status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
+    createdAt?: Date | string
+    consultation?: ConsultationRequestUncheckedCreateNestedOneWithoutScheduledAppointmentInput
+  }
+
+  export type AppointmentCreateOrConnectWithoutPartnershipInput = {
+    where: AppointmentWhereUniqueInput
+    create: XOR<AppointmentCreateWithoutPartnershipInput, AppointmentUncheckedCreateWithoutPartnershipInput>
+  }
+
+  export type AppointmentCreateManyPartnershipInputEnvelope = {
+    data: AppointmentCreateManyPartnershipInput | AppointmentCreateManyPartnershipInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AppointmentUpsertWithWhereUniqueWithoutPartnershipInput = {
+    where: AppointmentWhereUniqueInput
+    update: XOR<AppointmentUpdateWithoutPartnershipInput, AppointmentUncheckedUpdateWithoutPartnershipInput>
+    create: XOR<AppointmentCreateWithoutPartnershipInput, AppointmentUncheckedCreateWithoutPartnershipInput>
+  }
+
+  export type AppointmentUpdateWithWhereUniqueWithoutPartnershipInput = {
+    where: AppointmentWhereUniqueInput
+    data: XOR<AppointmentUpdateWithoutPartnershipInput, AppointmentUncheckedUpdateWithoutPartnershipInput>
+  }
+
+  export type AppointmentUpdateManyWithWhereWithoutPartnershipInput = {
+    where: AppointmentScalarWhereInput
+    data: XOR<AppointmentUpdateManyMutationInput, AppointmentUncheckedUpdateManyWithoutPartnershipInput>
+  }
+
+  export type UserCreateWithoutNotificationPreferencesInput = {
+    name: string
+    email: string
+    password: string
+    role?: $Enums.Role
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    notificationEmail?: string | null
+    createdAt?: Date | string
+    employee?: EmployeeCreateNestedOneWithoutUserInput
+    blogPosts?: BlogPostCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    role?: $Enums.Role
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    notificationEmail?: string | null
+    createdAt?: Date | string
+    employee?: EmployeeUncheckedCreateNestedOneWithoutUserInput
+    blogPosts?: BlogPostUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNotificationPreferencesInput, UserUncheckedCreateWithoutNotificationPreferencesInput>
+  }
+
+  export type UserUpsertWithoutNotificationPreferencesInput = {
+    update: XOR<UserUpdateWithoutNotificationPreferencesInput, UserUncheckedUpdateWithoutNotificationPreferencesInput>
+    create: XOR<UserCreateWithoutNotificationPreferencesInput, UserUncheckedCreateWithoutNotificationPreferencesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotificationPreferencesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotificationPreferencesInput, UserUncheckedUpdateWithoutNotificationPreferencesInput>
+  }
+
+  export type UserUpdateWithoutNotificationPreferencesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneWithoutUserNestedInput
+    blogPosts?: BlogPostUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notificationEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUncheckedUpdateOneWithoutUserNestedInput
+    blogPosts?: BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type BlogPostCreateManyAuthorInput = {
@@ -20795,6 +23779,12 @@ export namespace Prisma {
     seoTitle?: string | null
     seoDescription?: string | null
     isPublished?: boolean
+  }
+
+  export type NotificationPreferenceCreateManyUserInput = {
+    id?: number
+    eventType: string
+    enabled?: boolean
   }
 
   export type BlogPostUpdateWithoutAuthorInput = {
@@ -20835,6 +23825,23 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type NotificationPreferenceUpdateWithoutUserInput = {
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type NotificationPreferenceUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type NotificationPreferenceUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type EmployeeServiceCreateManyEmployeeInput = {
     serviceId: number
     sortOrder?: number
@@ -20869,6 +23876,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
   }
 
@@ -20959,8 +23969,11 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
+    partnership?: PartnershipUpdateOneWithoutAppointmentsNestedInput
     consultation?: ConsultationRequestUpdateOneWithoutScheduledAppointmentNestedInput
   }
 
@@ -20976,6 +23989,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     consultation?: ConsultationRequestUncheckedUpdateOneWithoutScheduledAppointmentNestedInput
   }
@@ -20992,6 +24008,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21050,6 +24069,9 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     notes?: string | null
     cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    partnershipId?: number | null
+    extraFieldValue?: string | null
     createdAt?: Date | string
   }
 
@@ -21091,8 +24113,11 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput
+    partnership?: PartnershipUpdateOneWithoutAppointmentsNestedInput
     consultation?: ConsultationRequestUpdateOneWithoutScheduledAppointmentNestedInput
   }
 
@@ -21108,6 +24133,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     consultation?: ConsultationRequestUncheckedUpdateOneWithoutScheduledAppointmentNestedInput
   }
@@ -21124,6 +24152,9 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    partnershipId?: NullableIntFieldUpdateOperationsInput | number | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21253,6 +24284,79 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AppointmentCreateManyPartnershipInput = {
+    id?: number
+    clientName: string
+    clientEmail: string
+    clientPhone: string
+    employeeId: number
+    serviceId: number
+    startDatetime: Date | string
+    endDatetime: Date | string
+    status?: $Enums.AppointmentStatus
+    price?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    cancelToken?: string | null
+    reminderSentAt?: Date | string | null
+    extraFieldValue?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AppointmentUpdateWithoutPartnershipInput = {
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: StringFieldUpdateOperationsInput | string
+    clientPhone?: StringFieldUpdateOperationsInput | string
+    startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneRequiredWithoutAppointmentsNestedInput
+    service?: ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
+    consultation?: ConsultationRequestUpdateOneWithoutScheduledAppointmentNestedInput
+  }
+
+  export type AppointmentUncheckedUpdateWithoutPartnershipInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: StringFieldUpdateOperationsInput | string
+    clientPhone?: StringFieldUpdateOperationsInput | string
+    employeeId?: IntFieldUpdateOperationsInput | number
+    serviceId?: IntFieldUpdateOperationsInput | number
+    startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consultation?: ConsultationRequestUncheckedUpdateOneWithoutScheduledAppointmentNestedInput
+  }
+
+  export type AppointmentUncheckedUpdateManyWithoutPartnershipInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    clientName?: StringFieldUpdateOperationsInput | string
+    clientEmail?: StringFieldUpdateOperationsInput | string
+    clientPhone?: StringFieldUpdateOperationsInput | string
+    employeeId?: IntFieldUpdateOperationsInput | number
+    serviceId?: IntFieldUpdateOperationsInput | number
+    startDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelToken?: NullableStringFieldUpdateOperationsInput | string | null
+    reminderSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    extraFieldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -21274,6 +24378,10 @@ export namespace Prisma {
      * @deprecated Use CategoryCountOutputTypeDefaultArgs instead
      */
     export type CategoryCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CategoryCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PartnershipCountOutputTypeDefaultArgs instead
+     */
+    export type PartnershipCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PartnershipCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
@@ -21315,9 +24423,17 @@ export namespace Prisma {
      */
     export type BlogPostArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BlogPostDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use PartnershipDefaultArgs instead
+     */
+    export type PartnershipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PartnershipDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use SettingDefaultArgs instead
      */
     export type SettingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SettingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use NotificationPreferenceDefaultArgs instead
+     */
+    export type NotificationPreferenceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationPreferenceDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ClientNicknameDefaultArgs instead
      */

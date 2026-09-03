@@ -51,9 +51,11 @@ model User {
   role                Role       @default(employee)
   twoFactorSecret     String?    @map("two_factor_secret")
   twoFactorEnabled    Boolean    @default(false) @map("two_factor_enabled")
-  createdAt           DateTime   @default(now()) @map("created_at")
-  employee            Employee?
-  blogPosts           BlogPost[]
+  notificationEmail         String?                    @map("notification_email")
+  createdAt                 DateTime                   @default(now()) @map("created_at")
+  employee                  Employee?
+  blogPosts                 BlogPost[]
+  notificationPreferences   NotificationPreference[]
 
   @@map("users")
 }
@@ -65,7 +67,7 @@ model Employee {
   bio           String?               @db.Text
   photoUrl      String?               @map("photo_url")
   materialCost  Decimal?              @db.Decimal(6, 2) @map("material_cost")
-  payoutPercent Decimal?              @db.Decimal(5, 2) @map("payout_percent")
+  studioPercent Decimal?              @db.Decimal(5, 2) @map("studio_percent")
   isActive      Boolean               @default(true) @map("is_active")
   sortOrder     Int                   @default(0) @map("sort_order")
   createdAt     DateTime              @default(now()) @map("created_at")
@@ -160,11 +162,15 @@ model Appointment {
   status        AppointmentStatus    @default(confirmed)
   price         Decimal?             @db.Decimal(8, 2)
   notes         String?              @db.Text
-  cancelToken   String?              @unique @map("cancel_token")
-  createdAt     DateTime             @default(now()) @map("created_at")
-  employee      Employee             @relation(fields: [employeeId], references: [id])
-  service       Service              @relation(fields: [serviceId], references: [id])
-  consultation  ConsultationRequest?
+  cancelToken    String?              @unique @map("cancel_token")
+  reminderSentAt DateTime?            @map("reminder_sent_at")
+  partnershipId  Int?                 @map("partnership_id")
+  extraFieldValue String?             @map("extra_field_value")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  employee       Employee             @relation(fields: [employeeId], references: [id])
+  service        Service              @relation(fields: [serviceId], references: [id])
+  partnership    Partnership?         @relation(fields: [partnershipId], references: [id])
+  consultation   ConsultationRequest?
 
   @@map("appointments")
 }
@@ -205,12 +211,36 @@ model BlogPost {
   @@map("blog_posts")
 }
 
+model Partnership {
+  id              Int           @id @default(autoincrement())
+  name            String
+  percent         Decimal       @db.Decimal(5, 2)
+  extraFieldLabel String?       @map("extra_field_label")
+  isActive        Boolean       @default(true) @map("is_active")
+  sortOrder       Int           @default(0) @map("sort_order")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  appointments    Appointment[]
+
+  @@map("partnerships")
+}
+
 model Setting {
   key       String   @id
   value     String?  @db.Text
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("settings")
+}
+
+model NotificationPreference {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  eventType String   @map("event_type") @db.VarChar(64)
+  enabled   Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventType])
+  @@map("notification_preferences")
 }
 
 // Alcunha interna para distinguir clientes com o mesmo nome — visível só no

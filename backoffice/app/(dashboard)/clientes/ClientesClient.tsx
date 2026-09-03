@@ -109,9 +109,13 @@ export default function ClientesClient({ initial }: Props) {
     { key: 'nickname', label: 'Alcunha', render: (c: Client) => <NicknameCell client={c} onSaved={handleNicknameSaved} /> },
     { key: 'email', label: 'Email', render: (c: Client) => <span className="text-text-secondary text-sm">{c.email}</span> },
     { key: 'phone', label: 'Telefone', render: (c: Client) => <span className="text-text-secondary text-sm">{c.phone}</span> },
-    {
-      key: 'count', label: 'Marcações',
+    { key: 'count', label: 'Marcações',
       render: (c: Client) => <span className="text-gold font-medium">{c.appointmentCount}</span>
+    },
+    {
+      key: 'partnership',
+      label: 'Parceria',
+      render: (c: Client) => <span className="text-text-secondary text-sm">{c.lastPartnership || '—'}</span>,
     },
     {
       key: 'actions', label: '',
