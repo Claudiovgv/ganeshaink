@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
 const { logRouteError } = require('../lib/logger');
+const { withPhotoUrl } = require('../lib/employeePhotos');
 
 router.get('/', async (req, res) => {
   try {
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     });
 
-    const result = employees.map(emp => ({
+    const result = employees.map(emp => withPhotoUrl({
       ...emp,
       services: emp.services.map(es => es.service),
     }));
@@ -41,10 +42,10 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Employee not found' });
     }
 
-    res.json({
+    res.json(withPhotoUrl({
       ...employee,
       services: employee.services.map(es => es.service),
-    });
+    }));
   } catch (err) {
     logRouteError(req, err, 'employees');
     res.status(500).json({ error: 'Internal server error' });

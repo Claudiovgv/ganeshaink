@@ -2,6 +2,7 @@
 deployment:
   tasks:
     - source /home/ganesha/nodevenv/ganeshaink/backend/18/bin/activate && cd /home/ganesha/ganeshaink/backend && npm install --omit=dev
+    - source /home/ganesha/nodevenv/ganeshaink/backend/18/bin/activate && cd /home/ganesha/ganeshaink/backend && npx prisma generate
     - source /home/ganesha/nodevenv/ganeshaink/backend/18/bin/activate && cd /home/ganesha/ganeshaink/backend && node prisma/migrate.js
     # Next.js is built locally and committed as .next — cPanel LVE OOMs on `next build`.
     - source /home/ganesha/nodevenv/ganeshaink/frontend/18/bin/activate && cd /home/ganesha/ganeshaink/frontend && npm install

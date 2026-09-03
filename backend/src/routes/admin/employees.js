@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { authenticate, requirePermission } = require('../../middleware/auth');
 const { logEvent } = require('../../lib/logger');
 const { isDeliverableEmail } = require('../../lib/notifications');
-const { photoUploadMiddleware, saveEmployeePhoto } = require('../../lib/employeePhotos');
+const { photoUploadMiddleware, saveEmployeePhoto, withPhotoUrl } = require('../../lib/employeePhotos');
 
 router.use(authenticate, requirePermission('manage_employees'));
 
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
       include: EMPLOYEE_INCLUDE,
       orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     });
-    res.json(employees);
+    res.json(employees.map(withPhotoUrl));
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -41,7 +41,7 @@ router.put('/reorder', async (req, res) => {
     );
 
     const employees = await prisma.employee.findMany({ orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] });
-    res.json(employees);
+    res.json(employees.map(withPhotoUrl));
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

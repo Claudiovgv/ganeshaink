@@ -25,6 +25,22 @@ const upload = multer({
   },
 });
 
+const DEFAULT_PHOTOS = [
+  { match: /ricardo/i, url: '/images/employees/ricardo-vieira.webp' },
+  { match: /vera/i, url: '/images/employees/vera-ferreira.webp' },
+  { match: /eduardo/i, url: '/images/employees/eduardo-gomes.webp' },
+];
+
+function defaultPhotoUrl(name) {
+  const hit = DEFAULT_PHOTOS.find((p) => p.match.test(name || ''));
+  return hit ? hit.url : null;
+}
+
+function withPhotoUrl(employee) {
+  if (!employee) return employee;
+  return { ...employee, photoUrl: employee.photoUrl || defaultPhotoUrl(employee.name) };
+}
+
 function saveEmployeePhoto(employeeId, buffer, mimetype) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
   const ext = ALLOWED[mimetype] || 'jpg';
@@ -47,4 +63,4 @@ function photoUploadMiddleware(req, res, next) {
   });
 }
 
-module.exports = { photoUploadMiddleware, saveEmployeePhoto };
+module.exports = { photoUploadMiddleware, saveEmployeePhoto, defaultPhotoUrl, withPhotoUrl };

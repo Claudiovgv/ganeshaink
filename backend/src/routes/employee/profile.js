@@ -2,7 +2,7 @@ const router = require('express').Router();
 const prisma = require('../../config/database');
 const bcrypt = require('bcryptjs');
 const { authenticate, requirePermission } = require('../../middleware/auth');
-const { photoUploadMiddleware, saveEmployeePhoto } = require('../../lib/employeePhotos');
+const { photoUploadMiddleware, saveEmployeePhoto, withPhotoUrl } = require('../../lib/employeePhotos');
 
 router.use(authenticate, requirePermission('edit_profile'));
 
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
       include: { user: { select: { id: true, name: true, email: true, role: true } }, services: { include: { service: true } } },
     });
     if (!emp) return res.status(404).json({ error: 'Employee profile not found' });
-    res.json(emp);
+    res.json(withPhotoUrl(emp));
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

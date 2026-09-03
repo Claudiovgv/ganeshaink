@@ -52,6 +52,8 @@ function ArtistCard({ employee }: { employee: Employee }) {
   );
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function ArtistasPage() {
   const fetched = await api.employees.list().catch(() => [] as Employee[]);
   const employees = fetched.length > 0 ? fetched : MOCK_EMPLOYEES;

@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: 'Catálogo completo de serviços Ganesha Ink — barbearia, tatuagem, piercing e unhas com preços e durações.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function ServicosPage() {
   const [services, categories] = await Promise.all([
     api.services.list().catch(() => [] as Service[]),

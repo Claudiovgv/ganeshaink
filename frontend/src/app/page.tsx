@@ -4,6 +4,8 @@ import { api } from '@/lib/api';
 import ServicosGrid from './servicos/ServicosGrid';
 import { resolvePhotoUrl } from '@/lib/media';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [employees, services, categories] = await Promise.all([
     api.employees.list().catch(() => []),

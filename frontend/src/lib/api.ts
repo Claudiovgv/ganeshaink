@@ -109,18 +109,18 @@ export interface BlogPost {
 
 export const api = {
   employees: {
-    list: () => apiFetch<Employee[]>('/employees', { next: { revalidate: 300 } } as RequestInit),
-    get: (id: number) => apiFetch<Employee>(`/employees/${id}`, { next: { revalidate: 300 } } as RequestInit),
+    list: () => apiFetch<Employee[]>('/employees', { cache: 'no-store' }),
+    get: (id: number) => apiFetch<Employee>(`/employees/${id}`, { cache: 'no-store' }),
   },
   services: {
     list: (category?: string) =>
       apiFetch<Service[]>(
         category ? `/services?category=${category}` : '/services',
-        { next: { revalidate: 300 } } as RequestInit,
+        { cache: 'no-store' },
       ),
   },
   categories: {
-    list: () => apiFetch<Category[]>('/categories', { next: { revalidate: 300 } } as RequestInit),
+    list: () => apiFetch<Category[]>('/categories', { cache: 'no-store' }),
   },
   availability: {
     slots: (employeeId: number, date: string, serviceId: number) =>
