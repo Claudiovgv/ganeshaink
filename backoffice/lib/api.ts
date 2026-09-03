@@ -91,9 +91,13 @@ export const api = {
       return apiFetch<Appointment[]>(`/employee/appointments${q ? `?${q}` : ''}`);
     },
   },
-  consultations: {
-    list: (status?: string) =>
-      apiFetch<ConsultationRequest[]>(`/admin/consultations${status ? `?status=${status}` : ''}`),
+    consultations: {
+    list: (params?: { status?: string; category?: string; excludeCategory?: string }) => {
+      const q = new URLSearchParams(
+        Object.entries(params ?? {}).filter(([, v]) => v).map(([k, v]) => [k, String(v)])
+      ).toString();
+      return apiFetch<ConsultationRequest[]>(`/admin/consultations${q ? `?${q}` : ''}`);
+    },
     schedule: (id: number, data: object) =>
       apiFetch<ConsultationRequest>(`/admin/consultations/${id}/schedule`, { method: 'POST', body: JSON.stringify(data) }),
     reject: (id: number) =>
@@ -109,6 +113,21 @@ export const api = {
       apiFetch<{ message: string }>(`/admin/employees/${id}`, { method: 'DELETE' }),
     reorder: (employeeIds: number[]) =>
       apiFetch<Employee[]>('/admin/employees/reorder', { method: 'PUT', body: JSON.stringify({ employeeIds }) }),
+    uploadPhoto: async (id: number, formData: FormData) => {
+      const cookieStore = await cookies();
+      const token = cookieStore.get('ganesha_token')?.value;
+      const res = await fetch(`${API}/admin/employees/${id}/photo`, {
+        method: 'POST',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: formData,
+        cache: 'no-store',
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(err.error ?? res.statusText);
+      }
+      return res.json() as Promise<Employee>;
+    },
   },
   services: {
     adminList: () => apiFetch<Service[]>('/admin/services'),
@@ -198,6 +217,21 @@ export const api = {
     get: () => apiFetch<Employee>('/employee/profile'),
     update: (data: object) =>
       apiFetch<Employee>('/employee/profile', { method: 'PUT', body: JSON.stringify(data) }),
+    uploadPhoto: async (formData: FormData) => {
+      const cookieStore = await cookies();
+      const token = cookieStore.get('ganesha_token')?.value;
+      const res = await fetch(`${API}/employee/profile/photo`, {
+        method: 'POST',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: formData,
+        cache: 'no-store',
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(err.error ?? res.statusText);
+      }
+      return res.json() as Promise<Employee>;
+    },
   },
   settings: {
     getSmtp: () => apiFetch<SmtpSettings>('/admin/settings/smtp'),
@@ -223,6 +257,9 @@ export const api = {
         `/admin/logs${q ? `?${q}` : ''}`
       );
     },
+    clear: () => apiFetch<{ deleted: number; message: string }>('/admin/logs', { method: 'DELETE' }),
+    loginBlocks: () => apiFetch<{ blocks: { key: string; hits: number; resetAt: string }[] }>('/admin/logs/login-blocks'),
+    unlockLogins: () => apiFetch<{ message: string }>('/admin/logs/login-blocks', { method: 'DELETE' }),
   },
   partnerships: {
     list: () => apiFetch<Partnership[]>('/admin/partnerships'),

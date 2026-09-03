@@ -1,6 +1,5 @@
 const prisma = require('../config/database');
 
-// Fire-and-forget system log — never throws, never blocks the request.
 async function logEvent(level, category, message, { ip, userId, meta } = {}) {
   try {
     await prisma.systemLog.create({
@@ -11,4 +10,13 @@ async function logEvent(level, category, message, { ip, userId, meta } = {}) {
   }
 }
 
-module.exports = { logEvent };
+function logRouteError(req, err, category) {
+  console.error(err);
+  logEvent('error', category, err.message || 'Internal server error', {
+    ip: req.ip,
+    userId: req.user?.id,
+    meta: { path: req.originalUrl || req.path, method: req.method },
+  });
+}
+
+module.exports = { logEvent, logRouteError };

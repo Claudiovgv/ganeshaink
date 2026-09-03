@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { api, Service } from '@/lib/api';
 import Button from '@/components/ui/Button';
 
-export default function ConsultaForm() {
+export default function ConsultaForm({ tipo }: { tipo?: 'piercing' | 'tattoo' }) {
   const [services, setServices] = useState<Service[]>([]);
   const [form, setForm] = useState({
     clientName: '',
@@ -18,15 +18,22 @@ export default function ConsultaForm() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    Promise.all([api.services.list('tattoo'), api.services.list('piercing')])
-      .then(([t, p]) => setServices([...t, ...p]))
+    const loads = tipo
+      ? [api.services.list(tipo)]
+      : [api.services.list('tattoo'), api.services.list('piercing')];
+    Promise.all(loads)
+      .then((groups) => setServices(groups.flat()))
       .catch(() => setError('Erro ao carregar serviços.'));
-  }, []);
+  }, [tipo]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!form.clientName || !form.clientEmail || !form.clientPhone || !form.serviceId || !form.description) {
-      setError('Preenche todos os campos.');
+    if (!form.clientName || !form.clientEmail || !form.clientPhone.trim() || !form.serviceId || !form.description) {
+      setError('Preenche todos os campos, incluindo o contacto.');
+      return;
+    }
+    if (form.clientPhone.replace(/\D/g, '').length < 9) {
+      setError('Indica um contacto válido (telemóvel).');
       return;
     }
     setLoading(true);
@@ -53,7 +60,9 @@ export default function ConsultaForm() {
         <div className="text-5xl mb-6">🎉</div>
         <h2 className="font-display text-2xl font-bold mb-3 text-gold">Pedido Enviado!</h2>
         <p className="text-text-secondary">
-          Entraremos em contacto contigo em breve para agendar a consulta.
+          {tipo === 'piercing'
+            ? 'A equipa vai confirmar a marcação e entra em contacto contigo.'
+            : 'Entraremos em contacto contigo em breve para agendar a consulta.'}
         </p>
       </div>
     );
@@ -84,10 +93,11 @@ export default function ConsultaForm() {
         />
       </div>
       <div>
-        <label className="block text-sm text-text-secondary mb-1">Telefone *</label>
+        <label className="block text-sm text-text-secondary mb-1">Contacto (obrigatório) *</label>
         <input
           type="tel"
           required
+          minLength={9}
           value={form.clientPhone}
           onChange={(e) => setForm({ ...form, clientPhone: e.target.value })}
           placeholder="+351 9xx xxx xxx"

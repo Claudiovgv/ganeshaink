@@ -22,7 +22,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/images/logo/ganesha-icon.png"
+              src="/images/logo/ganesha-icon.webp"
             alt="Ganesha Ink"
             width={36}
             height={36}

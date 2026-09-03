@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import ServicosGrid from './servicos/ServicosGrid';
+import { resolvePhotoUrl } from '@/lib/media';
 
 export default async function HomePage() {
   const [employees, services, categories] = await Promise.all([
@@ -17,17 +18,18 @@ export default async function HomePage() {
       {/* ── Hero ── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/hero/studio-hero.jpg"
+          src="/images/hero/studio-hero.webp"
           alt="Ganesha Ink Studio"
           fill
           priority
+          sizes="100vw"
           className="object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/60 via-transparent to-bg-primary" />
         {/* Logo grande com opacidade — atrás do texto, ligeiramente subido */}
         <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
           <Image
-            src="/images/logo/ganesha-logo-gold-white.png"
+            src="/images/logo/ganesha-logo-gold-white.webp"
             alt=""
             width={640}
             height={640}
@@ -98,8 +100,8 @@ export default async function HomePage() {
                   className="group text-center"
                 >
                   <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-2 border-gold-border group-hover:border-gold transition-colors bg-bg-card">
-                    {emp.photoUrl ? (
-                      <Image src={emp.photoUrl} alt={emp.name} width={128} height={128} className="object-cover w-full h-full" />
+                    {resolvePhotoUrl(emp.photoUrl) ? (
+                      <Image src={resolvePhotoUrl(emp.photoUrl)!} alt={emp.name} width={128} height={128} sizes="128px" className="object-cover w-full h-full" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-4xl text-gold">
                         {emp.name[0]}

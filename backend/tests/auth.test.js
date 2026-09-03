@@ -1,5 +1,6 @@
 const request = require('supertest');
 const { authenticator } = require('otplib');
+const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const prisma = require('../src/config/database');
 const bcrypt = require('bcryptjs');
@@ -84,6 +85,18 @@ describe('POST /v1/auth/login', () => {
       .send({ email: 'nobody@test.com', password: 'password123' });
     expect(res.status).toBe(401);
   });
+
+  it('does not lock a user out after several successful login attempts', async () => {
+    const { resetAuthLimits } = require('../src/middleware/rateLimit');
+    await resetAuthLimits();
+    for (let i = 0; i < 12; i++) {
+      const res = await request(app)
+        .post('/v1/auth/login')
+        .send({ email: 'admin@test.com', password: 'password123' });
+      expect(res.status).toBe(200);
+      expect(res.body.requires2FA).toBe(true);
+    }
+  });
 });
 
 describe('GET /v1/auth/me', () => {
@@ -91,7 +104,7 @@ describe('GET /v1/auth/me', () => {
 
   beforeAll(async () => {
     await prisma.user.deleteMany({ where: { email: 'me@test.com' } });
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name: 'Me Test',
         email: 'me@test.com',
@@ -99,16 +112,7 @@ describe('GET /v1/auth/me', () => {
         role: 'employee',
       },
     });
-
-    const loginRes = await request(app)
-      .post('/v1/auth/login')
-      .send({ email: 'me@test.com', password: 'password123' });
-    const { pendingToken } = loginRes.body;
-
-    const setupRes = await request(app).post('/v1/auth/login/setup-2fa').send({ pendingToken });
-    const code = authenticator.generate(setupRes.body.secret);
-    const verifyRes = await request(app).post('/v1/auth/login/verify-2fa').send({ pendingToken, code });
-    token = verifyRes.body.token;
+    token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
   });
 
   afterAll(async () => {

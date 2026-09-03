@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="md:col-span-2">
           <Link href="/" className="inline-block mb-4">
             <Image
-              src="/images/logo/ganesha-logo-gold.png"
+              src="/images/logo/ganesha-logo-gold.webp"
               alt="Ganesha Ink"
               width={140}
               height={50}

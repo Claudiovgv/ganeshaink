@@ -399,3 +399,103 @@ describe('GET/PUT /v1/admin/settings/notifications', () => {
     await prisma.notificationPreference.deleteMany({ where: { userId: adminUser.id } });
   });
 });
+
+const TINY_PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+  'base64'
+);
+
+describe('POST /v1/admin/employees/:id/photo', () => {
+  it('saves a photo and serves it from /uploads', async () => {
+    const res = await request(app)
+      .post(`/v1/admin/employees/${employee.id}/photo`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .attach('photo', TINY_PNG, { filename: 'foto.png', contentType: 'image/png' });
+    expect(res.status).toBe(200);
+    expect(res.body.photoUrl).toMatch(/^\/uploads\/employees\/\d+\.png$/);
+
+    const file = await request(app).get(res.body.photoUrl);
+    expect(file.status).toBe(200);
+    expect(file.headers['content-type']).toMatch(/image\/png/);
+  });
+
+  it('rejects a non-image file', async () => {
+    const res = await request(app)
+      .post(`/v1/admin/employees/${employee.id}/photo`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .attach('photo', Buffer.from('not-an-image'), { filename: 'notes.txt', contentType: 'text/plain' });
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('GET /v1/admin/consultations category filter', () => {
+  let piercingCat, tattooCat, piercingSvc, tattooSvc, piercingReq, tattooReq;
+
+  beforeAll(async () => {
+    piercingCat = await ensureCategory('piercing', 'Piercing');
+    tattooCat = await ensureCategory('tattoo', 'Tatuagem');
+    piercingSvc = await prisma.service.create({
+      data: { name: 'Admin Piercing Test', categoryId: piercingCat.id, durationMin: 30, price: 40 },
+    });
+    tattooSvc = await prisma.service.create({
+      data: { name: 'Admin Tattoo Test', categoryId: tattooCat.id, durationMin: 60, price: 80 },
+    });
+    piercingReq = await prisma.consultationRequest.create({
+      data: {
+        clientName: 'Piercing Client',
+        clientEmail: 'piercing-client@test.com',
+        clientPhone: '912345678',
+        serviceId: piercingSvc.id,
+        description: 'helix',
+        status: 'pending',
+      },
+    });
+    tattooReq = await prisma.consultationRequest.create({
+      data: {
+        clientName: 'Tattoo Client',
+        clientEmail: 'tattoo-client@test.com',
+        clientPhone: '918765432',
+        serviceId: tattooSvc.id,
+        description: 'flash',
+        status: 'pending',
+      },
+    });
+  });
+
+  afterAll(async () => {
+    await prisma.consultationRequest.deleteMany({ where: { id: { in: [piercingReq.id, tattooReq.id] } } });
+    await prisma.service.deleteMany({ where: { id: { in: [piercingSvc.id, tattooSvc.id] } } });
+  });
+
+  it('returns piercing requests with phone, createdAt and service name', async () => {
+    const res = await request(app)
+      .get('/v1/admin/consultations?category=piercing')
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    const ids = res.body.map((c) => c.id);
+    expect(ids).toContain(piercingReq.id);
+    expect(ids).not.toContain(tattooReq.id);
+    const row = res.body.find((c) => c.id === piercingReq.id);
+    expect(row.clientPhone).toBe('912345678');
+    expect(row.createdAt).toBeTruthy();
+    expect(row.service.name).toBe('Admin Piercing Test');
+  });
+
+  it('excludes piercing from the consultas list', async () => {
+    const res = await request(app)
+      .get('/v1/admin/consultations?excludeCategory=piercing')
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    const ids = res.body.map((c) => c.id);
+    expect(ids).toContain(tattooReq.id);
+    expect(ids).not.toContain(piercingReq.id);
+  });
+
+  it('rejects a pending consultation via POST /:id/reject', async () => {
+    const res = await request(app)
+      .post(`/v1/admin/consultations/${tattooReq.id}/reject`)
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe('rejected');
+  });
+});

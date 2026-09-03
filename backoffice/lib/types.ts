@@ -98,10 +98,11 @@ export interface ConsultationRequest {
   clientName: string;
   clientEmail: string;
   clientPhone: string | null;
-  serviceType: string;
+  serviceType?: string;
   description: string | null;
   status: ConsultationStatus;
   createdAt: string;
+  service?: { name: string; category?: { slug: string; name: string; parent?: { slug: string } | null } };
 }
 
 export interface BlogPost {

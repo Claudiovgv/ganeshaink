@@ -7,12 +7,31 @@ const { v4: uuidv4 } = require('uuid');
 
 router.use(authenticate, requirePermission('manage_appointments'));
 
+const CONSULTATION_INCLUDE = {
+  service: { include: { category: { include: { parent: true } } } },
+  employee: { select: { id: true, name: true } },
+};
+
+function serviceCategoryWhere(slug) {
+  return {
+    OR: [
+      { category: { slug } },
+      { category: { parent: { slug } } },
+    ],
+  };
+}
+
 router.get('/', async (req, res) => {
   try {
-    const { status } = req.query;
+    const { status, category, excludeCategory } = req.query;
+    const where = {};
+    if (status) where.status = status;
+    if (category) where.service = serviceCategoryWhere(category);
+    if (excludeCategory) where.NOT = { service: serviceCategoryWhere(excludeCategory) };
+
     const consultations = await prisma.consultationRequest.findMany({
-      where: status ? { status } : {},
-      include: { service: true, employee: { select: { id: true, name: true } } },
+      where,
+      include: CONSULTATION_INCLUDE,
       orderBy: { createdAt: 'desc' },
     });
     res.json(consultations);
@@ -21,7 +40,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+async function applyConsultationUpdate(req, res) {
   try {
     const id = parseInt(req.params.id);
     const { status, employeeId, date, time } = req.body;
@@ -49,13 +68,25 @@ router.put('/:id', async (req, res) => {
 
     const updated = await prisma.consultationRequest.update({
       where: { id }, data: updateData,
-      include: { service: true, employee: true, scheduledAppointment: true },
+      include: { ...CONSULTATION_INCLUDE, scheduledAppointment: true, employee: true },
     });
     res.json(updated);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
+}
+
+router.post('/:id/schedule', (req, res) => {
+  req.body.status = 'scheduled';
+  return applyConsultationUpdate(req, res);
 });
+
+router.post('/:id/reject', (req, res) => {
+  req.body.status = 'rejected';
+  return applyConsultationUpdate(req, res);
+});
+
+router.put('/:id', applyConsultationUpdate);
 
 module.exports = router;

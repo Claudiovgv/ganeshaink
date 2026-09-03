@@ -2,6 +2,7 @@ const router = require('express').Router();
 const prisma = require('../../config/database');
 const bcrypt = require('bcryptjs');
 const { authenticate, requirePermission } = require('../../middleware/auth');
+const { photoUploadMiddleware, saveEmployeePhoto } = require('../../lib/employeePhotos');
 
 router.use(authenticate, requirePermission('edit_profile'));
 
@@ -13,6 +14,25 @@ router.get('/', async (req, res) => {
     });
     if (!emp) return res.status(404).json({ error: 'Employee profile not found' });
     res.json(emp);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/photo', photoUploadMiddleware, async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'É obrigatório enviar uma foto' });
+    const emp = await prisma.employee.findUnique({ where: { userId: req.user.id } });
+    if (!emp) return res.status(404).json({ error: 'Employee profile not found' });
+
+    const photoUrl = saveEmployeePhoto(emp.id, req.file.buffer, req.file.mimetype);
+    await prisma.employee.update({ where: { id: emp.id }, data: { photoUrl } });
+
+    const updated = await prisma.employee.findUnique({
+      where: { id: emp.id },
+      include: { user: { select: { id: true, name: true, email: true, role: true } } },
+    });
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

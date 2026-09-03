@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
+import ClientErrorReporter from '@/components/ClientErrorReporter';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   description:
     'Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Vale de Cambra. Marcações online disponíveis.',
   icons: {
-    icon: '/images/logo/ganesha-icon.png',
+    icon: '/images/logo/ganesha-icon.webp',
     apple: '/images/logo/ganesha-icon.png',
   },
   openGraph: {
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt" className={`${playfair.variable} ${inter.variable}`}>
       <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col">
         <Header />
+        <ClientErrorReporter />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

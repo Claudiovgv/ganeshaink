@@ -1,3 +1,5 @@
+import { reportClientError } from './reportError';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/v1';
 
 export class ApiError extends Error {
@@ -8,15 +10,33 @@ export class ApiError extends Error {
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({ error: res.statusText }));
-    throw new ApiError(res.status, body.error || res.statusText);
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ error: res.statusText }));
+      if (res.status >= 500) {
+        reportClientError({
+          message: `Erro no site (${res.status}) ao pedir ${path}`,
+          path,
+          status: res.status,
+          detail: body.error,
+        });
+      }
+      throw new ApiError(res.status, body.error || res.statusText);
+    }
+    return res.json();
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    reportClientError({
+      message: `Erro ao abrir/ligar ao site (${path})`,
+      path,
+      detail: err instanceof Error ? err.message : String(err),
+    });
+    throw err;
   }
-  return res.json();
 }
 
 export interface Employee {

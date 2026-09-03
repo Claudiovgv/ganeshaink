@@ -6,7 +6,7 @@ export const metadata = { title: 'Consultas' };
 
 export default async function ConsultasPage() {
   const [consultations, employees] = await Promise.all([
-    api.consultations.list().catch(() => []),
+    api.consultations.list({ excludeCategory: 'piercing' }).catch(() => []),
     api.employees.list().catch(() => []),
   ]);
   const pending = consultations.filter((c) => c.status === 'pending').length;

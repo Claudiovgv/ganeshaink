@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api, Category as ApiCategory } from '@/lib/api';
+import { api, Category as ApiCategory, ApiError } from '@/lib/api';
 import { Category } from './BookingWizard';
 import { useRouter } from 'next/navigation';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import Button from '../ui/Button';
+import { reportClientError } from '@/lib/reportError';
 
 // Tatuagem e piercing exigem sempre consulta prévia — regra de negócio fixa,
 // não algo que se defina ao criar uma categoria nova no backoffice.
@@ -24,8 +25,16 @@ export default function Step1Category({ onSelect }: { onSelect: (cat: Category) 
       .then((data) => {
         if (!cancelled) setCategories(data);
       })
-      .catch(() => {
-        if (!cancelled) setError('Erro ao carregar categorias. Confirma a ligação e tenta outra vez.');
+      .catch((err) => {
+        if (!cancelled) {
+          reportClientError({
+            message: 'Erro ao carregar categorias',
+            path: '/marcar',
+            status: err instanceof ApiError ? err.status : undefined,
+            detail: err instanceof Error ? err.message : undefined,
+          });
+          setError('Erro ao carregar categorias. Confirma a ligação e tenta outra vez.');
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -47,7 +56,15 @@ export default function Step1Category({ onSelect }: { onSelect: (cat: Category) 
             setError('');
             api.categories.list()
               .then(setCategories)
-              .catch(() => setError('Erro ao carregar categorias. Confirma a ligação e tenta outra vez.'))
+              .catch((err) => {
+                reportClientError({
+                  message: 'Erro ao carregar categorias',
+                  path: '/marcar',
+                  status: err instanceof ApiError ? err.status : undefined,
+                  detail: err instanceof Error ? err.message : undefined,
+                });
+                setError('Erro ao carregar categorias. Confirma a ligação e tenta outra vez.');
+              })
               .finally(() => setLoading(false));
           }}>
             Tentar outra vez
@@ -64,7 +81,7 @@ export default function Step1Category({ onSelect }: { onSelect: (cat: Category) 
                 key={cat.id}
                 onClick={() => {
                   if (consultation) {
-                    router.push('/consulta');
+                    router.push(`/consulta?tipo=${cat.slug}`);
                   } else {
                     onSelect(cat.slug);
                   }

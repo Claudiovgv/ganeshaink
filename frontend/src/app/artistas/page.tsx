@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { api, Employee } from '@/lib/api';
 import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
+import { resolvePhotoUrl } from '@/lib/media';
 
 export const metadata: Metadata = {
   title: 'Artistas',
@@ -17,8 +18,8 @@ function ArtistCard({ employee }: { employee: Employee }) {
       className="group bg-bg-card border border-gold-border rounded-lg overflow-hidden hover:border-gold transition-colors"
     >
       <div className="aspect-square bg-bg-section relative">
-        {employee.photoUrl ? (
-          <Image src={employee.photoUrl} alt={employee.name} fill className="object-cover" />
+        {resolvePhotoUrl(employee.photoUrl) ? (
+          <Image src={resolvePhotoUrl(employee.photoUrl)!} alt={employee.name} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <span className="text-7xl font-display text-gold opacity-30">{employee.name[0]}</span>

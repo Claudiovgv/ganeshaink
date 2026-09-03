@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { api, Employee } from '@/lib/api';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import Button from '../ui/Button';
+import { resolvePhotoUrl } from '@/lib/media';
 
 interface Props {
   serviceId: number;
@@ -45,8 +46,8 @@ export default function Step3Employee({ serviceId, onSelect, onBack }: Props) {
               className="bg-bg-card border border-gold-border rounded-lg p-5 text-left hover:border-gold transition-colors group flex items-center gap-4"
             >
               <div className="w-14 h-14 rounded-full overflow-hidden border border-gold-border flex-shrink-0 bg-bg-section">
-                {emp.photoUrl ? (
-                  <Image src={emp.photoUrl} alt={emp.name} width={56} height={56} className="object-cover w-full h-full" />
+                {resolvePhotoUrl(emp.photoUrl) ? (
+                  <Image src={resolvePhotoUrl(emp.photoUrl)!} alt={emp.name} width={56} height={56} sizes="56px" className="object-cover w-full h-full" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xl font-display text-gold">
                     {emp.name[0]}

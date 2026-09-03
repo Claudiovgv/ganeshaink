@@ -3,6 +3,7 @@
 // (categorias de topo, cada uma com as suas subcategorias, se tiver).
 const router = require('express').Router();
 const prisma = require('../config/database');
+const { logRouteError } = require('../lib/logger');
 
 router.get('/', async (req, res) => {
   try {
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
     });
     res.json(categories);
   } catch (err) {
-    console.error(err);
+    logRouteError(req, err, 'categories');
     res.status(500).json({ error: 'Internal server error' });
   }
 });

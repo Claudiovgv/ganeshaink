@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import { formatPrice, formatDuration } from '@/lib/utils';
 import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
+import { resolvePhotoUrl } from '@/lib/media';
 
 interface Props {
   params: { id: string };
@@ -35,8 +36,8 @@ export default async function ArtistProfilePage({ params }: Props) {
       <section className="bg-bg-section py-16 px-4">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-10 items-center md:items-start">
           <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-gold bg-bg-card flex-shrink-0">
-            {employee.photoUrl ? (
-              <Image src={employee.photoUrl} alt={employee.name} width={160} height={160} className="object-cover" />
+            {resolvePhotoUrl(employee.photoUrl) ? (
+              <Image src={resolvePhotoUrl(employee.photoUrl)!} alt={employee.name} width={160} height={160} sizes="160px" className="object-cover w-full h-full" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-5xl font-display text-gold">
                 {employee.name[0]}

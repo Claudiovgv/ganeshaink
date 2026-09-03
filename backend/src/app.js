@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -13,6 +14,7 @@ const availabilityRoutes = require('./routes/availability');
 const appointmentsRoutes = require('./routes/appointments');
 const consultationsRoutes = require('./routes/consultations');
 const blogRoutes = require('./routes/blog');
+const clientErrorsRoutes = require('./routes/clientErrors');
 
 const adminAppointmentsRoutes = require('./routes/admin/appointments');
 const adminConsultationsRoutes = require('./routes/admin/consultations');
@@ -45,16 +47,26 @@ const app = express();
 const API_BASE = process.env.API_BASE_PATH || '';
 
 app.set('trust proxy', 1);
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3000',
-    process.env.BACKOFFICE_URL || 'http://localhost:3001',
+    process.env.BACKOFFICE_URL || 'http://localhost:3011',
+    'http://localhost:3001',
+    'http://localhost:3011',
   ],
   credentials: true,
 }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
+  setHeaders(res) {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+  },
+}));
 app.use(apiLimiter);
 
 // Public routes
@@ -66,6 +78,7 @@ app.use(`${API_BASE}/v1/availability`, availabilityRoutes);
 app.use(`${API_BASE}/v1/appointments`, appointmentsRoutes);
 app.use(`${API_BASE}/v1/consultations`, consultationsRoutes);
 app.use(`${API_BASE}/v1/blog`, blogRoutes);
+app.use(`${API_BASE}/v1/client-errors`, clientErrorsRoutes);
 
 // Admin routes
 app.use(`${API_BASE}/v1/admin/appointments`, adminAppointmentsRoutes);

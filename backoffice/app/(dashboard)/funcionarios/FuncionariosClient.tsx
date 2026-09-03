@@ -4,7 +4,9 @@ import type { Employee, Service } from '@/lib/types';
 import DataTable from '@/components/DataTable';
 import Button from '@/components/Button';
 import ReorderList from '@/components/ReorderList';
-import { createEmployeeAction, updateEmployeeAction, deleteEmployeeAction, reorderEmployeesAction } from '@/lib/actions';
+import { createEmployeeAction, updateEmployeeAction, deleteEmployeeAction, reorderEmployeesAction, uploadEmployeePhotoAction } from '@/lib/actions';
+import { resolveMediaUrl } from '@/lib/media';
+import { resizeEmployeePhoto } from '@/lib/resizeImage';
 
 const emptyForm = { name: '', email: '', password: '', bio: '', role: 'employee', notificationEmail: '', serviceIds: [] as number[] };
 type FormState = typeof emptyForm;
@@ -60,6 +62,33 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [ordering, setOrdering] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
+  async function pickPhoto(file: File | undefined) {
+    setPhotoError(null);
+    if (!file) {
+      setPhotoFile(null);
+      setPhotoPreview(null);
+      return;
+    }
+    try {
+      const blob = await resizeEmployeePhoto(file);
+      const resized = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+      setPhotoFile(resized);
+      setPhotoPreview(URL.createObjectURL(resized));
+    } catch (err) {
+      setPhotoError((err as Error).message);
+    }
+  }
+
+  async function persistPhoto(id: number, current: Employee): Promise<Employee> {
+    if (!photoFile) return current;
+    const fd = new FormData();
+    fd.append('photo', photoFile, 'photo.jpg');
+    return uploadEmployeePhotoAction(id, fd);
+  }
 
   async function handleReorder(orderedIds: number[]) {
     await reorderEmployeesAction(orderedIds);
@@ -71,11 +100,17 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
 
   function openCreate() {
     setForm(emptyForm);
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setPhotoError(null);
     setShowForm(true);
   }
 
   function openEdit(emp: Employee) {
     setEditing(emp);
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setPhotoError(null);
     setForm({
       name: emp.name,
       email: emp.user.email,
@@ -89,32 +124,40 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
 
   function handleCreate() {
     startTransition(async () => {
-      const created = await createEmployeeAction(form) as Employee;
+      let created = await createEmployeeAction(form) as Employee;
+      created = await persistPhoto(created.id, created);
       setEmployees((prev) => [...prev, created]);
       setShowForm(false);
       setForm(emptyForm);
+      setPhotoFile(null);
+      setPhotoPreview(null);
     });
   }
 
   function handleUpdate() {
     if (!editing) return;
     startTransition(async () => {
-      const updated = await updateEmployeeAction(editing.id, {
+      let updated = await updateEmployeeAction(editing.id, {
         name: form.name,
         bio: form.bio,
         serviceIds: form.serviceIds,
         notificationEmail: form.notificationEmail || null,
       }) as Employee;
+      updated = await persistPhoto(editing.id, updated);
       setEmployees((prev) => prev.map((e) => e.id === editing.id
         ? {
             ...e,
+            ...updated,
             name: updated.name,
             bio: updated.bio,
+            photoUrl: updated.photoUrl,
             services: form.serviceIds.map((id) => ({ service: services.find((s) => s.id === id)! })),
             user: { ...e.user, notificationEmail: form.notificationEmail || null },
           }
         : e));
       setEditing(null);
+      setPhotoFile(null);
+      setPhotoPreview(null);
     });
   }
 
@@ -146,9 +189,13 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
       mobileMain: true,
       render: (e: Employee) => (
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 shrink-0 rounded-full bg-gold-muted text-gold flex items-center justify-center text-xs font-semibold">
-            {initials(e.name)}
-          </div>
+          {resolveMediaUrl(e.photoUrl) ? (
+            <img src={resolveMediaUrl(e.photoUrl)!} alt="" className="w-9 h-9 shrink-0 rounded-full object-cover border border-gold-border" />
+          ) : (
+            <div className="w-9 h-9 shrink-0 rounded-full bg-gold-muted text-gold flex items-center justify-center text-xs font-semibold">
+              {initials(e.name)}
+            </div>
+          )}
           <div className="min-w-0">
             <p className="font-medium truncate">{e.name}</p>
             <p className="text-text-muted text-xs truncate">{e.user.notificationEmail || e.user.email}</p>
@@ -274,6 +321,29 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
                 <p className="text-text-muted text-[11px] mt-1">Para onde chegam os emails de marcações. Pode ser diferente do login.</p>
               </div>
               <div>
+                <label className="block text-xs text-text-secondary mb-1">Foto (aparece no site)</label>
+                <div className="flex items-center gap-3">
+                  {(photoPreview || (editing && resolveMediaUrl(editing.photoUrl))) ? (
+                    <img
+                      src={photoPreview || resolveMediaUrl(editing!.photoUrl)!}
+                      alt=""
+                      className="w-16 h-16 rounded-full object-cover border border-gold-border"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gold-muted text-gold flex items-center justify-center text-sm font-semibold">
+                      {initials(form.name || 'Novo')}
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={(e) => pickPhoto(e.target.files?.[0])}
+                    className="block w-full text-xs text-text-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-gold-border file:bg-bg-section file:text-text-primary"
+                  />
+                </div>
+                {photoError && <p className="text-red-400 text-xs mt-1">{photoError}</p>}
+              </div>
+              <div>
                 <label className="block text-xs text-text-secondary mb-1">Bio (opcional, aparece no site)</label>
                 <input
                   placeholder="Bio"
@@ -296,7 +366,7 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
               >
                 {editing ? 'Guardar alterações' : 'Criar'}
               </Button>
-              <Button variant="outline" onClick={() => { setShowForm(false); setEditing(null); }}>Cancelar</Button>
+              <Button variant="outline" onClick={() => { setShowForm(false); setEditing(null); setPhotoFile(null); setPhotoPreview(null); }}>Cancelar</Button>
             </div>
           </div>
         </div>

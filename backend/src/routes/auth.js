@@ -68,7 +68,7 @@ function verifyPendingToken(pendingToken) {
 }
 
 // First login only: generate + store the 2FA secret so it can be shown as a QR code before it's confirmed.
-router.post('/login/setup-2fa', authLimiter, async (req, res) => {
+router.post('/login/setup-2fa', async (req, res) => {
   try {
     const decoded = verifyPendingToken(req.body.pendingToken);
     if (!decoded) return res.status(401).json({ error: 'Expired or invalid session, please log in again' });

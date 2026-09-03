@@ -10,7 +10,7 @@ export default function LoginPage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-20 h-20 mb-4">
             <Image
-              src="/images/logo/ganesha-icon.png"
+              src="/images/logo/ganesha-icon.webp"
               alt="Ganesha Ink"
               width={80}
               height={80}

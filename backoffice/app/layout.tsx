@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'sw
 
 export const metadata: Metadata = {
   title: { template: '%s | Ganesha Ink Admin', default: 'Ganesha Ink — Backoffice' },
-  icons: { icon: '/images/logo/ganesha-icon.png' },
+  icons: { icon: '/images/logo/ganesha-icon.webp' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

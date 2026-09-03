@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
 const { getAvailableSlots } = require('../services/availability.service');
+const { logRouteError } = require('../lib/logger');
 
 router.get('/:employeeId', async (req, res) => {
   try {
@@ -70,7 +71,7 @@ router.get('/:employeeId', async (req, res) => {
       slots,
     });
   } catch (err) {
-    console.error(err);
+    logRouteError(req, err, 'availability');
     res.status(500).json({ error: 'Internal server error' });
   }
 });

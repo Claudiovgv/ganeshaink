@@ -117,6 +117,10 @@ export async function reorderEmployeesAction(employeeIds: number[]) {
   return api.employees.reorder(employeeIds);
 }
 
+export async function uploadEmployeePhotoAction(id: number, formData: FormData) {
+  return api.employees.uploadPhoto(id, formData);
+}
+
 export async function createServiceAction(role: 'superadmin' | 'admin' | 'employee', data: object) {
   if (role === 'admin' || role === 'superadmin') return api.services.adminCreate(data);
   return api.services.employeeCreate(data);
@@ -229,6 +233,10 @@ export async function updateProfileAction(data: object) {
   return api.profile.update(data);
 }
 
+export async function uploadProfilePhotoAction(formData: FormData) {
+  return api.profile.uploadPhoto(formData);
+}
+
 export async function setup2FAAction() {
   return api.auth.setup2FA();
 }
@@ -281,6 +289,18 @@ export async function testSmtpTemplateAction(data: { eventType: string; testEmai
 
 export async function fetchLogsAction(params: { level?: string; page?: number }) {
   return api.logs.list(params);
+}
+
+export async function clearLogsAction() {
+  return api.logs.clear();
+}
+
+export async function fetchLoginBlocksAction() {
+  return api.logs.loginBlocks();
+}
+
+export async function unlockLoginsAction() {
+  return api.logs.unlockLogins();
 }
 
 export async function createUserAction(data: { name: string; email: string; password: string; role: string }) {

@@ -55,6 +55,13 @@ const Icons: Record<string, JSX.Element> = {
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   ),
+  Piercings: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <circle cx="12" cy="12" r="8"/>
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+    </svg>
+  ),
   Horários: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
@@ -169,6 +176,7 @@ const ADMIN_NAV_ALL = [
       { href: '/barbearia', label: 'Barbearia', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/tatuagens', label: 'Tatuagens', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/nails', label: 'Nails', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/piercings', label: 'Piercings', perm: 'manage_appointments' as AdminPermissionKey | null },
     ],
   },
   {
@@ -245,6 +253,7 @@ const SUPERADMIN_NAV = [
       { href: '/barbearia', label: 'Barbearia' },
       { href: '/tatuagens', label: 'Tatuagens' },
       { href: '/nails', label: 'Nails' },
+      { href: '/piercings', label: 'Piercings' },
     ],
   },
   {
@@ -314,7 +323,7 @@ export default function Sidebar() {
       {/* ── Desktop sidebar ── */}
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[180px] bg-bg-sidebar border-r border-gold-border/20 flex-col z-20">
         <div className="flex items-center justify-center px-4 py-5 border-b border-gold-border/20">
-          <Image src="/images/logo/ganesha-logo-gold-white.png" alt="Ganesha Ink" width={120} height={40} className="object-contain" />
+          <Image src="/images/logo/ganesha-logo-gold-white.webp" alt="Ganesha Ink" width={120} height={40} className="object-contain" />
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-2">
@@ -355,7 +364,7 @@ export default function Sidebar() {
 
       {/* ── Mobile top bar ── */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-bg-sidebar border-b border-gold-border/20 flex items-center px-4 z-20">
-        <Image src="/images/logo/ganesha-logo-gold-white.png" alt="Ganesha Ink" width={100} height={32} className="object-contain" />
+        <Image src="/images/logo/ganesha-logo-gold-white.webp" alt="Ganesha Ink" width={100} height={32} className="object-contain" />
         <span className="ml-auto text-text-secondary text-xs">{user.name}</span>
       </header>
 
