@@ -78,6 +78,72 @@ describe('Appointments (public)', () => {
       expect(res.status).toBe(400);
     });
 
+    it('rejects a public booking that overlaps lunch', async () => {
+      await prisma.employee.update({
+        where: { id: employee.id },
+        data: { lunchStart: '13:00', lunchEnd: '14:00' },
+      });
+      const res = await request(app)
+        .post('/v1/appointments')
+        .send({
+          clientName: 'Almoco',
+          clientEmail: 'almoco@test.com',
+          clientPhone: '914444444',
+          employeeId: employee.id,
+          serviceId: service.id,
+          date: '2026-04-28',
+          time: '13:00',
+        });
+      expect(res.status).toBe(409);
+      await prisma.employee.update({
+        where: { id: employee.id },
+        data: { lunchStart: null, lunchEnd: null },
+      });
+    });
+
+    it('rejects a public booking for tomorrow when the cutoff is already in effect', async () => {
+      const { toZonedTime, format } = require('date-fns-tz');
+      const { addDays, parseISO } = require('date-fns');
+      const zoned = toZonedTime(new Date(), 'Europe/Lisbon');
+      const today = format(zoned, 'yyyy-MM-dd', { timeZone: 'Europe/Lisbon' });
+      const tomorrow = format(addDays(parseISO(`${today}T12:00:00`), 1), 'yyyy-MM-dd');
+      const dayOfWeek = parseISO(`${tomorrow}T12:00:00`).getDay();
+
+      await prisma.workSchedule.create({
+        data: {
+          employeeId: employee.id,
+          dayOfWeek,
+          startTime: '09:00',
+          endTime: '18:00',
+          isActive: true,
+        },
+      });
+      await prisma.employee.update({
+        where: { id: employee.id },
+        data: { nextDayCutoffEnabled: true, nextDayCutoffTime: '00:00' },
+      });
+
+      try {
+        const res = await request(app)
+          .post('/v1/appointments')
+          .send({
+            clientName: 'Tarde',
+            clientEmail: 'tarde@test.com',
+            clientPhone: '915555555',
+            employeeId: employee.id,
+            serviceId: service.id,
+            date: tomorrow,
+            time: '10:00',
+          });
+        expect(res.status).toBe(409);
+      } finally {
+        await prisma.employee.update({
+          where: { id: employee.id },
+          data: { nextDayCutoffEnabled: false, nextDayCutoffTime: '23:00' },
+        });
+      }
+    });
+
     it('allows a barbershop booking without email and stores a placeholder', async () => {
       const res = await request(app)
         .post('/v1/appointments')

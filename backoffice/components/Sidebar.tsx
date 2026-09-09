@@ -311,7 +311,13 @@ export default function Sidebar() {
   const mainItems = mainLabels
     .map((label) => allItems.find((i) => i.label === label))
     .filter(Boolean) as { href: string; label: string }[];
-  const moreItems = allItems.filter((i) => !mainLabels.includes(i.label));
+  const moreItems = allItems
+    .filter((i) => !mainLabels.includes(i.label))
+    .sort((a, b) => {
+      if (a.label === 'Estatísticas') return -1;
+      if (b.label === 'Estatísticas') return 1;
+      return 0;
+    });
 
   // Saber se algum item do "Mais" está ativo
   const moreActive = moreItems.some((i) =>
@@ -408,10 +414,10 @@ export default function Sidebar() {
             onClick={() => setDrawerOpen(false)}
           />
           {/* Sheet */}
-          <div className="md:hidden fixed bottom-16 left-0 right-0 z-20 bg-bg-sidebar border-t border-gold-border/30 rounded-t-2xl pb-2 animate-slide-up">
-            <div className="w-10 h-1 bg-gold-border rounded-full mx-auto mt-3 mb-4" />
+          <div className="md:hidden fixed bottom-16 left-0 right-0 z-20 bg-bg-sidebar border-t border-gold-border/30 rounded-t-2xl animate-slide-up max-h-[min(70dvh,calc(100dvh-7rem))] flex flex-col">
+            <div className="w-10 h-1 bg-gold-border rounded-full mx-auto mt-3 mb-3 flex-shrink-0" />
 
-            <div className="px-4 space-y-1">
+            <div className="px-4 space-y-1 overflow-y-auto overscroll-contain flex-1 min-h-0 pb-2">
               {moreItems.map(({ href, label }) => {
                 const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
                 return (
@@ -430,7 +436,7 @@ export default function Sidebar() {
               })}
             </div>
 
-            <div className="border-t border-gold-border/20 mt-3 mx-4 pt-3">
+            <div className="border-t border-gold-border/20 mt-1 mx-4 pt-3 pb-3 flex-shrink-0">
               <form action={logoutAction}>
                 <button
                   type="submit"

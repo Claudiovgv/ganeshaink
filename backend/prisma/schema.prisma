@@ -70,6 +70,10 @@ model Employee {
   studioPercent Decimal?              @db.Decimal(5, 2) @map("studio_percent")
   isActive      Boolean               @default(true) @map("is_active")
   sortOrder     Int                   @default(0) @map("sort_order")
+  lunchStart    String?               @map("lunch_start")
+  lunchEnd      String?               @map("lunch_end")
+  nextDayCutoffEnabled Boolean        @default(false) @map("next_day_cutoff_enabled")
+  nextDayCutoffTime    String         @default("23:00") @map("next_day_cutoff_time")
   createdAt     DateTime              @default(now()) @map("created_at")
   user          User                  @relation(fields: [userId], references: [id])
   services      EmployeeService[]

@@ -5,11 +5,11 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
 const { authenticate, requirePermission } = require('../../middleware/auth');
+const { TIME_RE, parseSchedulePrefs, selectPrefs } = require('../../lib/schedulePrefs');
 
 router.use(authenticate, requirePermission('manage_employees'));
 
 const DAYS = [0, 1, 2, 3, 4, 5, 6];
-const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 function validate(schedules) {
   if (!Array.isArray(schedules)) return 'schedules must be an array';
@@ -37,6 +37,10 @@ router.get('/', async (req, res) => {
       select: {
         id: true,
         name: true,
+        lunchStart: true,
+        lunchEnd: true,
+        nextDayCutoffEnabled: true,
+        nextDayCutoffTime: true,
         workSchedules: {
           where: { isActive: true },
           orderBy: { dayOfWeek: 'asc' },
@@ -66,6 +70,9 @@ router.put('/:employeeId', async (req, res) => {
     const error = validate(schedules);
     if (error) return res.status(400).json({ error });
 
+    const parsed = parseSchedulePrefs(req.body);
+    if (parsed.error) return res.status(400).json({ error: parsed.error });
+
     await prisma.$transaction([
       prisma.workSchedule.deleteMany({ where: { employeeId } }),
       ...(schedules.length > 0
@@ -79,14 +86,18 @@ router.put('/:employeeId', async (req, res) => {
             })),
           })]
         : []),
+      ...(Object.keys(parsed.prefs).length > 0
+        ? [prisma.employee.update({ where: { id: employeeId }, data: parsed.prefs })]
+        : []),
     ]);
 
+    const updatedEmp = await prisma.employee.findUnique({ where: { id: employeeId } });
     const updated = await prisma.workSchedule.findMany({
       where: { employeeId, isActive: true },
       orderBy: { dayOfWeek: 'asc' },
       select: { dayOfWeek: true, startTime: true, endTime: true },
     });
-    res.json(updated);
+    res.json({ schedules: updated, ...selectPrefs(updatedEmp) });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

@@ -98,4 +98,46 @@ describe('getAvailableSlots', () => {
     expect(slots).toContain('11:30');
     expect(slots).not.toContain('12:00');
   });
+
+  it('excludes the recurring lunch window on working days', () => {
+    const emp = {
+      ...baseEmployee,
+      lunchStart: '10:00',
+      lunchEnd: '11:00',
+    };
+    const slots = getAvailableSlots(emp, '2026-04-28', 60);
+    expect(slots).toContain('09:00');
+    expect(slots).not.toContain('09:15');
+    expect(slots).not.toContain('10:00');
+    expect(slots).toContain('11:00');
+    expect(slots).toContain('12:00');
+  });
+
+  it('closes tomorrow after the next-day cutoff, but leaves later days open', () => {
+    const emp = {
+      ...baseEmployee,
+      workSchedules: [
+        { dayOfWeek: 2, startTime: '09:00', endTime: '13:00', isActive: true },
+        { dayOfWeek: 3, startTime: '09:00', endTime: '13:00', isActive: true },
+      ],
+      nextDayCutoffEnabled: true,
+      nextDayCutoffTime: '23:00',
+    };
+    const afterCutoff = new Date('2026-04-27T22:05:00.000Z'); // 23:05 in Lisbon (UTC+1)
+    const beforeCutoff = new Date('2026-04-27T21:00:00.000Z'); // 22:00 in Lisbon
+
+    expect(getAvailableSlots(emp, '2026-04-28', 60, { now: afterCutoff })).toEqual([]);
+    expect(getAvailableSlots(emp, '2026-04-28', 60, { now: beforeCutoff })).toContain('09:00');
+    expect(getAvailableSlots(emp, '2026-04-29', 60, { now: afterCutoff })).toContain('09:00');
+  });
+
+  it('does not apply the next-day cutoff when the switch is off', () => {
+    const emp = {
+      ...baseEmployee,
+      nextDayCutoffEnabled: false,
+      nextDayCutoffTime: '23:00',
+    };
+    const afterCutoff = new Date('2026-04-27T22:05:00.000Z');
+    expect(getAvailableSlots(emp, '2026-04-28', 60, { now: afterCutoff })).toContain('09:00');
+  });
 });

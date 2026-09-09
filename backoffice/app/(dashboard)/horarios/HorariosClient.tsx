@@ -1,9 +1,10 @@
 'use client';
 import { useState, useTransition } from 'react';
-import type { EmployeeSchedules, WeeklyScheduleDay } from '@/lib/types';
+import type { EmployeeSchedules, SchedulePrefs, WeeklyScheduleDay } from '@/lib/types';
 import Button from '@/components/Button';
 import { updateEmployeeScheduleAction } from '@/lib/actions';
-import { toFullWeek } from '../horario/HorarioClient';
+import { prefsFrom, toFullWeek } from '../horario/HorarioClient';
+import SchedulePrefsFields from '@/components/SchedulePrefsFields';
 
 const DAY_NAMES = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
@@ -15,6 +16,7 @@ function resumo(week: WeeklyScheduleDay[]) {
 
 function EmployeeCard({ employee }: { employee: EmployeeSchedules }) {
   const [week, setWeek] = useState<WeeklyScheduleDay[]>(toFullWeek(employee.workSchedules));
+  const [prefs, setPrefs] = useState<SchedulePrefs>(prefsFrom(employee));
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState<'idle' | 'saved' | 'error'>('idle');
@@ -28,7 +30,7 @@ function EmployeeCard({ employee }: { employee: EmployeeSchedules }) {
   function handleSave() {
     startTransition(async () => {
       try {
-        await updateEmployeeScheduleAction(employee.id, week);
+        await updateEmployeeScheduleAction(employee.id, week, prefs);
         setStatus('saved');
         setTimeout(() => setStatus('idle'), 2500);
       } catch (err) {
@@ -88,6 +90,8 @@ function EmployeeCard({ employee }: { employee: EmployeeSchedules }) {
             Os dias desligados ficam fechados a marcações no site.
           </p>
 
+          <SchedulePrefsFields prefs={prefs} onChange={(patch) => { setPrefs((p) => ({ ...p, ...patch })); setStatus('idle'); }} />
+
           <div className="flex items-center gap-3 pt-1">
             <Button onClick={handleSave} loading={isPending}>
               {status === 'saved' ? 'Guardado!' : 'Guardar'}
@@ -108,8 +112,8 @@ export default function HorariosClient({ employees }: { employees: EmployeeSched
   return (
     <div className="space-y-3 max-w-2xl">
       <p className="text-text-secondary text-sm mb-4">
-        Horário semanal de cada funcionário. Cada pessoa também pode alterar o seu em
-        «Horário» — aqui podes fazê-lo por ela.
+        Horário semanal, almoço e corte de marcações para o dia seguinte. Cada pessoa também pode alterar o seu em
+        «Horário».
       </p>
       {employees.map((e) => (
         <EmployeeCard key={e.id} employee={e} />

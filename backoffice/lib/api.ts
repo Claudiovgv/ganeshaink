@@ -3,6 +3,7 @@ import type {
   AdminPermissionKey, Appointment, BlogPost, BarbershopStatsResponse, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
   Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, NotificationMatrix, Partnership, StatsPeriod, StatsResponse, SystemLogEntry,
   TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay, AppointmentExportRow,
+  EmployeeSchedulePayload, SchedulePrefs,
 } from './types';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002/v1';
@@ -183,16 +184,31 @@ export const api = {
       }),
   },
   schedule: {
-    get: () => apiFetch<WeeklyScheduleDay[]>('/employee/schedule'),
-    update: (data: WeeklyScheduleDay[]) =>
-      apiFetch<WeeklyScheduleDay[]>('/employee/schedule', { method: 'PUT', body: JSON.stringify({ schedules: data }) }),
+    get: () => apiFetch<EmployeeSchedulePayload>('/employee/schedule'),
+    update: (data: WeeklyScheduleDay[], prefs: SchedulePrefs) =>
+      apiFetch<EmployeeSchedulePayload>('/employee/schedule', {
+        method: 'PUT',
+        body: JSON.stringify({
+          schedules: data,
+          lunchStart: prefs.lunchStart,
+          lunchEnd: prefs.lunchEnd,
+          nextDayCutoffEnabled: prefs.nextDayCutoffEnabled,
+          nextDayCutoffTime: prefs.nextDayCutoffTime,
+        }),
+      }),
   },
   adminSchedules: {
     list: () => apiFetch<EmployeeSchedules[]>('/admin/schedules'),
-    update: (employeeId: number, data: WeeklyScheduleDay[]) =>
-      apiFetch<WeeklyScheduleDay[]>(`/admin/schedules/${employeeId}`, {
+    update: (employeeId: number, data: WeeklyScheduleDay[], prefs: SchedulePrefs) =>
+      apiFetch<EmployeeSchedulePayload>(`/admin/schedules/${employeeId}`, {
         method: 'PUT',
-        body: JSON.stringify({ schedules: data }),
+        body: JSON.stringify({
+          schedules: data,
+          lunchStart: prefs.lunchStart,
+          lunchEnd: prefs.lunchEnd,
+          nextDayCutoffEnabled: prefs.nextDayCutoffEnabled,
+          nextDayCutoffTime: prefs.nextDayCutoffTime,
+        }),
       }),
   },
   timeBlocks: {

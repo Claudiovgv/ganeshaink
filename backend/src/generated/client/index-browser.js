@@ -144,6 +144,10 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   studioPercent: 'studioPercent',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
+  lunchStart: 'lunchStart',
+  lunchEnd: 'lunchEnd',
+  nextDayCutoffEnabled: 'nextDayCutoffEnabled',
+  nextDayCutoffTime: 'nextDayCutoffTime',
   createdAt: 'createdAt'
 };
 

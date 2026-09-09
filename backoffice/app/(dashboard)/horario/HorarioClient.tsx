@@ -1,8 +1,9 @@
 'use client';
 import { useState, useTransition } from 'react';
-import type { WeeklyScheduleDay } from '@/lib/types';
+import type { EmployeeSchedulePayload, SchedulePrefs, WeeklyScheduleDay } from '@/lib/types';
 import Button from '@/components/Button';
 import { updateScheduleAction } from '@/lib/actions';
+import SchedulePrefsFields, { EMPTY_PREFS } from '@/components/SchedulePrefsFields';
 
 const DAY_NAMES = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
@@ -12,6 +13,15 @@ const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0];
 const DEFAULT_SCHEDULE: WeeklyScheduleDay[] = WEEK_ORDER.map((d) => ({
   dayOfWeek: d, isActive: d >= 1 && d <= 5, startTime: '10:00', endTime: '19:00',
 }));
+
+export function prefsFrom(data: Partial<SchedulePrefs> | null | undefined): SchedulePrefs {
+  return {
+    lunchStart: data?.lunchStart || '',
+    lunchEnd: data?.lunchEnd || '',
+    nextDayCutoffEnabled: Boolean(data?.nextDayCutoffEnabled),
+    nextDayCutoffTime: data?.nextDayCutoffTime || '23:00',
+  };
+}
 
 // O backend só guarda os dias activos, por isso os dias em falta são dias fechados:
 // preenche a semana toda para que todos apareçam no editor.
@@ -24,9 +34,13 @@ export function toFullWeek(saved: { dayOfWeek: number; startTime: string; endTim
   });
 }
 
-export default function HorarioClient({ initial }: { initial: WeeklyScheduleDay[] }) {
+export default function HorarioClient({ initial }: { initial: EmployeeSchedulePayload | WeeklyScheduleDay[] }) {
+  const days = Array.isArray(initial) ? initial : (initial.schedules || []);
   const [schedule, setSchedule] = useState<WeeklyScheduleDay[]>(
-    initial.length > 0 ? toFullWeek(initial) : DEFAULT_SCHEDULE,
+    days.length > 0 ? toFullWeek(days) : DEFAULT_SCHEDULE,
+  );
+  const [prefs, setPrefs] = useState<SchedulePrefs>(
+    Array.isArray(initial) ? EMPTY_PREFS : prefsFrom(initial),
   );
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
@@ -37,7 +51,7 @@ export default function HorarioClient({ initial }: { initial: WeeklyScheduleDay[
 
   function handleSave() {
     startTransition(async () => {
-      await updateScheduleAction(schedule);
+      await updateScheduleAction(schedule, prefs);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });
@@ -56,6 +70,7 @@ export default function HorarioClient({ initial }: { initial: WeeklyScheduleDay[
           <input type="time" value={day.endTime} disabled={!day.isActive} onChange={(e) => updateDay(day.dayOfWeek, { endTime: e.target.value })} className="bg-bg-section border border-gold-border/30 rounded px-2 py-1 text-sm text-text-primary disabled:opacity-40" />
         </div>
       ))}
+      <SchedulePrefsFields prefs={prefs} onChange={(patch) => setPrefs((p) => ({ ...p, ...patch }))} />
       <Button onClick={handleSave} loading={isPending} className="mt-2">
         {saved ? 'Guardado!' : 'Guardar Horário'}
       </Button>

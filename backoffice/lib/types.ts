@@ -124,7 +124,18 @@ export interface WeeklyScheduleDay {
   endTime: string;   // "19:00"
 }
 
-export interface EmployeeSchedules {
+export interface SchedulePrefs {
+  lunchStart: string;
+  lunchEnd: string;
+  nextDayCutoffEnabled: boolean;
+  nextDayCutoffTime: string;
+}
+
+export interface EmployeeSchedulePayload extends SchedulePrefs {
+  schedules: { dayOfWeek: number; startTime: string; endTime: string; isActive?: boolean }[];
+}
+
+export interface EmployeeSchedules extends SchedulePrefs {
   id: number;
   name: string;
   workSchedules: Omit<WeeklyScheduleDay, 'isActive'>[];

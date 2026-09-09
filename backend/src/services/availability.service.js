@@ -1,5 +1,5 @@
 const { toZonedTime, fromZonedTime, format } = require('date-fns-tz');
-const { parseISO, addMinutes, isBefore, isAfter } = require('date-fns');
+const { parseISO, addMinutes, addDays, isBefore, isAfter } = require('date-fns');
 
 const TIMEZONE = 'Europe/Lisbon';
 
@@ -19,14 +19,50 @@ function overlaps(slotStart, slotEnd, blockStart, blockEnd) {
   return isBefore(slotStart, blockEnd) && isAfter(slotEnd, blockStart);
 }
 
+function lisbonDateAndTime(now) {
+  const zoned = toZonedTime(now, TIMEZONE);
+  return {
+    dateStr: format(zoned, 'yyyy-MM-dd', { timeZone: TIMEZONE }),
+    timeStr: format(zoned, 'HH:mm', { timeZone: TIMEZONE }),
+  };
+}
+
+function tomorrowDateStr(dateStr) {
+  return format(addDays(parseISO(`${dateStr}T12:00:00`), 1), 'yyyy-MM-dd');
+}
+
+/**
+ * After the employee's cutoff hour, the public site stops offering tomorrow.
+ * Later days stay open. Backoffice bookings skip this check.
+ */
+function isNextDayCutoffClosed(employee, dateStr, now = new Date()) {
+  if (!employee.nextDayCutoffEnabled) return false;
+  const cutoff = employee.nextDayCutoffTime || '23:00';
+  const { dateStr: today, timeStr } = lisbonDateAndTime(now);
+  if (timeStr < cutoff) return false;
+  return dateStr === tomorrowDateStr(today);
+}
+
+function lunchWindow(employee, dateStr) {
+  if (!employee.lunchStart || !employee.lunchEnd) return null;
+  if (employee.lunchStart >= employee.lunchEnd) return null;
+  return {
+    start: lisboaTimeToUTC(dateStr, employee.lunchStart),
+    end: lisboaTimeToUTC(dateStr, employee.lunchEnd),
+  };
+}
+
 /**
  * Returns available time slots for an employee on a given date.
  * @param {object} employee - with workSchedules, timeBlocks, appointments arrays
  * @param {string} dateStr - "YYYY-MM-DD"
  * @param {number} durationMin - service duration in minutes
+ * @param {{ now?: Date }} [opts]
  * @returns {string[]} - array of "HH:mm" strings in Europe/Lisbon timezone
  */
-function getAvailableSlots(employee, dateStr, durationMin) {
+function getAvailableSlots(employee, dateStr, durationMin, opts = {}) {
+  if (isNextDayCutoffClosed(employee, dateStr, opts.now || new Date())) return [];
+
   const date = parseISO(dateStr);
   const dayOfWeek = date.getDay(); // 0=Sunday, 6=Saturday
 
@@ -39,6 +75,7 @@ function getAvailableSlots(employee, dateStr, durationMin) {
   // Convert work hours to UTC for comparison
   const workStart = lisboaTimeToUTC(dateStr, schedule.startTime);
   const workEnd = lisboaTimeToUTC(dateStr, schedule.endTime);
+  const lunch = lunchWindow(employee, dateStr);
 
   // Grelha de 15 min: um dia livre mostra 11:30, 11:45, 12:00… e não só
   // horários saltados pela duração do serviço (ex.: cortes de 75 min).
@@ -52,6 +89,10 @@ function getAvailableSlots(employee, dateStr, durationMin) {
     // Slot must fit entirely within work hours
     if (isAfter(slotEnd, workEnd)) break;
 
+    const blockedByLunch = lunch
+      ? overlaps(current, slotEnd, lunch.start, lunch.end)
+      : false;
+
     // Check if slot is blocked by a time block
     const blockedByTimeBlock = employee.timeBlocks.some(tb =>
       overlaps(current, slotEnd, new Date(tb.startDatetime), new Date(tb.endDatetime))
@@ -63,7 +104,7 @@ function getAvailableSlots(employee, dateStr, durationMin) {
       overlaps(current, slotEnd, new Date(apt.startDatetime), new Date(apt.endDatetime))
     );
 
-    if (!blockedByTimeBlock && !blockedByAppointment) {
+    if (!blockedByLunch && !blockedByTimeBlock && !blockedByAppointment) {
       // Format as Lisbon local time "HH:mm"
       const zonedTime = toZonedTime(current, TIMEZONE);
       slots.push(format(zonedTime, 'HH:mm', { timeZone: TIMEZONE }));
@@ -75,4 +116,4 @@ function getAvailableSlots(employee, dateStr, durationMin) {
   return slots;
 }
 
-module.exports = { getAvailableSlots, lisboaTimeToUTC };
+module.exports = { getAvailableSlots, lisboaTimeToUTC, isNextDayCutoffClosed, lunchWindow, overlaps };

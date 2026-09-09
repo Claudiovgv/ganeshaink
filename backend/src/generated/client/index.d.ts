@@ -3346,6 +3346,10 @@ export namespace Prisma {
     studioPercent: Decimal | null
     isActive: boolean | null
     sortOrder: number | null
+    lunchStart: string | null
+    lunchEnd: string | null
+    nextDayCutoffEnabled: boolean | null
+    nextDayCutoffTime: string | null
     createdAt: Date | null
   }
 
@@ -3359,6 +3363,10 @@ export namespace Prisma {
     studioPercent: Decimal | null
     isActive: boolean | null
     sortOrder: number | null
+    lunchStart: string | null
+    lunchEnd: string | null
+    nextDayCutoffEnabled: boolean | null
+    nextDayCutoffTime: string | null
     createdAt: Date | null
   }
 
@@ -3372,6 +3380,10 @@ export namespace Prisma {
     studioPercent: number
     isActive: number
     sortOrder: number
+    lunchStart: number
+    lunchEnd: number
+    nextDayCutoffEnabled: number
+    nextDayCutoffTime: number
     createdAt: number
     _all: number
   }
@@ -3403,6 +3415,10 @@ export namespace Prisma {
     studioPercent?: true
     isActive?: true
     sortOrder?: true
+    lunchStart?: true
+    lunchEnd?: true
+    nextDayCutoffEnabled?: true
+    nextDayCutoffTime?: true
     createdAt?: true
   }
 
@@ -3416,6 +3432,10 @@ export namespace Prisma {
     studioPercent?: true
     isActive?: true
     sortOrder?: true
+    lunchStart?: true
+    lunchEnd?: true
+    nextDayCutoffEnabled?: true
+    nextDayCutoffTime?: true
     createdAt?: true
   }
 
@@ -3429,6 +3449,10 @@ export namespace Prisma {
     studioPercent?: true
     isActive?: true
     sortOrder?: true
+    lunchStart?: true
+    lunchEnd?: true
+    nextDayCutoffEnabled?: true
+    nextDayCutoffTime?: true
     createdAt?: true
     _all?: true
   }
@@ -3529,6 +3553,10 @@ export namespace Prisma {
     studioPercent: Decimal | null
     isActive: boolean
     sortOrder: number
+    lunchStart: string | null
+    lunchEnd: string | null
+    nextDayCutoffEnabled: boolean
+    nextDayCutoffTime: string
     createdAt: Date
     _count: EmployeeCountAggregateOutputType | null
     _avg: EmployeeAvgAggregateOutputType | null
@@ -3561,6 +3589,10 @@ export namespace Prisma {
     studioPercent?: boolean
     isActive?: boolean
     sortOrder?: boolean
+    lunchStart?: boolean
+    lunchEnd?: boolean
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     services?: boolean | Employee$servicesArgs<ExtArgs>
@@ -3582,6 +3614,10 @@ export namespace Prisma {
     studioPercent?: boolean
     isActive?: boolean
     sortOrder?: boolean
+    lunchStart?: boolean
+    lunchEnd?: boolean
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: boolean
     createdAt?: boolean
   }
 
@@ -3615,6 +3651,10 @@ export namespace Prisma {
       studioPercent: Prisma.Decimal | null
       isActive: boolean
       sortOrder: number
+      lunchStart: string | null
+      lunchEnd: string | null
+      nextDayCutoffEnabled: boolean
+      nextDayCutoffTime: string
       createdAt: Date
     }, ExtArgs["result"]["employee"]>
     composites: {}
@@ -4000,6 +4040,10 @@ export namespace Prisma {
     readonly studioPercent: FieldRef<"Employee", 'Decimal'>
     readonly isActive: FieldRef<"Employee", 'Boolean'>
     readonly sortOrder: FieldRef<"Employee", 'Int'>
+    readonly lunchStart: FieldRef<"Employee", 'String'>
+    readonly lunchEnd: FieldRef<"Employee", 'String'>
+    readonly nextDayCutoffEnabled: FieldRef<"Employee", 'Boolean'>
+    readonly nextDayCutoffTime: FieldRef<"Employee", 'String'>
     readonly createdAt: FieldRef<"Employee", 'DateTime'>
   }
     
@@ -16817,6 +16861,10 @@ export namespace Prisma {
     studioPercent: 'studioPercent',
     isActive: 'isActive',
     sortOrder: 'sortOrder',
+    lunchStart: 'lunchStart',
+    lunchEnd: 'lunchEnd',
+    nextDayCutoffEnabled: 'nextDayCutoffEnabled',
+    nextDayCutoffTime: 'nextDayCutoffTime',
     createdAt: 'createdAt'
   };
 
@@ -17218,6 +17266,10 @@ export namespace Prisma {
     studioPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Employee"> | boolean
     sortOrder?: IntFilter<"Employee"> | number
+    lunchStart?: StringNullableFilter<"Employee"> | string | null
+    lunchEnd?: StringNullableFilter<"Employee"> | string | null
+    nextDayCutoffEnabled?: BoolFilter<"Employee"> | boolean
+    nextDayCutoffTime?: StringFilter<"Employee"> | string
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     services?: EmployeeServiceListRelationFilter
@@ -17237,6 +17289,10 @@ export namespace Prisma {
     studioPercent?: SortOrderInput | SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
+    lunchStart?: SortOrderInput | SortOrder
+    lunchEnd?: SortOrderInput | SortOrder
+    nextDayCutoffEnabled?: SortOrder
+    nextDayCutoffTime?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     services?: EmployeeServiceOrderByRelationAggregateInput
@@ -17259,6 +17315,10 @@ export namespace Prisma {
     studioPercent?: DecimalNullableFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFilter<"Employee"> | boolean
     sortOrder?: IntFilter<"Employee"> | number
+    lunchStart?: StringNullableFilter<"Employee"> | string | null
+    lunchEnd?: StringNullableFilter<"Employee"> | string | null
+    nextDayCutoffEnabled?: BoolFilter<"Employee"> | boolean
+    nextDayCutoffTime?: StringFilter<"Employee"> | string
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     services?: EmployeeServiceListRelationFilter
@@ -17278,6 +17338,10 @@ export namespace Prisma {
     studioPercent?: SortOrderInput | SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
+    lunchStart?: SortOrderInput | SortOrder
+    lunchEnd?: SortOrderInput | SortOrder
+    nextDayCutoffEnabled?: SortOrder
+    nextDayCutoffTime?: SortOrder
     createdAt?: SortOrder
     _count?: EmployeeCountOrderByAggregateInput
     _avg?: EmployeeAvgOrderByAggregateInput
@@ -17299,6 +17363,10 @@ export namespace Prisma {
     studioPercent?: DecimalNullableWithAggregatesFilter<"Employee"> | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolWithAggregatesFilter<"Employee"> | boolean
     sortOrder?: IntWithAggregatesFilter<"Employee"> | number
+    lunchStart?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    lunchEnd?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    nextDayCutoffEnabled?: BoolWithAggregatesFilter<"Employee"> | boolean
+    nextDayCutoffTime?: StringWithAggregatesFilter<"Employee"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
   }
 
@@ -18323,6 +18391,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -18342,6 +18414,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -18358,6 +18434,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -18377,6 +18457,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -18395,6 +18479,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
   }
 
@@ -18406,6 +18494,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -18419,6 +18511,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19642,6 +19738,10 @@ export namespace Prisma {
     studioPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
+    lunchStart?: SortOrder
+    lunchEnd?: SortOrder
+    nextDayCutoffEnabled?: SortOrder
+    nextDayCutoffTime?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -19663,6 +19763,10 @@ export namespace Prisma {
     studioPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
+    lunchStart?: SortOrder
+    lunchEnd?: SortOrder
+    nextDayCutoffEnabled?: SortOrder
+    nextDayCutoffTime?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -19676,6 +19780,10 @@ export namespace Prisma {
     studioPercent?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
+    lunchStart?: SortOrder
+    lunchEnd?: SortOrder
+    nextDayCutoffEnabled?: SortOrder
+    nextDayCutoffTime?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21775,6 +21883,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleCreateNestedManyWithoutEmployeeInput
@@ -21792,6 +21904,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -21880,6 +21996,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUpdateManyWithoutEmployeeNestedInput
@@ -21897,6 +22017,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -22743,6 +22867,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     workSchedules?: WorkScheduleCreateNestedManyWithoutEmployeeInput
@@ -22761,6 +22889,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutEmployeeInput
@@ -22824,6 +22956,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUpdateManyWithoutEmployeeNestedInput
@@ -22842,6 +22978,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -22895,6 +23035,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -22913,6 +23057,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutEmployeeInput
@@ -22944,6 +23092,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -22962,6 +23114,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -22977,6 +23133,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -22995,6 +23155,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -23026,6 +23190,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -23044,6 +23212,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -23059,6 +23231,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -23077,6 +23253,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -23194,6 +23374,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -23212,6 +23396,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -23363,6 +23551,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutEmployeeInput
     services?: EmployeeServiceCreateNestedManyWithoutEmployeeInput
@@ -23381,6 +23573,10 @@ export namespace Prisma {
     studioPercent?: Decimal | DecimalJsLike | number | string | null
     isActive?: boolean
     sortOrder?: number
+    lunchStart?: string | null
+    lunchEnd?: string | null
+    nextDayCutoffEnabled?: boolean
+    nextDayCutoffTime?: string
     createdAt?: Date | string
     services?: EmployeeServiceUncheckedCreateNestedManyWithoutEmployeeInput
     workSchedules?: WorkScheduleUncheckedCreateNestedManyWithoutEmployeeInput
@@ -23492,6 +23688,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmployeeNestedInput
     services?: EmployeeServiceUpdateManyWithoutEmployeeNestedInput
@@ -23510,6 +23710,10 @@ export namespace Prisma {
     studioPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
+    lunchStart?: NullableStringFieldUpdateOperationsInput | string | null
+    lunchEnd?: NullableStringFieldUpdateOperationsInput | string | null
+    nextDayCutoffEnabled?: BoolFieldUpdateOperationsInput | boolean
+    nextDayCutoffTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: EmployeeServiceUncheckedUpdateManyWithoutEmployeeNestedInput
     workSchedules?: WorkScheduleUncheckedUpdateManyWithoutEmployeeNestedInput

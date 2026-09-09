@@ -182,15 +182,19 @@ export async function deleteBlogPostAction(id: number) {
 
 // O backend guarda apenas os dias em que se trabalha — os dias desligados
 // desaparecem do horário, que é como ficam fechados às marcações.
-export async function updateScheduleAction(schedule: import('./types').WeeklyScheduleDay[]) {
-  return api.schedule.update(schedule.filter((d) => d.isActive));
+export async function updateScheduleAction(
+  schedule: import('./types').WeeklyScheduleDay[],
+  prefs: import('./types').SchedulePrefs,
+) {
+  return api.schedule.update(schedule.filter((d) => d.isActive), prefs);
 }
 
 export async function updateEmployeeScheduleAction(
   employeeId: number,
   schedule: import('./types').WeeklyScheduleDay[],
+  prefs: import('./types').SchedulePrefs,
 ) {
-  return api.adminSchedules.update(employeeId, schedule.filter((d) => d.isActive));
+  return api.adminSchedules.update(employeeId, schedule.filter((d) => d.isActive), prefs);
 }
 
 export async function previewTimeBlockAction(data: import('./types').TimeBlockInput) {

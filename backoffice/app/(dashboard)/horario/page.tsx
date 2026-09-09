@@ -5,12 +5,18 @@ import HorarioClient from './HorarioClient';
 export const metadata = { title: 'Horário' };
 
 export default async function HorarioPage() {
-  const schedule = await api.schedule.get().catch(() => []);
+  const data = await api.schedule.get().catch(() => ({
+    schedules: [],
+    lunchStart: '',
+    lunchEnd: '',
+    nextDayCutoffEnabled: false,
+    nextDayCutoffTime: '23:00',
+  }));
   return (
     <div>
       <TopBar title="Horário Semanal" />
       <div className="p-6 max-w-lg">
-        <HorarioClient initial={schedule} />
+        <HorarioClient initial={data} />
       </div>
     </div>
   );
