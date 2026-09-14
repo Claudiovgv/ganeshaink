@@ -217,6 +217,20 @@ function templateForEvent(eventType, audience = 'client') {
   }
 }
 
+function passwordResetEmail(name, link) {
+  return {
+    subject: 'Repor senha — Ganesha Ink',
+    html: layout('Repor a tua senha', `
+      ${paragraph(`Olá <strong style="color:${COLORS.textPrimary};">${name || ''}</strong>,`)}
+      ${paragraph('Recebemos um pedido para definires uma senha nova na área de gestão da Ganesha Ink. O link é válido durante 1 hora.')}
+      <p style="margin: 24px 0; text-align: center;">
+        <a href="${link}" style="display: inline-block; background: ${COLORS.gold}; color: ${COLORS.bgPrimary}; text-decoration: none; font-weight: bold; padding: 12px 22px; border-radius: 4px;">Definir senha nova</a>
+      </p>
+      ${paragraph('Se não foste tu a pedir, ignora este email. A senha actual continua a funcionar.')}
+    `),
+  };
+}
+
 module.exports = {
   appointmentConfirmedEmail,
   appointmentReceivedEmail,
@@ -227,5 +241,6 @@ module.exports = {
   staffStatusChangedEmail,
   staffConsultationReceivedEmail,
   staffReminderEmail,
+  passwordResetEmail,
   templateForEvent,
 };

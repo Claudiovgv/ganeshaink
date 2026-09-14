@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
-const { lisboaTimeToUTC, isNextDayCutoffClosed, lunchWindow, overlaps } = require('../services/availability.service');
+const { lisboaTimeToUTC, isNextDayCutoffClosed, publicCutoffNotice, lunchWindow, overlaps } = require('../services/availability.service');
 const { publicLimiter } = require('../middleware/rateLimit');
 const { addMinutes } = require('date-fns');
 const { notifyAppointmentCreated, notifyAppointmentStatusChanged, APPOINTMENT_INCLUDE } = require('../lib/notifications');
@@ -38,7 +38,9 @@ router.post('/', publicLimiter, async (req, res) => {
     if (!employee || !employee.isActive) return res.status(404).json({ error: 'Employee not found' });
 
     if (isNextDayCutoffClosed(employee, date)) {
-      return res.status(409).json({ error: 'Já não é possível marcar para amanhã a esta hora' });
+      return res.status(409).json({
+        error: publicCutoffNotice(employee, date) || 'O horário de agendamento online já fechou para amanhã.',
+      });
     }
 
     const startDatetime = lisboaTimeToUTC(date, time);

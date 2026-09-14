@@ -52,7 +52,11 @@ export default function Step4DateTime({ employeeId, serviceId, onSelect, onBack 
     try {
       const res = await api.availability.slots(employeeId, d, serviceId);
       setSlots(res.slots);
-      if (res.slots.length === 0) setSlotsError('Sem disponibilidade neste dia. Escolhe outro.');
+      if (res.closedReason === 'cutoff' && res.notice) {
+        setSlotsError(res.notice);
+      } else if (res.slots.length === 0) {
+        setSlotsError('Sem disponibilidade neste dia. Escolhe outro.');
+      }
     } catch {
       setSlotsError('Erro ao carregar disponibilidade.');
     } finally {

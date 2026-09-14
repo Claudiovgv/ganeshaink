@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
-const { getAvailableSlots } = require('../services/availability.service');
+const { getAvailableSlots, publicCutoffNotice } = require('../services/availability.service');
 const { logRouteError } = require('../lib/logger');
 
 router.get('/:employeeId', async (req, res) => {
@@ -62,6 +62,7 @@ router.get('/:employeeId', async (req, res) => {
     }
 
     const slots = getAvailableSlots(employee, date, service.durationMin);
+    const notice = publicCutoffNotice(employee, date);
 
     res.json({
       date,
@@ -69,6 +70,8 @@ router.get('/:employeeId', async (req, res) => {
       serviceId: service.id,
       durationMin: service.durationMin,
       slots,
+      closedReason: notice ? 'cutoff' : null,
+      notice,
     });
   } catch (err) {
     logRouteError(req, err, 'availability');

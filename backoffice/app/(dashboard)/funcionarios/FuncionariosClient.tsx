@@ -142,6 +142,7 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
         bio: form.bio,
         serviceIds: form.serviceIds,
         notificationEmail: form.notificationEmail || null,
+        ...(form.password ? { password: form.password } : {}),
       }) as Employee;
       updated = await persistPhoto(editing.id, updated);
       setEmployees((prev) => prev.map((e) => e.id === editing.id
@@ -308,6 +309,18 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
                     </select>
                   </div>
                 </>
+              )}
+              {editing && (
+                <div>
+                  <label className="block text-xs text-text-secondary mb-1">Nova senha (opcional)</label>
+                  <input
+                    type="password"
+                    placeholder="Deixa em branco para não alterar"
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm placeholder-text-muted"
+                  />
+                </div>
               )}
               <div>
                 <label className="block text-xs text-text-secondary mb-1">Email para notificações</label>

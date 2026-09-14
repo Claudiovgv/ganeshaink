@@ -43,6 +43,28 @@ function isNextDayCutoffClosed(employee, dateStr, now = new Date()) {
   return dateStr === tomorrowDateStr(today);
 }
 
+function formatHourLabel(hhmm) {
+  const [h, m] = String(hhmm || '00:00').split(':');
+  const hour = String(parseInt(h, 10) || 0);
+  if (!m || m === '00') return `${hour}h`;
+  return `${hour}h${m}`;
+}
+
+function earliestWorkStart(employee) {
+  const times = (employee.workSchedules || [])
+    .filter((ws) => ws.isActive && ws.startTime)
+    .map((ws) => ws.startTime)
+    .sort();
+  return times[0] || '09:00';
+}
+
+function publicCutoffNotice(employee, dateStr, now = new Date()) {
+  if (!isNextDayCutoffClosed(employee, dateStr, now)) return null;
+  const start = earliestWorkStart(employee);
+  const end = employee.nextDayCutoffTime || '23:00';
+  return `O horário de agendamento online é das ${formatHourLabel(start)} às ${formatHourLabel(end)}. Já não é possível marcar para amanhã.`;
+}
+
 function lunchWindow(employee, dateStr) {
   if (!employee.lunchStart || !employee.lunchEnd) return null;
   if (employee.lunchStart >= employee.lunchEnd) return null;
@@ -116,4 +138,11 @@ function getAvailableSlots(employee, dateStr, durationMin, opts = {}) {
   return slots;
 }
 
-module.exports = { getAvailableSlots, lisboaTimeToUTC, isNextDayCutoffClosed, lunchWindow, overlaps };
+module.exports = {
+  getAvailableSlots,
+  lisboaTimeToUTC,
+  isNextDayCutoffClosed,
+  publicCutoffNotice,
+  lunchWindow,
+  overlaps,
+};

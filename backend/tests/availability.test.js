@@ -1,4 +1,4 @@
-const { getAvailableSlots } = require('../src/services/availability.service');
+const { getAvailableSlots, publicCutoffNotice } = require('../src/services/availability.service');
 
 describe('getAvailableSlots', () => {
   // 2026-04-28 is a Tuesday (dayOfWeek = 2)
@@ -129,6 +129,8 @@ describe('getAvailableSlots', () => {
     expect(getAvailableSlots(emp, '2026-04-28', 60, { now: afterCutoff })).toEqual([]);
     expect(getAvailableSlots(emp, '2026-04-28', 60, { now: beforeCutoff })).toContain('09:00');
     expect(getAvailableSlots(emp, '2026-04-29', 60, { now: afterCutoff })).toContain('09:00');
+    expect(publicCutoffNotice(emp, '2026-04-28', afterCutoff)).toMatch(/das 9h às 23h/);
+    expect(publicCutoffNotice(emp, '2026-04-28', beforeCutoff)).toBeNull();
   });
 
   it('does not apply the next-day cutoff when the switch is off', () => {

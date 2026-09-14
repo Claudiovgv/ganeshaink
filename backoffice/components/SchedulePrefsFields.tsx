@@ -57,7 +57,7 @@ export default function SchedulePrefsFields({
           <span>
             <span className="text-sm text-text-primary font-medium block">Bloquear marcações para amanhã à noite</span>
             <span className="text-text-muted text-xs">
-              A partir desta hora, o site deixa de aceitar marcações só para o dia seguinte. No backoffice continuas a poder marcar.
+              A partir desta hora, o site deixa de aceitar marcações para o dia seguinte. O horário de agendamento online é até esta hora (ex.: das 9h às 23h). No backoffice continuas a poder marcar.
             </span>
           </span>
         </label>

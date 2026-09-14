@@ -3,6 +3,14 @@ const prisma = require('../../config/database');
 const bcrypt = require('bcryptjs');
 const { authenticate, requireSuperadmin } = require('../../middleware/auth');
 const { logEvent } = require('../../lib/logger');
+const {
+  destinationMailbox,
+  createPasswordResetToken,
+  resetLink,
+  assertPassword,
+} = require('../../lib/passwordReset');
+const { sendMailOrThrow } = require('../../lib/mailer');
+const { passwordResetEmail } = require('../../lib/emailTemplates');
 
 router.use(authenticate, requireSuperadmin);
 
@@ -42,7 +50,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, role, notificationEmail } = req.body;
+    const { name, role, notificationEmail, password } = req.body;
 
     if (id === req.user.id && role && role !== req.user.role) {
       return res.status(400).json({ error: 'Não podes alterar o teu próprio papel' });
@@ -61,6 +69,14 @@ router.put('/:id', async (req, res) => {
       }
       data.notificationEmail = mailbox || null;
     }
+    if (password) {
+      try {
+        assertPassword(password);
+      } catch (err) {
+        return res.status(err.status || 400).json({ error: err.message });
+      }
+      data.password = await bcrypt.hash(password, 10);
+    }
 
     const user = await prisma.user.update({
       where: { id },
@@ -68,9 +84,49 @@ router.put('/:id', async (req, res) => {
       select: { id: true, name: true, email: true, notificationEmail: true, role: true, twoFactorEnabled: true, createdAt: true },
     });
 
-    logEvent('info', 'users', `Utilizador atualizado: ${user.email}`, { userId: req.user.id, ip: req.ip });
+    logEvent('info', 'users', `Utilizador atualizado: ${user.email}${password ? ' (senha alterada)' : ''}`, { userId: req.user.id, ip: req.ip });
     res.json(user);
   } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/:id/reset-email', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+    const mailbox = destinationMailbox(user);
+    if (!mailbox) {
+      return res.status(400).json({ error: 'Esta conta não tem um email de notificação. Define um email ou altera a senha aqui.' });
+    }
+
+    const token = createPasswordResetToken(user);
+    const template = passwordResetEmail(user.name, resetLink(token));
+    await sendMailOrThrow({ to: mailbox, subject: template.subject, html: template.html });
+    logEvent('security', 'users', `Reposição de senha enviada para ${user.email}`, { userId: req.user.id, ip: req.ip });
+    res.json({ message: `Email de reposição enviado para ${mailbox}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
+router.post('/:id/reset-2fa', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return res.status(404).json({ error: 'Utilizador não encontrado' });
+
+    await prisma.user.update({
+      where: { id },
+      data: { twoFactorEnabled: false, twoFactorSecret: null },
+    });
+    logEvent('security', 'users', `2FA reposto: ${user.email}`, { userId: req.user.id, ip: req.ip });
+    res.json({ message: '2FA limpo. No próximo login a pessoa configura de novo.' });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

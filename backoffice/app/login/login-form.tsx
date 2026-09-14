@@ -146,6 +146,11 @@ export default function LoginForm() {
       </div>
 
       <SubmitButton label="Entrar" pendingLabel="A entrar…" />
+      <p className="text-center">
+        <a href="/repor-senha" className="text-text-muted text-xs hover:text-gold transition-colors">
+          Esqueceste a senha?
+        </a>
+      </p>
     </form>
   );
 }

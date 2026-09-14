@@ -75,6 +75,8 @@ export interface AvailabilityResponse {
   employeeId: number;
   date: string;
   slots: string[];
+  closedReason?: 'cutoff' | null;
+  notice?: string | null;
 }
 
 export interface Appointment {

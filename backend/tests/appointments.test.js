@@ -136,6 +136,7 @@ describe('Appointments (public)', () => {
             time: '10:00',
           });
         expect(res.status).toBe(409);
+        expect(res.body.error).toMatch(/horário de agendamento online/i);
       } finally {
         await prisma.employee.update({
           where: { id: employee.id },

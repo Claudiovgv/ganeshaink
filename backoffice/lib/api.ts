@@ -51,6 +51,10 @@ export const api = {
       apiFetch<{ message: string }>('/auth/2fa/enable', { method: 'POST', body: JSON.stringify({ code }) }),
     disable2FA: (password: string) =>
       apiFetch<{ message: string }>('/auth/2fa/disable', { method: 'POST', body: JSON.stringify({ password }) }),
+    forgotPassword: (email: string) =>
+      apiFetch<{ message: string }>('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) }),
+    resetPassword: (token: string, password: string) =>
+      apiFetch<{ message: string }>('/auth/reset-password', { method: 'POST', body: JSON.stringify({ token, password }) }),
   },
   appointments: {
     list: (params?: { date?: string; employeeId?: number; status?: string }) => {
@@ -290,8 +294,12 @@ export const api = {
     list: () => apiFetch<User[]>('/admin/users'),
     create: (data: { name: string; email: string; password: string; role: string }) =>
       apiFetch<User>('/admin/users', { method: 'POST', body: JSON.stringify(data) }),
-    update: (id: number, data: { name?: string; role?: string; notificationEmail?: string | null }) =>
+    update: (id: number, data: { name?: string; role?: string; notificationEmail?: string | null; password?: string }) =>
       apiFetch<User>(`/admin/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    sendResetEmail: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/users/${id}/reset-email`, { method: 'POST' }),
+    reset2FA: (id: number) =>
+      apiFetch<{ message: string }>(`/admin/users/${id}/reset-2fa`, { method: 'POST' }),
     remove: (id: number) =>
       apiFetch<{ message: string }>(`/admin/users/${id}`, { method: 'DELETE' }),
   },

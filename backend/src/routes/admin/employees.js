@@ -5,6 +5,7 @@ const { authenticate, requirePermission } = require('../../middleware/auth');
 const { logEvent } = require('../../lib/logger');
 const { isDeliverableEmail } = require('../../lib/notifications');
 const { photoUploadMiddleware, saveEmployeePhoto, withPhotoUrl } = require('../../lib/employeePhotos');
+const { assertPassword } = require('../../lib/passwordReset');
 
 router.use(authenticate, requirePermission('manage_employees'));
 
@@ -108,7 +109,7 @@ router.post('/:id/photo', photoUploadMiddleware, async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { name, bio, isActive, serviceIds, materialCost, studioPercent, notificationEmail } = req.body;
+    const { name, bio, isActive, serviceIds, materialCost, studioPercent, notificationEmail, password } = req.body;
 
     const existing = await prisma.employee.findUnique({ where: { id } });
     if (!existing) return res.status(404).json({ error: 'Funcionário não encontrado' });
@@ -132,6 +133,19 @@ router.put('/:id', async (req, res) => {
         where: { id: existing.userId },
         data: { notificationEmail: mailbox || null },
       });
+    }
+
+    if (password) {
+      try {
+        assertPassword(password);
+      } catch (err) {
+        return res.status(err.status || 400).json({ error: err.message });
+      }
+      await prisma.user.update({
+        where: { id: existing.userId },
+        data: { password: await bcrypt.hash(password, 10) },
+      });
+      logEvent('security', 'employees', `Senha alterada: funcionário ${id}`, { userId: req.user.id, ip: req.ip });
     }
 
     if (serviceIds !== undefined) {

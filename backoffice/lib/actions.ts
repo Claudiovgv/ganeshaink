@@ -315,8 +315,38 @@ export async function createUserAction(data: { name: string; email: string; pass
   return api.users.create(data);
 }
 
-export async function updateUserAction(id: number, data: { name?: string; role?: string; notificationEmail?: string | null }) {
+export async function updateUserAction(id: number, data: { name?: string; role?: string; notificationEmail?: string | null; password?: string }) {
   return api.users.update(id, data);
+}
+
+export async function sendUserResetEmailAction(id: number) {
+  return api.users.sendResetEmail(id);
+}
+
+export async function resetUser2FAAction(id: number) {
+  return api.users.reset2FA(id);
+}
+
+export async function forgotPasswordAction(_prev: { error?: string; message?: string } | null, formData: FormData) {
+  const email = String(formData.get('email') || '').trim();
+  if (!email) return { error: 'Indica o utilizador ou o email.' };
+  try {
+    return await api.auth.forgotPassword(email);
+  } catch (err) {
+    return { error: (err as Error).message };
+  }
+}
+
+export async function resetPasswordAction(_prev: { error?: string; message?: string } | null, formData: FormData) {
+  const token = String(formData.get('token') || '');
+  const password = String(formData.get('password') || '');
+  const confirm = String(formData.get('confirm') || '');
+  if (password !== confirm) return { error: 'As senhas não coincidem.' };
+  try {
+    return await api.auth.resetPassword(token, password);
+  } catch (err) {
+    return { error: (err as Error).message };
+  }
 }
 
 export async function deleteUserAction(id: number) {

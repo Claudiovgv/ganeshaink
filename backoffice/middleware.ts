@@ -4,8 +4,8 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('ganesha_token')?.value;
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/login') {
-    if (token) {
+  if (pathname === '/login' || pathname === '/repor-senha') {
+    if (token && pathname === '/login') {
       const url = request.nextUrl.clone();
       url.pathname = '/';
       return NextResponse.redirect(url);

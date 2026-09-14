@@ -8,6 +8,16 @@ const { authenticate } = require('../middleware/auth');
 const { authLimiter } = require('../middleware/rateLimit');
 const { logEvent } = require('../lib/logger');
 const { getPermissions } = require('../lib/permissions');
+const { sendMail } = require('../lib/mailer');
+const { passwordResetEmail } = require('../lib/emailTemplates');
+const {
+  findUserByIdentifier,
+  destinationMailbox,
+  createPasswordResetToken,
+  verifyPasswordResetToken,
+  resetLink,
+  assertPassword,
+} = require('../lib/passwordReset');
 
 function issueToken(user) {
   return jwt.sign(
@@ -25,7 +35,7 @@ router.post('/login', authLimiter, async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await findUserByIdentifier(email);
     if (!user) {
       logEvent('security', 'auth', `Failed login: unknown user "${email}"`, { ip: req.ip });
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -202,6 +212,51 @@ router.get('/me', authenticate, async (req, res) => {
 
 router.post('/logout', authenticate, (req, res) => {
   res.json({ message: 'Logged out successfully' });
+});
+
+const FORGOT_MESSAGE = 'Se a conta existir, envíamos um email com o link para definires uma senha nova.';
+
+router.post('/forgot-password', authLimiter, async (req, res) => {
+  try {
+    const user = await findUserByIdentifier(req.body.email);
+    const mailbox = destinationMailbox(user);
+    if (user && mailbox) {
+      const token = createPasswordResetToken(user);
+      const template = passwordResetEmail(user.name, resetLink(token));
+      sendMail({ to: mailbox, subject: template.subject, html: template.html });
+      logEvent('security', 'auth', `Pedido de reposição de senha: ${user.email}`, { ip: req.ip, userId: user.id });
+    }
+    res.json({ message: FORGOT_MESSAGE });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/reset-password', authLimiter, async (req, res) => {
+  try {
+    const decoded = verifyPasswordResetToken(req.body.token);
+    if (!decoded) return res.status(400).json({ error: 'Este link já não é válido. Pede uma reposição nova.' });
+
+    try {
+      assertPassword(req.body.password);
+    } catch (err) {
+      return res.status(err.status || 400).json({ error: err.message });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    if (!user) return res.status(400).json({ error: 'Este link já não é válido. Pede uma reposição nova.' });
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: await bcrypt.hash(req.body.password, 10) },
+    });
+    logEvent('security', 'auth', `Senha reposta: ${user.email}`, { ip: req.ip, userId: user.id });
+    res.json({ message: 'Senha actualizada. Já podes entrar.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

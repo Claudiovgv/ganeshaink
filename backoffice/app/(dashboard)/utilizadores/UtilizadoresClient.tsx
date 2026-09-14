@@ -3,7 +3,7 @@ import { useState, useTransition } from 'react';
 import type { User } from '@/lib/types';
 import DataTable from '@/components/DataTable';
 import Button from '@/components/Button';
-import { createUserAction, updateUserAction, deleteUserAction } from '@/lib/actions';
+import { createUserAction, updateUserAction, deleteUserAction, sendUserResetEmailAction, resetUser2FAAction } from '@/lib/actions';
 
 const ROLE_LABELS: Record<string, string> = { superadmin: 'Superadmin', admin: 'Admin', employee: 'Funcionário' };
 const ROLE_STYLE: Record<string, string> = {
@@ -25,11 +25,13 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
   const [form, setForm] = useState(emptyForm);
   const [deleting, setDeleting] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function openCreate() {
     setForm(emptyForm);
     setError(null);
+    setInfo(null);
     setShowForm(true);
   }
 
@@ -37,6 +39,7 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
     setEditing(u);
     setForm({ name: u.name, email: u.email, password: '', role: u.role, notificationEmail: u.notificationEmail ?? '' });
     setError(null);
+    setInfo(null);
   }
 
   function handleCreate() {
@@ -55,11 +58,47 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
   function handleUpdate() {
     if (!editing) return;
     setError(null);
+    setInfo(null);
     startTransition(async () => {
       try {
-        const updated = await updateUserAction(editing.id, { name: form.name, role: form.role, notificationEmail: form.notificationEmail || null });
+        const payload: { name: string; role: string; notificationEmail: string | null; password?: string } = {
+          name: form.name,
+          role: form.role,
+          notificationEmail: form.notificationEmail || null,
+        };
+        if (form.password) payload.password = form.password;
+        const updated = await updateUserAction(editing.id, payload);
         setUsers((prev) => prev.map((u) => u.id === editing.id ? { ...u, ...updated } : u));
         setEditing(null);
+      } catch (err) {
+        setError((err as Error).message);
+      }
+    });
+  }
+
+  function handleSendReset() {
+    if (!editing) return;
+    setError(null);
+    setInfo(null);
+    startTransition(async () => {
+      try {
+        const res = await sendUserResetEmailAction(editing.id);
+        setInfo(res.message);
+      } catch (err) {
+        setError((err as Error).message);
+      }
+    });
+  }
+
+  function handleReset2FA() {
+    if (!editing) return;
+    setError(null);
+    setInfo(null);
+    startTransition(async () => {
+      try {
+        const res = await resetUser2FAAction(editing.id);
+        setUsers((prev) => prev.map((u) => u.id === editing.id ? { ...u, twoFactorEnabled: false } : u));
+        setInfo(res.message);
       } catch (err) {
         setError((err as Error).message);
       }
@@ -139,9 +178,10 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
 
       {(showForm || editing) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-bg-card border border-gold-border rounded-lg p-6 w-full max-w-sm space-y-4">
+          <div className="bg-bg-card border border-gold-border rounded-lg p-6 w-full max-w-sm space-y-4 max-h-[90vh] overflow-y-auto">
             <h2 className="font-display text-lg font-bold">{editing ? `Editar ${editing.name}` : 'Novo Utilizador'}</h2>
             {error && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/30 rounded px-3 py-2">{error}</p>}
+            {info && <p className="text-emerald-400 text-sm bg-emerald-500/10 border border-emerald-500/30 rounded px-3 py-2">{info}</p>}
             <div className="space-y-3">
               <div>
                 <label className="block text-xs text-text-secondary mb-1">Nome</label>
@@ -162,17 +202,18 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
                       className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm placeholder-text-muted"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-text-secondary mb-1">Password</label>
-                    <input
-                      type="password"
-                      value={form.password}
-                      onChange={(e) => setForm({ ...form, password: e.target.value })}
-                      className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm placeholder-text-muted"
-                    />
-                  </div>
                 </>
               )}
+              <div>
+                <label className="block text-xs text-text-secondary mb-1">{editing ? 'Nova senha (opcional)' : 'Password'}</label>
+                <input
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm placeholder-text-muted"
+                  placeholder={editing ? 'Deixa em branco para não alterar' : ''}
+                />
+              </div>
               <div>
                 <label className="block text-xs text-text-secondary mb-1">Email para notificações</label>
                 <input
@@ -211,6 +252,16 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
               </Button>
               <Button variant="outline" onClick={() => { setShowForm(false); setEditing(null); }}>Cancelar</Button>
             </div>
+            {editing && (
+              <div className="flex flex-col gap-2 pt-1">
+                <Button size="sm" variant="outline" onClick={handleSendReset} disabled={isPending}>
+                  Enviar reposição por email
+                </Button>
+                <Button size="sm" variant="outline" onClick={handleReset2FA} disabled={isPending}>
+                  Repor 2FA
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
