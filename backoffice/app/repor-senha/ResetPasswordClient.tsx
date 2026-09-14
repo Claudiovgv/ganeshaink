@@ -87,7 +87,7 @@ export default function ResetPasswordClient({ token }: { token: string }) {
               <p className="text-red-400 text-sm text-center">{forgotState.error}</p>
             )}
             <p className="text-text-secondary text-sm text-center">
-              Indica o utilizador ou o email de notificação. Se a conta existir, enviamos um link.
+              Indica o utilizador (ex.: vera), o email ou o nome. Se a conta existir, enviamos um link.
             </p>
             <div>
               <label className="block text-sm text-text-secondary mb-1.5" htmlFor="email">Utilizador ou email</label>

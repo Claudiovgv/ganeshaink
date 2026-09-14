@@ -63,6 +63,14 @@ describe('password recovery', () => {
     expect(res.body.requires2FA).toBe(true);
   });
 
+  it('accepts login with the staff display name, ignoring case and extra spaces', async () => {
+    const res = await request(app)
+      .post('/v1/auth/login')
+      .send({ email: '  vera FERREIRA  ', password: 'old-pass-1' });
+    expect(res.status).toBe(200);
+    expect(res.body.requires2FA).toBe(true);
+  });
+
   it('returns the same 200 for forgot-password whether the account exists or not', async () => {
     const known = await request(app)
       .post('/v1/auth/forgot-password')

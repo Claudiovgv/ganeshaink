@@ -131,7 +131,7 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
           </div>
           <div className="min-w-0">
             <p className="font-medium truncate">{u.name}{u.id === currentUserId && <span className="text-text-muted font-normal"> (tu)</span>}</p>
-            <p className="text-text-muted text-xs truncate">{u.email}</p>
+            <p className="text-text-muted text-xs truncate">login: {u.email}</p>
           </div>
         </div>
       ),
@@ -203,6 +203,15 @@ export default function UtilizadoresClient({ initial, currentUserId }: { initial
                     />
                   </div>
                 </>
+              )}
+              {editing && (
+                <div>
+                  <label className="block text-xs text-text-secondary mb-1">Utilizador de login</label>
+                  <p className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm">
+                    {editing.email}
+                  </p>
+                  <p className="text-text-muted text-[11px] mt-1">É isto que se escreve no login, não o nome completo.</p>
+                </div>
               )}
               <div>
                 <label className="block text-xs text-text-secondary mb-1">{editing ? 'Nova senha (opcional)' : 'Password'}</label>

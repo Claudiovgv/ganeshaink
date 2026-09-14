@@ -9,10 +9,15 @@ function resetSecret() {
   return `${process.env.JWT_SECRET}::password-reset`;
 }
 
-function findUserByIdentifier(identifier) {
+function normalizeIdent(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
+async function findUserByIdentifier(identifier) {
   const raw = String(identifier || '').trim();
-  if (!raw) return Promise.resolve(null);
-  return prisma.user.findFirst({
+  if (!raw) return null;
+
+  const byLogin = await prisma.user.findFirst({
     where: {
       OR: [
         { email: raw },
@@ -20,6 +25,17 @@ function findUserByIdentifier(identifier) {
       ],
     },
   });
+  if (byLogin) return byLogin;
+
+  const needle = normalizeIdent(raw);
+  const candidates = await prisma.user.findMany({
+    include: { employee: { select: { name: true } } },
+  });
+  const matches = candidates.filter((user) => {
+    const keys = [user.email, user.notificationEmail, user.name, user.employee?.name];
+    return keys.some((key) => key && normalizeIdent(key) === needle);
+  });
+  return matches.length === 1 ? matches[0] : null;
 }
 
 function destinationMailbox(user) {

@@ -199,7 +199,7 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
           )}
           <div className="min-w-0">
             <p className="font-medium truncate">{e.name}</p>
-            <p className="text-text-muted text-xs truncate">{e.user.notificationEmail || e.user.email}</p>
+            <p className="text-text-muted text-xs truncate">login: {e.user.email}</p>
           </div>
         </div>
       ),
@@ -309,6 +309,15 @@ export default function FuncionariosClient({ initial, services }: { initial: Emp
                     </select>
                   </div>
                 </>
+              )}
+              {editing && (
+                <div>
+                  <label className="block text-xs text-text-secondary mb-1">Utilizador de login</label>
+                  <p className="w-full bg-bg-section border border-gold-border rounded px-3 py-2 text-text-primary text-sm">
+                    {editing.user.email}
+                  </p>
+                  <p className="text-text-muted text-[11px] mt-1">É isto que se escreve no login, não o nome completo.</p>
+                </div>
               )}
               {editing && (
                 <div>

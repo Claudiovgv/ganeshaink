@@ -127,8 +127,11 @@ export default function LoginForm() {
           required
           autoComplete="username"
           className="w-full bg-bg-card border border-gold-border rounded px-4 py-3 text-text-primary placeholder-text-muted focus:outline-none focus:border-gold transition-colors"
-          placeholder="utilizador ou email"
+          placeholder="ex.: vera"
         />
+        <p className="text-text-muted text-[11px] mt-1.5">
+          Utilizador de login (ex.: vera), email ou nome completo. Não confundas o nome da pessoa com o utilizador.
+        </p>
       </div>
       <div>
         <label className="block text-sm text-text-secondary mb-1.5" htmlFor="password">

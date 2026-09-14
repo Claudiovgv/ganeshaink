@@ -32,19 +32,19 @@ router.post('/login', authLimiter, async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' });
+      return res.status(400).json({ error: 'Utilizador e senha obrigatórios' });
     }
 
     const user = await findUserByIdentifier(email);
     if (!user) {
       logEvent('security', 'auth', `Failed login: unknown user "${email}"`, { ip: req.ip });
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Utilizador ou senha incorretos. O login é o utilizador (ex.: vera), o email ou o nome.' });
     }
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       logEvent('security', 'auth', `Failed login: wrong password for "${email}"`, { ip: req.ip, userId: user.id });
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Utilizador ou senha incorretos. O login é o utilizador (ex.: vera), o email ou o nome.' });
     }
 
     // Atalho só para desenvolvimento local: salta o 2FA por completo.
