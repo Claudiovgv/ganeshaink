@@ -41,14 +41,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt" className={`${playfair.variable} ${inter.variable}`}>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              '</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9938976891580683" crossorigin="anonymous"></script><script>',
-          }}
-        />
-      </head>
       <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col">
         <Header />
         <ClientErrorReporter />
