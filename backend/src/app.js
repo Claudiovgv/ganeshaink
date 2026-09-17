@@ -23,6 +23,7 @@ const adminServicesRoutes = require('./routes/admin/services');
 const adminCategoriesRoutes = require('./routes/admin/categories');
 const adminBlogRoutes = require('./routes/admin/blog');
 const adminClientsRoutes = require('./routes/admin/clients');
+const adsenseRoutes = require('./routes/adsense');
 const adminSettingsRoutes = require('./routes/admin/settings');
 const adminLogsRoutes = require('./routes/admin/logs');
 const adminUsersRoutes = require('./routes/admin/users');
@@ -93,6 +94,7 @@ app.use(`${API_BASE}/v1/appointments`, appointmentsRoutes);
 app.use(`${API_BASE}/v1/consultations`, consultationsRoutes);
 app.use(`${API_BASE}/v1/blog`, blogRoutes);
 app.use(`${API_BASE}/v1/client-errors`, clientErrorsRoutes);
+app.use(`${API_BASE}/v1/adsense`, adsenseRoutes);
 
 // Admin routes
 app.use(`${API_BASE}/v1/admin/appointments`, adminAppointmentsRoutes);

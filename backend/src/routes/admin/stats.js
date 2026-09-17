@@ -111,7 +111,7 @@ async function tradeStats(req, res, slug) {
   if (!canViewTradeStats(ctx, slug)) {
     return res.status(403).json({ error: 'A tua conta não tem permissão para estas estatísticas' });
   }
-  if (!ctx.employeeId) {
+  if (!ctx.canViewGeneralStats && !ctx.employeeId) {
     return res.status(403).json({ error: 'A tua conta não tem permissão para estas estatísticas' });
   }
 
@@ -139,7 +139,7 @@ async function tradeStats(req, res, slug) {
   const appointments = await prisma.appointment.findMany({
     where: {
       startDatetime: { gte: start, lte: end },
-      employeeId: ctx.employeeId,
+      ...(ctx.canViewGeneralStats ? {} : { employeeId: ctx.employeeId }),
       service: { categoryId: { in: categoryIds } },
       OR: [
         { status: 'completed' },

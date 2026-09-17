@@ -298,6 +298,25 @@ describe('GET /v1/admin/stats/barbershop', () => {
     await prisma.employee.delete({ where: { id: barber.id } });
     await prisma.user.delete({ where: { id: barberUser.id } });
   });
+
+  it('lets a superadmin see barbershop stats without an employee profile', async () => {
+    const sa = await prisma.user.create({
+      data: {
+        name: 'Stats Menu Superadmin',
+        email: 'stats-menu-sa@test.com',
+        password: await bcrypt.hash('pass123', 10),
+        role: 'superadmin',
+      },
+    });
+    const token = jwt.sign({ id: sa.id, email: sa.email, role: sa.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const res = await request(app)
+      .get('/v1/admin/stats/barbershop')
+      .set('Authorization', `Bearer ${token}`)
+      .query({ period: 'month', offset: '0' });
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.people)).toBe(true);
+    await prisma.user.delete({ where: { id: sa.id } });
+  });
 });
 
 describe('GET /v1/admin/consultations', () => {
@@ -592,5 +611,29 @@ describe('GET /v1/admin/consultations category filter', () => {
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('rejected');
+  });
+});
+
+describe('AdSense settings', () => {
+  afterEach(async () => {
+    await prisma.setting.deleteMany({ where: { key: 'adsense_enabled' } });
+  });
+
+  it('defaults to disabled on the public endpoint', async () => {
+    const res = await request(app).get('/v1/adsense');
+    expect(res.status).toBe(200);
+    expect(res.body.enabled).toBe(false);
+  });
+
+  it('turns on after an admin saves the setting', async () => {
+    const put = await request(app)
+      .put('/v1/admin/settings/adsense')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ enabled: true });
+    expect(put.status).toBe(200);
+    expect(put.body.enabled).toBe(true);
+    const pub = await request(app).get('/v1/adsense');
+    expect(pub.status).toBe(200);
+    expect(pub.body.enabled).toBe(true);
   });
 });

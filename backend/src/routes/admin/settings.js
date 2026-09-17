@@ -5,6 +5,7 @@ const { logEvent } = require('../../lib/logger');
 const { sendTestMail, sendMailOrThrow, getSmtpConfig } = require('../../lib/mailer');
 const { getNotificationMatrix, saveNotificationPreferences, EVENT_TYPES } = require('../../lib/notifications');
 const { templateForEvent } = require('../../lib/emailTemplates');
+const { isAdsenseEnabled, setAdsenseEnabled } = require('../../lib/adsense');
 
 router.use(authenticate, requirePermission('manage_settings'));
 
@@ -106,6 +107,27 @@ router.put('/notifications', async (req, res) => {
     res.json(matrix);
   } catch (err) {
     res.status(400).json({ error: err.message || 'Não foi possível guardar as preferências' });
+  }
+});
+
+router.get('/adsense', async (req, res) => {
+  try {
+    res.json({ enabled: await isAdsenseEnabled() });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.put('/adsense', async (req, res) => {
+  try {
+    if (typeof req.body?.enabled !== 'boolean') {
+      return res.status(400).json({ error: 'enabled deve ser true ou false' });
+    }
+    const enabled = await setAdsenseEnabled(req.body.enabled);
+    await logEvent('info', 'settings', `AdSense ${enabled ? 'ligado' : 'desligado'}`, { userId: req.user.id, ip: req.ip });
+    res.json({ enabled });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

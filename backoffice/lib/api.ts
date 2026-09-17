@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import type {
   AdminPermissionKey, Appointment, BlogPost, BarbershopStatsResponse, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
-  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, NotificationMatrix, Partnership, StatsPeriod, StatsResponse, SystemLogEntry,
+  Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, AdsenseSettings, NotificationMatrix, Partnership, StatsPeriod, StatsResponse, SystemLogEntry,
   TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay, AppointmentExportRow,
   EmployeeSchedulePayload, SchedulePrefs,
 } from './types';
@@ -267,6 +267,9 @@ export const api = {
       apiFetch<NotificationMatrix>('/admin/settings/notifications', { method: 'PUT', body: JSON.stringify(data) }),
     testSmtpTemplate: (data: { eventType: string; testEmail: string; audience?: 'client' | 'staff' }) =>
       apiFetch<{ message: string }>('/admin/settings/smtp/test-template', { method: 'POST', body: JSON.stringify(data) }),
+    getAdsense: () => apiFetch<AdsenseSettings>('/admin/settings/adsense'),
+    updateAdsense: (data: AdsenseSettings) =>
+      apiFetch<AdsenseSettings>('/admin/settings/adsense', { method: 'PUT', body: JSON.stringify(data) }),
   },
   logs: {
     list: (params?: { level?: string; page?: number }) => {

@@ -52,14 +52,15 @@ async function loadUserStatsContext(userId) {
 }
 
 function canViewTradeStats(ctx, slug) {
-  if (!ctx || ctx.canViewGeneralStats) return false;
+  if (!ctx) return false;
+  if (ctx.canViewGeneralStats) return TRADE_SLUGS.includes(slug);
   return ctx.categorySlugs.includes(slug);
 }
 
 function publicStatsFields(ctx) {
   return {
     canViewGeneralStats: Boolean(ctx.canViewGeneralStats),
-    statsCategories: ctx.canViewGeneralStats ? [] : ctx.categorySlugs,
+    statsCategories: ctx.canViewGeneralStats ? [...TRADE_SLUGS] : ctx.categorySlugs,
     employeeId: ctx.employeeId,
   };
 }

@@ -186,6 +186,10 @@ export interface SmtpSettings {
   source: 'database' | 'env';
 }
 
+export interface AdsenseSettings {
+  enabled: boolean;
+}
+
 export type NotificationEventType =
   | 'new_appointment'
   | 'appointment_confirmed'

@@ -180,7 +180,7 @@ const ADMIN_NAV_ALL = [
       { href: '/estatisticas', label: 'Estatísticas', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/barbearia', label: 'Barbearia', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/tatuagens', label: 'Tatuagens', perm: 'view_stats' as AdminPermissionKey | null },
-      { href: '/nails', label: 'Nails', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/nails', label: 'Estética', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/piercings', label: 'Piercings', perm: 'manage_appointments' as AdminPermissionKey | null },
     ],
   },
@@ -209,6 +209,7 @@ const ADMIN_NAV_ALL = [
     section: 'Definições',
     items: [
       { href: '/definicoes/smtp', label: 'SMTP e notificações', perm: 'manage_settings' as AdminPermissionKey | null },
+      { href: '/definicoes/anuncios', label: 'Anúncios', perm: 'manage_settings' as AdminPermissionKey | null },
       { href: '/definicoes/contas-barbearia', label: 'Contas Barbearia', perm: 'manage_settings' as AdminPermissionKey | null },
       { href: '/definicoes/tecnologia', label: 'Tecnologia', perm: 'manage_settings' as AdminPermissionKey | null },
     ],
@@ -228,8 +229,14 @@ function getAdminNav(permissions: Partial<Record<AdminPermissionKey, boolean>> |
 function rebuildAnalise(user: ReturnType<typeof useAuth>) {
   const items: { href: string; label: string }[] = [];
   if (user.canViewGeneralStats) {
-    items.push({ href: '/estatisticas', label: 'Estatísticas' });
-    items.push({ href: '/piercings', label: 'Piercings' });
+    items.push(
+      { href: '/estatisticas', label: 'Estatísticas' },
+      { href: '/barbearia', label: 'Barbearia' },
+      { href: '/tatuagens', label: 'Tatuagens' },
+      { href: '/nails', label: 'Estética' },
+      { href: '/piercings', label: 'Piercings' },
+    );
+    return [{ section: 'Análise', items }];
   }
   if (user.statsCategories?.includes('barbershop')) items.push({ href: '/barbearia', label: 'Barbearia' });
   if (user.statsCategories?.includes('tattoo')) items.push({ href: '/tatuagens', label: 'Tatuagens' });
@@ -276,7 +283,7 @@ const SUPERADMIN_NAV = [
       { href: '/estatisticas', label: 'Estatísticas' },
       { href: '/barbearia', label: 'Barbearia' },
       { href: '/tatuagens', label: 'Tatuagens' },
-      { href: '/nails', label: 'Nails' },
+      { href: '/nails', label: 'Estética' },
       { href: '/piercings', label: 'Piercings' },
     ],
   },
@@ -305,6 +312,7 @@ const SUPERADMIN_NAV = [
     section: 'Definições',
     items: [
       { href: '/definicoes/smtp', label: 'SMTP e notificações' },
+      { href: '/definicoes/anuncios', label: 'Anúncios' },
       { href: '/definicoes/contas-barbearia', label: 'Contas Barbearia' },
       { href: '/definicoes/tecnologia', label: 'Tecnologia' },
       { href: '/definicoes/logs', label: 'Log' },

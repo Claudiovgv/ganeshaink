@@ -6,7 +6,7 @@ export function canSeeGeneralStats(user: User | null) {
 }
 
 export function canSeeTradeStats(user: User | null, slug: string) {
-  return Boolean(user && !user.canViewGeneralStats && user.statsCategories?.includes(slug));
+  return Boolean(user && (user.canViewGeneralStats || user.statsCategories?.includes(slug)));
 }
 
 export function StatsForbidden({ title }: { title: string }) {

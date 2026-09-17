@@ -295,6 +295,16 @@ export async function testSmtpTemplateAction(data: { eventType: string; testEmai
   }
 }
 
+export async function updateAdsenseSettingsAction(enabled: boolean) {
+  try {
+    const settings = await api.settings.updateAdsense({ enabled });
+    revalidatePath('/definicoes/anuncios');
+    return { ok: true as const, settings };
+  } catch (err) {
+    return { ok: false as const, error: (err as Error).message };
+  }
+}
+
 export async function fetchLogsAction(params: { level?: string; page?: number }) {
   return api.logs.list(params);
 }

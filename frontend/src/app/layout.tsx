@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import ClientErrorReporter from '@/components/ClientErrorReporter';
+import AdSenseLoader from '@/components/AdSenseLoader';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col">
         <Header />
         <ClientErrorReporter />
+        <AdSenseLoader />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
