@@ -1,10 +1,16 @@
+function normalizeTime(value) {
+  const m = String(value || '').trim().match(/^(\d{1,2}):(\d{2})/);
+  if (!m) return '';
+  return `${String(parseInt(m[1], 10)).padStart(2, '0')}:${m[2]}`;
+}
+
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 function parseSchedulePrefs(body) {
   const prefs = {};
   if (body.lunchStart !== undefined || body.lunchEnd !== undefined) {
-    const lunchStart = body.lunchStart === '' || body.lunchStart == null ? null : String(body.lunchStart).trim();
-    const lunchEnd = body.lunchEnd === '' || body.lunchEnd == null ? null : String(body.lunchEnd).trim();
+    const lunchStart = body.lunchStart === '' || body.lunchStart == null ? null : normalizeTime(body.lunchStart);
+    const lunchEnd = body.lunchEnd === '' || body.lunchEnd == null ? null : normalizeTime(body.lunchEnd);
     if ((lunchStart && !lunchEnd) || (!lunchStart && lunchEnd)) {
       return { error: 'A hora de almoço precisa de início e fim' };
     }
@@ -23,7 +29,7 @@ function parseSchedulePrefs(body) {
     prefs.nextDayCutoffEnabled = Boolean(body.nextDayCutoffEnabled);
   }
   if (body.nextDayCutoffTime !== undefined) {
-    const t = String(body.nextDayCutoffTime || '23:00');
+    const t = normalizeTime(body.nextDayCutoffTime || '23:00');
     if (!TIME_RE.test(t)) return { error: 'Hora de corte inválida (formato HH:MM)' };
     prefs.nextDayCutoffTime = t;
   }
@@ -39,4 +45,4 @@ function selectPrefs(employee) {
   };
 }
 
-module.exports = { TIME_RE, parseSchedulePrefs, selectPrefs };
+module.exports = { TIME_RE, parseSchedulePrefs, selectPrefs, normalizeTime };

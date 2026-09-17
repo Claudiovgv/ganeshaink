@@ -152,7 +152,7 @@ function RecipientsTab({ initialMatrix }: { initialMatrix: NotificationMatrix })
     <div className="space-y-4">
       <p className="text-text-secondary text-sm">
         O cliente recebe sempre. Aqui defines o email de cada pessoa da equipa e que tipos de aviso recebe.
-        Um profissional só recebe as marcações dele; gestão (admin/superadmin) recebe todas.
+        Um profissional só recebe as marcações dele. Ninguém da gestão recebe as marcações de outra pessoa.
       </p>
       {error && <p className="text-red-400 text-sm">{error}</p>}
       {message && <p className="text-green-400 text-sm">{message}</p>}

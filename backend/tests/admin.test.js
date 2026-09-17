@@ -194,9 +194,14 @@ describe('Appointment price override affects stats revenue', () => {
       },
     });
 
+    const sa = await prisma.user.create({
+      data: { name: 'Stats Superadmin', email: 'stats-sa-rt@test.com', password: await bcrypt.hash('pass123', 10), role: 'superadmin' },
+    });
+    const saToken = jwt.sign({ id: sa.id, email: sa.email, role: sa.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
     const res = await request(app)
       .get('/v1/admin/stats')
-      .set('Authorization', `Bearer ${adminToken}`)
+      .set('Authorization', `Bearer ${saToken}`)
       .query({ period: 'month', offset: '0' });
 
     expect(res.status).toBe(200);
@@ -206,6 +211,7 @@ describe('Appointment price override affects stats revenue', () => {
 
     await prisma.appointment.delete({ where: { id: apt.id } });
     await prisma.service.delete({ where: { id: priceService.id } });
+    await prisma.user.delete({ where: { id: sa.id } });
   });
 });
 
@@ -221,6 +227,8 @@ describe('GET /v1/admin/stats/barbershop', () => {
     });
     const barber = barberUser.employee;
     const svc = await prisma.service.create({ data: { name: 'Barbershop Stats Svc', categoryId: category.id, durationMin: 30, price: 20 } });
+    await prisma.employeeService.create({ data: { employeeId: barber.id, serviceId: svc.id } });
+    const barberToken = jwt.sign({ id: barberUser.id, email: barberUser.email, role: barberUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     const now = new Date();
     const apt1 = await prisma.appointment.create({
@@ -232,7 +240,7 @@ describe('GET /v1/admin/stats/barbershop', () => {
 
     const res = await request(app)
       .get('/v1/admin/stats/barbershop')
-      .set('Authorization', `Bearer ${adminToken}`)
+      .set('Authorization', `Bearer ${barberToken}`)
       .query({ period: 'month', offset: '0' });
 
     expect(res.status).toBe(200);
@@ -247,6 +255,7 @@ describe('GET /v1/admin/stats/barbershop', () => {
     expect(entry.hasConfig).toBe(true);
 
     await prisma.appointment.deleteMany({ where: { id: { in: [apt1.id, apt2.id] } } });
+    await prisma.employeeService.deleteMany({ where: { employeeId: barber.id } });
     await prisma.service.delete({ where: { id: svc.id } });
     await prisma.employee.delete({ where: { id: barber.id } });
     await prisma.user.delete({ where: { id: barberUser.id } });
@@ -263,6 +272,8 @@ describe('GET /v1/admin/stats/barbershop', () => {
     });
     const barber = barberUser.employee;
     const svc = await prisma.service.create({ data: { name: 'Barbershop No Config Svc', categoryId: category.id, durationMin: 30, price: 15 } });
+    await prisma.employeeService.create({ data: { employeeId: barber.id, serviceId: svc.id } });
+    const barberToken = jwt.sign({ id: barberUser.id, email: barberUser.email, role: barberUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     const now = new Date();
     const apt = await prisma.appointment.create({
       data: { clientName: 'BS NoConfig', clientEmail: 'bsnc@test.com', clientPhone: '933333333', employeeId: barber.id, serviceId: svc.id, startDatetime: now, endDatetime: new Date(now.getTime() + 30 * 60000), status: 'completed', cancelToken: 'bs-token-3' },
@@ -270,7 +281,7 @@ describe('GET /v1/admin/stats/barbershop', () => {
 
     const res = await request(app)
       .get('/v1/admin/stats/barbershop')
-      .set('Authorization', `Bearer ${adminToken}`)
+      .set('Authorization', `Bearer ${barberToken}`)
       .query({ period: 'month', offset: '0' });
 
     expect(res.status).toBe(200);
@@ -282,6 +293,7 @@ describe('GET /v1/admin/stats/barbershop', () => {
     expect(entry.barberAmount).toBe(0);
 
     await prisma.appointment.delete({ where: { id: apt.id } });
+    await prisma.employeeService.deleteMany({ where: { employeeId: barber.id } });
     await prisma.service.delete({ where: { id: svc.id } });
     await prisma.employee.delete({ where: { id: barber.id } });
     await prisma.user.delete({ where: { id: barberUser.id } });

@@ -87,7 +87,7 @@ Após criar, clicar em "Edit" na app e adicionar as **Environment Variables**:
 | `NODE_ENV` | `production` |
 | `PORT` | `3001` |
 | `DATABASE_URL` | `mysql://ganesha_user:A_TUA_PASSWORD@localhost:3306/ganesha_db` |
-| `JWT_SECRET` | uma string aleatória com 32+ caracteres (ex: `ganeshaink-secret-key-2024-xpto`) |
+| `JWT_SECRET` | uma string aleatória gerada no servidor (não copies exemplos da documentação) |
 | `JWT_EXPIRES_IN` | `7d` |
 | `FRONTEND_URL` | URL do frontend (ver passo 3.2) |
 | `BACKOFFICE_URL` | URL do backoffice (ver passo 3.3) |
@@ -148,7 +148,7 @@ No cPanel → **File Manager**:
 
 ```
 DATABASE_URL="mysql://ganesha_user:A_TUA_PASSWORD@localhost:3306/ganesha_db"
-JWT_SECRET="uma-string-aleatoria-longa-aqui-minimo-32-chars"
+JWT_SECRET="SUBSTITUI_POR_UMA_STRING_ALEATORIA"
 JWT_EXPIRES_IN="7d"
 PORT=3001
 NODE_ENV="production"

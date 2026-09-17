@@ -159,11 +159,11 @@ describe('staff email notifications', () => {
     expect(sendMail.mock.calls.map(([arg]) => arg.to)).not.toContain('notif-emp2@test.com');
   });
 
-  it('emails management for every new booking when enabled', async () => {
+  it('does not email management for another professional\'s booking', async () => {
     await enable(adminUser.id, 'new_appointment');
     const apt = await makeAppointment();
     await notifyAppointmentCreated(apt);
-    expect(sendMail.mock.calls.map(([arg]) => arg.to)).toContain('notif-admin@test.com');
+    expect(sendMail.mock.calls.map(([arg]) => arg.to)).not.toContain('notif-admin@test.com');
   });
 
   it('sends a single staff email when the assigned pro is also admin', async () => {
@@ -183,10 +183,11 @@ describe('staff email notifications', () => {
   });
 
   it('notifies staff of status changes when that event is enabled', async () => {
-    await enable(adminUser.id, 'appointment_cancelled');
+    await enable(empUser.id, 'appointment_cancelled');
     const apt = await makeAppointment({ status: 'cancelled' });
     await notifyAppointmentStatusChanged(apt, 'pending');
-    expect(sendMail.mock.calls.map(([arg]) => arg.to)).toContain('notif-admin@test.com');
+    expect(sendMail.mock.calls.map(([arg]) => arg.to)).toContain('notif-emp@test.com');
+    expect(sendMail.mock.calls.map(([arg]) => arg.to)).not.toContain('notif-admin@test.com');
     expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({
       to: 'ana-notif@test.com',
       subject: expect.stringMatching(/cancelada/i),
@@ -194,7 +195,7 @@ describe('staff email notifications', () => {
   });
 
   it('notifies staff of consultations when enabled', async () => {
-    await enable(adminUser.id, 'consultation_received');
+    await enable(empUser.id, 'consultation_received');
     const consultation = await prisma.consultationRequest.create({
       data: {
         clientName: 'Ana Cliente',
@@ -208,8 +209,9 @@ describe('staff email notifications', () => {
     });
     await notifyConsultationCreated(consultation);
     expect(sendMail.mock.calls.map(([arg]) => arg.to)).toEqual(
-      expect.arrayContaining(['ana-notif@test.com', 'notif-admin@test.com']),
+      expect.arrayContaining(['ana-notif@test.com', 'notif-emp@test.com']),
     );
+    expect(sendMail.mock.calls.map(([arg]) => arg.to)).not.toContain('notif-admin@test.com');
   });
 });
 
@@ -328,10 +330,11 @@ describe('24h reminder job', () => {
 
   it('emails staff with reminder_24h enabled', async () => {
     await prisma.notificationPreference.create({
-      data: { userId: adminUser.id, eventType: 'reminder_24h', enabled: true },
+      data: { userId: empUser.id, eventType: 'reminder_24h', enabled: true },
     });
     await createDueConfirmed();
     await sendDueReminders();
-    expect(sendMail.mock.calls.map(([arg]) => arg.to)).toContain('remind-admin@test.com');
+    expect(sendMail.mock.calls.map(([arg]) => arg.to)).toContain('remind-emp@test.com');
+    expect(sendMail.mock.calls.map(([arg]) => arg.to)).not.toContain('remind-admin@test.com');
   });
 });

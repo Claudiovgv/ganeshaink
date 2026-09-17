@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
 const { authenticate, requirePermission } = require('../../middleware/auth');
-const { parseSchedulePrefs, selectPrefs } = require('../../lib/schedulePrefs');
+const { parseSchedulePrefs, selectPrefs, normalizeTime } = require('../../lib/schedulePrefs');
 
 router.use(authenticate, requirePermission('manage_schedule'));
 
@@ -36,7 +36,13 @@ router.put('/', async (req, res) => {
 
     if (schedules.length > 0) {
       await prisma.workSchedule.createMany({
-        data: schedules.map(s => ({ employeeId: emp.id, dayOfWeek: s.dayOfWeek, startTime: s.startTime, endTime: s.endTime, isActive: true })),
+        data: schedules.map(s => ({
+          employeeId: emp.id,
+          dayOfWeek: s.dayOfWeek,
+          startTime: normalizeTime(s.startTime),
+          endTime: normalizeTime(s.endTime),
+          isActive: true,
+        })),
       });
     }
 

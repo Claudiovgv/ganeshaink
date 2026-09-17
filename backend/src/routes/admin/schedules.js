@@ -5,7 +5,7 @@
 const router = require('express').Router();
 const prisma = require('../../config/database');
 const { authenticate, requirePermission } = require('../../middleware/auth');
-const { TIME_RE, parseSchedulePrefs, selectPrefs } = require('../../lib/schedulePrefs');
+const { TIME_RE, parseSchedulePrefs, selectPrefs, normalizeTime } = require('../../lib/schedulePrefs');
 
 router.use(authenticate, requirePermission('manage_employees'));
 
@@ -80,8 +80,8 @@ router.put('/:employeeId', async (req, res) => {
             data: schedules.map(s => ({
               employeeId,
               dayOfWeek: s.dayOfWeek,
-              startTime: s.startTime,
-              endTime: s.endTime,
+              startTime: normalizeTime(s.startTime),
+              endTime: normalizeTime(s.endTime),
               isActive: true,
             })),
           })]

@@ -1,28 +1,26 @@
 import { api } from '@/lib/api';
 import TopBar from '@/components/TopBar';
+import TradeStatsClient from '../TradeStatsClient';
+import { canSeeTradeStats, StatsForbidden } from '../statsAccess';
 
-export const metadata = { title: 'Nails' };
+export const metadata = { title: 'Estética' };
 
 export default async function NailsPage() {
   const user = await api.auth.me().catch(() => null);
-  const allowed = user && (user.role === 'superadmin' || (user.role === 'admin' && user.permissions?.view_stats));
-  if (!allowed) {
-    return (
-      <div>
-        <TopBar title="Nails" />
-        <div className="p-6 text-text-secondary">Não tens permissão para aceder a esta área.</div>
-      </div>
-    );
+  if (!canSeeTradeStats(user, 'nails')) {
+    return <StatsForbidden title="Estética" />;
   }
+
+  const initial = await api.stats.getTrade('nails', 'month', 0).catch(() => null);
 
   return (
     <div>
-      <TopBar title="Nails" />
+      <TopBar title="Estética" />
       <div className="p-6">
-        <div className="bg-bg-card border border-gold-border rounded-lg p-8 text-center">
-          <p className="text-text-primary font-semibold mb-1">Em breve</p>
-          <p className="text-text-secondary text-sm">Esta área ainda não está disponível.</p>
-        </div>
+        {initial
+          ? <TradeStatsClient slug="nails" personLabel="Estética" initial={initial} />
+          : <p className="text-text-secondary">Não foi possível carregar as estatísticas.</p>
+        }
       </div>
     </div>
   );

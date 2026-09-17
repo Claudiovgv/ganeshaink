@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
@@ -39,6 +40,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt" className={`${playfair.variable} ${inter.variable}`}>
       <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col">
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9938976891580683"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Header />
         <ClientErrorReporter />
         <main className="flex-1">{children}</main>

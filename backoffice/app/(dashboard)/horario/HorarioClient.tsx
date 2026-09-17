@@ -74,6 +74,9 @@ export default function HorarioClient({ initial }: { initial: EmployeeSchedulePa
       <Button onClick={handleSave} loading={isPending} className="mt-2">
         {saved ? 'Guardado!' : 'Guardar Horário'}
       </Button>
+      <p className="text-text-muted text-xs">
+        Este horário é semanal: se a sexta abrir às 8h, todas as sextas abrem às 8h. No backoffice podes marcar a qualquer hora da grelha, mesmo fora do horário do site.
+      </p>
     </div>
   );
 }

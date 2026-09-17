@@ -23,7 +23,7 @@ No cPanel → File Manager → navegar até `/home/ganesha/ganeshaink/backend/`
 Criar o ficheiro `.env` com:
 ```
 DATABASE_URL="mysql://ganesha_user:A_TUA_PASSWORD@localhost:3306/ganesha_db"
-JWT_SECRET="uma-string-aleatoria-com-pelo-menos-32-caracteres"
+JWT_SECRET="SUBSTITUI_POR_UMA_STRING_ALEATORIA_COM_PELO_MENOS_32_CARACTERES"
 JWT_EXPIRES_IN="7d"
 PORT=3001
 NODE_ENV="production"

@@ -18,11 +18,21 @@ interface Props {
 
 type ClientMode = 'existing' | 'new';
 
-const TIME_SLOTS = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-  '12:00', '12:30', '14:00', '14:30', '15:00', '15:30',
-  '16:00', '16:30', '17:00', '17:30', '18:00', '18:30',
-];
+function pad2(n: number) {
+  return String(n).padStart(2, '0');
+}
+
+function timeSlotsFrom(from = '07:00', to = '22:00', stepMin = 15) {
+  const [fh, fm] = from.split(':').map(Number);
+  const [th, tm] = to.split(':').map(Number);
+  const slots: string[] = [];
+  for (let min = fh * 60 + fm; min <= th * 60 + tm; min += stepMin) {
+    slots.push(`${pad2(Math.floor(min / 60))}:${pad2(min % 60)}`);
+  }
+  return slots;
+}
+
+const TIME_SLOTS = timeSlotsFrom('07:00', '22:00', 15);
 
 export default function NovaMarcacaoModal({ employees, services, clients, partnerships, onClose, onCreated, prefill }: Props) {
   const [isPending, startTransition] = useTransition();

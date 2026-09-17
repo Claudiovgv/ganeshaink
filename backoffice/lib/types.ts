@@ -10,6 +10,9 @@ export interface User {
   twoFactorEnabled?: boolean;
   notificationEmail?: string | null;
   permissions?: Partial<Record<AdminPermissionKey | EmployeePermissionKey, boolean>>;
+  canViewGeneralStats?: boolean;
+  statsCategories?: string[];
+  employeeId?: number | null;
   createdAt?: string;
   employee?: { id: number; isActive: boolean } | null;
 }
@@ -283,5 +286,6 @@ export interface BarbershopStatsResponse {
   offset: number;
   range: { start: string; end: string };
   barbers: BarberStats[];
+  people?: BarberStats[];
   totals: { count: number; revenue: number; materialCost: number; netRevenue: number; studioAmount: number; barberAmount: number };
 }

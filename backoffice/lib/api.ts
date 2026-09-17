@@ -319,5 +319,7 @@ export const api = {
       apiFetch<StatsResponse>(`/admin/stats?period=${period}&offset=${offset}`),
     getBarbershop: (period: StatsPeriod, offset: number) =>
       apiFetch<BarbershopStatsResponse>(`/admin/stats/barbershop?period=${period}&offset=${offset}`),
+    getTrade: (slug: string, period: StatsPeriod, offset: number) =>
+      apiFetch<BarbershopStatsResponse>(`/admin/stats/trade/${slug}?period=${period}&offset=${offset}`),
   },
 };

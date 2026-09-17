@@ -1,19 +1,14 @@
 import { api } from '@/lib/api';
 import TopBar from '@/components/TopBar';
 import BarbeariaClient from './BarbeariaClient';
+import { canSeeTradeStats, StatsForbidden } from '../statsAccess';
 
 export const metadata = { title: 'Barbearia' };
 
 export default async function BarbeariaPage() {
   const user = await api.auth.me().catch(() => null);
-  const allowed = user && (user.role === 'superadmin' || (user.role === 'admin' && user.permissions?.view_stats));
-  if (!allowed) {
-    return (
-      <div>
-        <TopBar title="Barbearia" />
-        <div className="p-6 text-text-secondary">Não tens permissão para aceder a esta área.</div>
-      </div>
-    );
+  if (!canSeeTradeStats(user, 'barbershop')) {
+    return <StatsForbidden title="Barbearia" />;
   }
 
   const initial = await api.stats.getBarbershop('month', 0).catch(() => null);

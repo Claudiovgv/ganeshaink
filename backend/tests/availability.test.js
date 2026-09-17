@@ -29,6 +29,17 @@ describe('getAvailableSlots', () => {
     expect(slots).toHaveLength(15);
   });
 
+  it('offers 08:00 when that weekday opens at 08:00', () => {
+    const emp = {
+      ...baseEmployee,
+      workSchedules: [{ dayOfWeek: 2, startTime: '08:00', endTime: '13:00', isActive: true }],
+    };
+    const slots = getAvailableSlots(emp, '2026-04-28', 30);
+    expect(slots[0]).toBe('08:00');
+    expect(slots).toContain('08:30');
+    expect(slots).toContain('09:00');
+  });
+
   it('includes in-between times for a 75min service, not only every 75 minutes', () => {
     const emp = {
       ...baseEmployee,

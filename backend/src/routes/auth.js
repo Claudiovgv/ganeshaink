@@ -38,13 +38,13 @@ router.post('/login', authLimiter, async (req, res) => {
     const user = await findUserByIdentifier(email);
     if (!user) {
       logEvent('security', 'auth', `Failed login: unknown user "${email}"`, { ip: req.ip });
-      return res.status(401).json({ error: 'Utilizador ou senha incorretos. O login é o utilizador (ex.: vera), o email ou o nome.' });
+      return res.status(401).json({ error: 'Utilizador ou senha incorretos.' });
     }
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       logEvent('security', 'auth', `Failed login: wrong password for "${email}"`, { ip: req.ip, userId: user.id });
-      return res.status(401).json({ error: 'Utilizador ou senha incorretos. O login é o utilizador (ex.: vera), o email ou o nome.' });
+      return res.status(401).json({ error: 'Utilizador ou senha incorretos.' });
     }
 
     // Atalho só para desenvolvimento local: salta o 2FA por completo.
@@ -203,8 +203,10 @@ router.get('/me', authenticate, async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const permissions = await getPermissions(user.role);
+    const { loadUserStatsContext, publicStatsFields } = require('../lib/statsAccess');
+    const stats = publicStatsFields(await loadUserStatsContext(user.id));
 
-    res.json({ ...user, permissions });
+    res.json({ ...user, permissions, ...stats });
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }

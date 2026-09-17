@@ -91,7 +91,7 @@ npx create-next-app@14 backoffice --typescript --tailwind --app --no-src-dir --i
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3002/v1
-JWT_SECRET=ganesha_secret_dev
+JWT_SECRET=SUBSTITUI_POR_UMA_STRING_ALEATORIA
 ```
 
 - [ ] **Step 3: Configure `tailwind.config.ts`**

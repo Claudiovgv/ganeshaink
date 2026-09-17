@@ -35,6 +35,11 @@ const Icons: Record<string, JSX.Element> = {
       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
     </svg>
   ),
+  Estética: (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+    </svg>
+  ),
   'Contas Barbearia': (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
@@ -220,6 +225,25 @@ function getAdminNav(permissions: Partial<Record<AdminPermissionKey, boolean>> |
     .filter((group) => group.items.length > 0);
 }
 
+function rebuildAnalise(user: ReturnType<typeof useAuth>) {
+  const items: { href: string; label: string }[] = [];
+  if (user.canViewGeneralStats) {
+    items.push({ href: '/estatisticas', label: 'Estatísticas' });
+    items.push({ href: '/piercings', label: 'Piercings' });
+  }
+  if (user.statsCategories?.includes('barbershop')) items.push({ href: '/barbearia', label: 'Barbearia' });
+  if (user.statsCategories?.includes('tattoo')) items.push({ href: '/tatuagens', label: 'Tatuagens' });
+  if (user.statsCategories?.includes('nails')) items.push({ href: '/nails', label: 'Estética' });
+  return items.length ? [{ section: 'Análise', items }] : [];
+}
+
+function applyStatsNav<T extends { section: string; items: { href: string; label: string }[] }>(user: ReturnType<typeof useAuth>, nav: T[]): T[] {
+  const without = nav.filter((g) => g.section !== 'Análise');
+  const analise = rebuildAnalise(user) as T[];
+  if (!analise.length) return without;
+  return [...without.slice(0, 1), ...analise, ...without.slice(1)];
+}
+
 const EMPLOYEE_NAV_ALL = [
   {
     section: '',
@@ -305,7 +329,10 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const nav = user.role === 'superadmin' ? SUPERADMIN_NAV : user.role === 'admin' ? getAdminNav(user.permissions) : getEmployeeNav(user.permissions);
+  const nav = applyStatsNav(
+    user,
+    user.role === 'superadmin' ? SUPERADMIN_NAV : user.role === 'admin' ? getAdminNav(user.permissions) : getEmployeeNav(user.permissions),
+  );
   const mainLabels = user.role === 'superadmin' || user.role === 'admin' ? ADMIN_BOTTOM_MAIN : EMPLOYEE_BOTTOM_MAIN;
   const allItems = nav.flatMap((g) => g.items);
   const mainItems = mainLabels

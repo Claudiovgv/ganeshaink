@@ -79,9 +79,10 @@ async function staffRecipients(eventType, payload) {
     const { user } = pref;
     const mailbox = staffMailbox(user);
     if (!mailbox) continue;
-    const isManagement = user.role === 'admin' || user.role === 'superadmin';
     const isAssignedPro = assigned && user.id === assigned;
-    if (isManagement || isAssignedPro) emails.add(mailbox);
+    const unassignedConsultation = !assigned && eventType === 'consultation_received'
+      && (user.role === 'admin' || user.role === 'superadmin');
+    if (isAssignedPro || unassignedConsultation) emails.add(mailbox);
   }
   return [...emails];
 }

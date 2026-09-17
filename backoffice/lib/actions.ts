@@ -365,6 +365,10 @@ export async function fetchBarbershopStatsAction(period: import('./types').Stats
   return api.stats.getBarbershop(period, offset);
 }
 
+export async function fetchTradeStatsAction(slug: string, period: import('./types').StatsPeriod, offset: number) {
+  return api.stats.getTrade(slug, period, offset);
+}
+
 export async function exportAppointmentsAction() {
   return api.appointments.exportAll();
 }

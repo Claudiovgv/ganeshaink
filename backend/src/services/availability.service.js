@@ -7,8 +7,14 @@ const TIMEZONE = 'Europe/Lisbon';
  * Converts "HH:mm" time string + "YYYY-MM-DD" date string → UTC Date
  * Interprets the time as Europe/Lisbon local time
  */
+function normalizeTime(value) {
+  const m = String(value || '').trim().match(/^(\d{1,2}):(\d{2})/);
+  if (!m) return String(value || '').trim();
+  return `${String(parseInt(m[1], 10)).padStart(2, '0')}:${m[2]}`;
+}
+
 function lisboaTimeToUTC(dateStr, timeStr) {
-  const localDateStr = `${dateStr}T${timeStr}:00`;
+  const localDateStr = `${dateStr}T${normalizeTime(timeStr)}:00`;
   return fromZonedTime(new Date(localDateStr), TIMEZONE);
 }
 
@@ -85,8 +91,8 @@ function lunchWindow(employee, dateStr) {
 function getAvailableSlots(employee, dateStr, durationMin, opts = {}) {
   if (isNextDayCutoffClosed(employee, dateStr, opts.now || new Date())) return [];
 
-  const date = parseISO(dateStr);
-  const dayOfWeek = date.getDay(); // 0=Sunday, 6=Saturday
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const dayOfWeek = new Date(Date.UTC(year, month - 1, day, 12, 0, 0)).getUTCDay();
 
   // Find work schedule for this day of week
   const schedule = employee.workSchedules.find(
