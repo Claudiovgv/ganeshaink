@@ -35,22 +35,6 @@
       "static/chunks/878-b60062f8d011c3db.js",
       "static/chunks/app/blog/[slug]/page-115c3f972c492b97.js"
     ],
-    "/contacto/page": [
-      "static/chunks/webpack-a20c06f2095b75a7.js",
-      "static/chunks/fd9d1056-108f4e356bd2c7ce.js",
-      "static/chunks/117-42573e2b6683caa2.js",
-      "static/chunks/main-app-a58350efea38f4a2.js",
-      "static/chunks/972-cf228531fe38499c.js",
-      "static/chunks/app/contacto/page-c33d298b7f755252.js"
-    ],
-    "/galeria/page": [
-      "static/chunks/webpack-a20c06f2095b75a7.js",
-      "static/chunks/fd9d1056-108f4e356bd2c7ce.js",
-      "static/chunks/117-42573e2b6683caa2.js",
-      "static/chunks/main-app-a58350efea38f4a2.js",
-      "static/chunks/878-b60062f8d011c3db.js",
-      "static/chunks/app/galeria/page-090eb5563f4774a9.js"
-    ],
     "/consulta/page": [
       "static/chunks/webpack-a20c06f2095b75a7.js",
       "static/chunks/fd9d1056-108f4e356bd2c7ce.js",
@@ -76,6 +60,14 @@
       "static/chunks/878-b60062f8d011c3db.js",
       "static/chunks/app/blog/page-f3da7ff6dc83a55b.js"
     ],
+    "/galeria/page": [
+      "static/chunks/webpack-a20c06f2095b75a7.js",
+      "static/chunks/fd9d1056-108f4e356bd2c7ce.js",
+      "static/chunks/117-42573e2b6683caa2.js",
+      "static/chunks/main-app-a58350efea38f4a2.js",
+      "static/chunks/878-b60062f8d011c3db.js",
+      "static/chunks/app/galeria/page-090eb5563f4774a9.js"
+    ],
     "/servicos/page": [
       "static/chunks/webpack-a20c06f2095b75a7.js",
       "static/chunks/fd9d1056-108f4e356bd2c7ce.js",
@@ -92,6 +84,14 @@
       "static/chunks/972-cf228531fe38499c.js",
       "static/chunks/878-b60062f8d011c3db.js",
       "static/chunks/app/page-787270581d6696cf.js"
+    ],
+    "/contacto/page": [
+      "static/chunks/webpack-a20c06f2095b75a7.js",
+      "static/chunks/fd9d1056-108f4e356bd2c7ce.js",
+      "static/chunks/117-42573e2b6683caa2.js",
+      "static/chunks/main-app-a58350efea38f4a2.js",
+      "static/chunks/972-cf228531fe38499c.js",
+      "static/chunks/app/contacto/page-c33d298b7f755252.js"
     ],
     "/politica-de-cookies/page": [
       "static/chunks/webpack-a20c06f2095b75a7.js",
