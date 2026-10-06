@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const prisma = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
-const { lisboaTimeToUTC, isNextDayCutoffClosed, publicCutoffNotice, lunchWindow, overlaps } = require('../services/availability.service');
+const { lisboaTimeToUTC, isNextDayCutoffClosed, isSameDayBeforeOpen, isPastSameDaySlot, publicCutoffNotice, lunchWindow, overlaps } = require('../services/availability.service');
 const { publicLimiter } = require('../middleware/rateLimit');
 const { addMinutes } = require('date-fns');
 const { notifyAppointmentCreated, notifyAppointmentStatusChanged, APPOINTMENT_INCLUDE } = require('../lib/notifications');
@@ -37,7 +37,7 @@ router.post('/', publicLimiter, async (req, res) => {
     const employee = await prisma.employee.findUnique({ where: { id: parseInt(employeeId) } });
     if (!employee || !employee.isActive) return res.status(404).json({ error: 'Employee not found' });
 
-    if (isNextDayCutoffClosed(employee, date)) {
+    if (isNextDayCutoffClosed(employee, date) || isSameDayBeforeOpen(date)) {
       return res.status(409).json({
         error: publicCutoffNotice(employee, date) || 'O horário de agendamento online já fechou para amanhã.',
       });
@@ -45,6 +45,9 @@ router.post('/', publicLimiter, async (req, res) => {
 
     const startDatetime = lisboaTimeToUTC(date, time);
     const endDatetime = addMinutes(startDatetime, service.durationMin);
+    if (isPastSameDaySlot(date, startDatetime)) {
+      return res.status(409).json({ error: 'Esse horário já passou.' });
+    }
 
     const lunch = lunchWindow(employee, date);
     if (lunch && overlaps(startDatetime, endDatetime, lunch.start, lunch.end)) {

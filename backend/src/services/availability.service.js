@@ -37,6 +37,8 @@ function tomorrowDateStr(dateStr) {
   return format(addDays(parseISO(`${dateStr}T12:00:00`), 1), 'yyyy-MM-dd');
 }
 
+const SAME_DAY_OPENS_AT = '08:00';
+
 /**
  * After the employee's cutoff hour, the public site stops offering tomorrow.
  * Later days stay open. Backoffice bookings skip this check.
@@ -47,6 +49,16 @@ function isNextDayCutoffClosed(employee, dateStr, now = new Date()) {
   const { dateStr: today, timeStr } = lisbonDateAndTime(now);
   if (timeStr < cutoff) return false;
   return dateStr === tomorrowDateStr(today);
+}
+
+function isSameDayBeforeOpen(dateStr, now = new Date()) {
+  const { dateStr: today, timeStr } = lisbonDateAndTime(now);
+  return dateStr === today && timeStr < SAME_DAY_OPENS_AT;
+}
+
+function isPastSameDaySlot(dateStr, startDatetime, now = new Date()) {
+  const { dateStr: today } = lisbonDateAndTime(now);
+  return dateStr === today && startDatetime.getTime() <= now.getTime();
 }
 
 function formatHourLabel(hhmm) {
@@ -65,10 +77,13 @@ function earliestWorkStart(employee) {
 }
 
 function publicCutoffNotice(employee, dateStr, now = new Date()) {
+  if (isSameDayBeforeOpen(dateStr, now)) {
+    return 'O agendamento online reabre às 8h.';
+  }
   if (!isNextDayCutoffClosed(employee, dateStr, now)) return null;
   const start = earliestWorkStart(employee);
   const end = employee.nextDayCutoffTime || '23:00';
-  return `O horário de agendamento online é das ${formatHourLabel(start)} às ${formatHourLabel(end)}. Já não é possível marcar para amanhã.`;
+  return `O horário de agendamento online é das ${formatHourLabel(start)} às ${formatHourLabel(end)}. Já não é possível marcar para amanhã. Reabre amanhã às 8h.`;
 }
 
 function lunchWindow(employee, dateStr) {
@@ -89,10 +104,13 @@ function lunchWindow(employee, dateStr) {
  * @returns {string[]} - array of "HH:mm" strings in Europe/Lisbon timezone
  */
 function getAvailableSlots(employee, dateStr, durationMin, opts = {}) {
-  if (isNextDayCutoffClosed(employee, dateStr, opts.now || new Date())) return [];
+  const now = opts.now || new Date();
+  if (isNextDayCutoffClosed(employee, dateStr, now)) return [];
+  if (isSameDayBeforeOpen(dateStr, now)) return [];
 
   const [year, month, day] = dateStr.split('-').map(Number);
   const dayOfWeek = new Date(Date.UTC(year, month - 1, day, 12, 0, 0)).getUTCDay();
+  const { dateStr: today } = lisbonDateAndTime(now);
 
   // Find work schedule for this day of week
   const schedule = employee.workSchedules.find(
@@ -132,7 +150,9 @@ function getAvailableSlots(employee, dateStr, durationMin, opts = {}) {
       overlaps(current, slotEnd, new Date(apt.startDatetime), new Date(apt.endDatetime))
     );
 
-    if (!blockedByLunch && !blockedByTimeBlock && !blockedByAppointment) {
+    const alreadyStarted = dateStr === today && !isAfter(current, now);
+
+    if (!blockedByLunch && !blockedByTimeBlock && !blockedByAppointment && !alreadyStarted) {
       // Format as Lisbon local time "HH:mm"
       const zonedTime = toZonedTime(current, TIMEZONE);
       slots.push(format(zonedTime, 'HH:mm', { timeZone: TIMEZONE }));
@@ -148,6 +168,8 @@ module.exports = {
   getAvailableSlots,
   lisboaTimeToUTC,
   isNextDayCutoffClosed,
+  isSameDayBeforeOpen,
+  isPastSameDaySlot,
   publicCutoffNotice,
   lunchWindow,
   overlaps,

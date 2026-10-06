@@ -153,4 +153,28 @@ describe('getAvailableSlots', () => {
     const afterCutoff = new Date('2026-04-27T22:05:00.000Z');
     expect(getAvailableSlots(emp, '2026-04-28', 60, { now: afterCutoff })).toContain('09:00');
   });
+
+  it('keeps today closed until 08:00, then offers remaining slots', () => {
+    const emp = {
+      ...baseEmployee,
+      nextDayCutoffEnabled: true,
+      nextDayCutoffTime: '23:00',
+    };
+    const beforeOpen = new Date('2026-04-28T06:50:00.000Z'); // 07:50 in Lisbon
+    const justOpen = new Date('2026-04-28T07:05:00.000Z'); // 08:05 in Lisbon
+    const midMorning = new Date('2026-04-28T09:05:00.000Z'); // 10:05 in Lisbon
+
+    expect(getAvailableSlots(emp, '2026-04-28', 60, { now: beforeOpen })).toEqual([]);
+    expect(publicCutoffNotice(emp, '2026-04-28', beforeOpen)).toMatch(/reabre às 8h/i);
+
+    const morningSlots = getAvailableSlots(emp, '2026-04-28', 60, { now: justOpen });
+    expect(morningSlots).toContain('09:00');
+    expect(publicCutoffNotice(emp, '2026-04-28', justOpen)).toBeNull();
+
+    const laterSlots = getAvailableSlots(emp, '2026-04-28', 60, { now: midMorning });
+    expect(laterSlots).not.toContain('09:00');
+    expect(laterSlots).not.toContain('10:00');
+    expect(laterSlots).toContain('10:15');
+    expect(laterSlots).toContain('12:00');
+  });
 });

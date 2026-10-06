@@ -12,24 +12,45 @@ interface Props {
   onBack: () => void;
 }
 
-function lisbonYmd(d: Date) {
-  return new Intl.DateTimeFormat('en-CA', {
+function lisbonNowParts() {
+  const fmt = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Europe/Lisbon',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).format(d);
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    hourCycle: 'h23',
+  });
+  const parts = Object.fromEntries(fmt.formatToParts(new Date()).map((p) => [p.type, p.value]));
+  return {
+    date: `${parts.year}-${parts.month}-${parts.day}`,
+    time: `${parts.hour}:${parts.minute}`,
+  };
+}
+
+function addDaysYmd(ymd: string, n: number) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + n));
+  return dt.toISOString().slice(0, 10);
 }
 
 function getDateOptions() {
   const options: { value: string; label: string }[] = [];
-  const now = new Date();
-  for (let i = 1; i <= 30; i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() + i);
-    const value = lisbonYmd(d);
-    const label = d.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Lisbon' });
-    options.push({ value, label });
+  const { date: today, time } = lisbonNowParts();
+  const start = time >= '08:00' ? 0 : 1;
+  for (let i = start; i <= 30; i++) {
+    const value = addDaysYmd(today, i);
+    const [y, m, d] = value.split('-').map(Number);
+    const noon = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+    const weekday = noon.toLocaleDateString('pt-PT', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      timeZone: 'UTC',
+    });
+    options.push({ value, label: i === 0 ? `Hoje, ${weekday}` : weekday });
   }
   return options;
 }
@@ -52,7 +73,7 @@ export default function Step4DateTime({ employeeId, serviceId, onSelect, onBack 
     try {
       const res = await api.availability.slots(employeeId, d, serviceId);
       setSlots(res.slots);
-      if (res.closedReason === 'cutoff' && res.notice) {
+      if (res.notice) {
         setSlotsError(res.notice);
       } else if (res.slots.length === 0) {
         setSlotsError('Sem disponibilidade neste dia. Escolhe outro.');
