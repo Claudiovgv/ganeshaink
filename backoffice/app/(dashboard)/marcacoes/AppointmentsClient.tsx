@@ -252,6 +252,8 @@ export default function AppointmentsClient({ initial, employees, services, clien
         <EditAppointmentModal
           appointment={editing}
           partnerships={partnerships}
+          employees={employees}
+          services={services}
           onClose={() => setEditing(null)}
           onUpdated={handleUpdated}
         />

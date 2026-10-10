@@ -79,7 +79,7 @@ export const api = {
     },
     updateStatus: (id: number, status: string) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }),
-    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null; partnershipId?: number | null; extraFieldValue?: string | null }) =>
+    updateClient: (id: number, data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null; partnershipId?: number | null; extraFieldValue?: string | null; serviceId?: number }) =>
       apiFetch<Appointment>(`/admin/appointments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     remove: (id: number) =>
       apiFetch<{ message: string }>(`/admin/appointments/${id}`, { method: 'DELETE' }),
@@ -318,8 +318,8 @@ export const api = {
       }),
   },
   stats: {
-    get: (period: StatsPeriod, offset: number) =>
-      apiFetch<StatsResponse>(`/admin/stats?period=${period}&offset=${offset}`),
+    get: (period: StatsPeriod, offset: number, trade?: string | null) =>
+      apiFetch<StatsResponse>(`/admin/stats?period=${period}&offset=${offset}${trade ? `&trade=${trade}` : ''}`),
     getBarbershop: (period: StatsPeriod, offset: number) =>
       apiFetch<BarbershopStatsResponse>(`/admin/stats/barbershop?period=${period}&offset=${offset}`),
     getTrade: (slug: string, period: StatsPeriod, offset: number) =>

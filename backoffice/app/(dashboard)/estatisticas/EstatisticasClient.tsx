@@ -9,6 +9,12 @@ import { toLisbon, formatLisbon } from '@/lib/timezone';
 const CATEGORY_COLOR_CYCLE = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-pink-500', 'bg-amber-500', 'bg-cyan-500'];
 
 const PERIOD_LABELS: Record<StatsPeriod, string> = { week: 'Semana', month: 'Mês', year: 'Ano' };
+const TRADE_FILTERS: { id: string | null; label: string }[] = [
+  { id: null, label: 'Tudo' },
+  { id: 'barbershop', label: 'Barbearia' },
+  { id: 'tattoo', label: 'Tatuagem' },
+  { id: 'nails', label: 'Estética' },
+];
 
 function money(n: number) {
   return `${n.toFixed(2)} €`;
@@ -27,14 +33,16 @@ export default function EstatisticasClient({ initial }: { initial: StatsResponse
   const [data, setData] = useState(initial);
   const [period, setPeriod] = useState<StatsPeriod>(initial.period);
   const [offset, setOffset] = useState(initial.offset);
+  const [trade, setTrade] = useState<string | null>(initial.trade ?? null);
   const [isPending, startTransition] = useTransition();
 
-  function load(nextPeriod: StatsPeriod, nextOffset: number) {
+  function load(nextPeriod: StatsPeriod, nextOffset: number, nextTrade = trade) {
     startTransition(async () => {
-      const result = await fetchStatsAction(nextPeriod, nextOffset);
+      const result = await fetchStatsAction(nextPeriod, nextOffset, nextTrade);
       setData(result);
       setPeriod(nextPeriod);
       setOffset(nextOffset);
+      setTrade(nextTrade);
     });
   }
 
@@ -81,7 +89,20 @@ export default function EstatisticasClient({ initial }: { initial: StatsResponse
         </div>
       </div>
 
-      <p className="text-text-muted text-xs -mt-2">Baseado em marcações com estado &quot;concluída&quot;.</p>
+      <div className="flex flex-wrap gap-2 -mt-2">
+        {TRADE_FILTERS.map((item) => (
+          <button
+            key={item.label}
+            onClick={() => load(period, offset, item.id)}
+            className={`px-3 py-1.5 rounded text-sm ${
+              trade === item.id ? 'bg-gold text-bg-primary' : 'border border-gold-border text-text-secondary hover:border-gold hover:text-gold'
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <p className="text-text-muted text-xs">Baseado em marcações concluídas (ou confirmadas já passadas).</p>
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -6,6 +6,7 @@ const { logEvent } = require('../../lib/logger');
 const { isDeliverableEmail } = require('../../lib/notifications');
 const { photoUploadMiddleware, saveEmployeePhoto, withPhotoUrl } = require('../../lib/employeePhotos');
 const { assertPassword } = require('../../lib/passwordReset');
+const { asFiniteNumber } = require('../../lib/money');
 
 router.use(authenticate, requirePermission('manage_employees'));
 
@@ -119,8 +120,12 @@ router.put('/:id', async (req, res) => {
     if (bio !== undefined) updateData.bio = bio;
     if (isActive !== undefined) updateData.isActive = isActive;
     // Vazio/null limpa o valor (volta a "por configurar").
-    if (materialCost !== undefined) updateData.materialCost = materialCost === '' || materialCost === null ? null : materialCost;
-    if (studioPercent !== undefined) updateData.studioPercent = studioPercent === '' || studioPercent === null ? null : studioPercent;
+    if (materialCost !== undefined) {
+      updateData.materialCost = materialCost === '' || materialCost === null ? null : asFiniteNumber(materialCost);
+    }
+    if (studioPercent !== undefined) {
+      updateData.studioPercent = studioPercent === '' || studioPercent === null ? null : asFiniteNumber(studioPercent);
+    }
 
     await prisma.employee.update({ where: { id }, data: updateData });
 

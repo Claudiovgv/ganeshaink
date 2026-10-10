@@ -263,6 +263,7 @@ export interface StatsByService {
 export interface StatsResponse {
   period: StatsPeriod;
   offset: number;
+  trade?: string | null;
   range: { start: string; end: string };
   totalRevenue: number;
   totalAppointments: number;

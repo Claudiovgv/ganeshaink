@@ -28,7 +28,10 @@ export default async function ContasBarbeariaPage() {
       : []
   );
   const barbers = employees.filter(
-    (e) => e.isActive && e.services.some((s) => barbershopCategoryIds.has(s.service.categoryId))
+    (e) => e.isActive && e.services.some((s) => {
+      const categoryId = s.service?.categoryId ?? (s as { categoryId?: number }).categoryId;
+      return categoryId != null && barbershopCategoryIds.has(categoryId);
+    })
   );
 
   return (

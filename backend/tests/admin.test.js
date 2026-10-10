@@ -140,6 +140,30 @@ describe('PUT /v1/admin/appointments/:id', () => {
     expect(res.status).toBe(200);
     expect(res.body.price).toBeNull();
   });
+
+  it('admin can change the service and the duration follows the new catalog', async () => {
+    const longer = await prisma.service.create({
+      data: { name: 'Admin Longer Svc', categoryId: nailsCategory.id, durationMin: 75, price: 18 },
+    });
+    try {
+      const res = await request(app)
+        .put(`/v1/admin/appointments/${apt.id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ serviceId: longer.id });
+      expect(res.status).toBe(200);
+      expect(res.body.service.id).toBe(longer.id);
+      expect(res.body.service.name).toBe('Admin Longer Svc');
+      const start = new Date(res.body.startDatetime).getTime();
+      const end = new Date(res.body.endDatetime).getTime();
+      expect(end - start).toBe(75 * 60 * 1000);
+    } finally {
+      await request(app)
+        .put(`/v1/admin/appointments/${apt.id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ serviceId: service.id });
+      await prisma.service.delete({ where: { id: longer.id } }).catch(() => {});
+    }
+  });
 });
 
 describe('DELETE /v1/admin/appointments/:id', () => {

@@ -1,6 +1,6 @@
 'use client';
-import { useState, useTransition } from 'react';
-import type { Appointment, Partnership } from '@/lib/types';
+import { useMemo, useState, useTransition } from 'react';
+import type { Appointment, Employee, Partnership, Service } from '@/lib/types';
 import Button from './Button';
 import { updateAppointmentClientAction } from '@/lib/actions';
 import { formatLisbon } from '@/lib/timezone';
@@ -8,13 +8,26 @@ import { formatLisbon } from '@/lib/timezone';
 interface Props {
   appointment: Appointment;
   partnerships: Partnership[];
+  employees?: Employee[];
+  services?: Service[];
   onClose: () => void;
   onUpdated: (appt: Appointment) => void;
 }
 
-export default function EditAppointmentModal({ appointment, partnerships, onClose, onUpdated }: Props) {
+function catalogServices(appointment: Appointment, employees: Employee[], services: Service[]) {
+  const emp = employees.find((e) => e.id === appointment.employee.id);
+  const fromEmployee = (emp?.services || []).map((row) => row.service).filter(Boolean) as Service[];
+  if (fromEmployee.length) return fromEmployee;
+  if (services.length) return services;
+  return [appointment.service];
+}
+
+export default function EditAppointmentModal({ appointment, partnerships, employees = [], services = [], onClose, onUpdated }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
+  const serviceOptions = useMemo(() => catalogServices(appointment, employees, services), [appointment, employees, services]);
+  const [serviceId, setServiceId] = useState(String(appointment.service.id));
+  const selectedService = serviceOptions.find((s) => s.id === Number(serviceId)) || appointment.service;
 
   const [clientName, setClientName] = useState(appointment.clientName);
   const [clientEmail, setClientEmail] = useState(
@@ -40,6 +53,7 @@ export default function EditAppointmentModal({ appointment, partnerships, onClos
           clientName,
           clientEmail: clientEmail || undefined,
           clientPhone: clientPhone || undefined,
+          serviceId: Number(serviceId),
           ...(partnershipId ? {} : { price: price === '' ? null : price }),
           partnershipId: partnershipId ? Number(partnershipId) : null,
           extraFieldValue: extraFieldValue || null,
@@ -57,12 +71,40 @@ export default function EditAppointmentModal({ appointment, partnerships, onClos
       <div className="bg-bg-card border border-gold-border rounded-xl w-full max-w-lg p-6 my-auto">
         <h2 className="font-display text-xl font-bold mb-1">Editar Marcação</h2>
         <p className="text-text-secondary text-sm mb-5">
-          {appointment.service.name} — {appointment.employee.name}
+          {appointment.employee.name}
           <br />
           {formatLisbon(appointment.startDatetime, 'dd/MM/yyyy')} às {formatLisbon(appointment.startDatetime, 'HH:mm')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Serviço</label>
+            <select
+              value={serviceId}
+              onChange={(e) => {
+                const nextId = e.target.value;
+                setServiceId(nextId);
+                const next = serviceOptions.find((s) => s.id === Number(nextId));
+                if (!next) return;
+                if (partnershipId) {
+                  const p = partnerships.find((x) => x.id === Number(partnershipId));
+                  if (p && next.price != null) {
+                    setPrice(String(Math.round(Number(next.price) * (1 - Number(p.percent) / 100) * 100) / 100));
+                  }
+                } else {
+                  setPrice(Number(next.price) ? String(next.price) : '');
+                }
+              }}
+              className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none"
+            >
+              {serviceOptions.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name} · {Number(s.price) === 0 ? 'sob consulta' : `${Number(s.price).toFixed(2)}€`}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div>
             <label className="block text-sm font-medium mb-1">Nome do cliente *</label>
             <input
@@ -105,8 +147,8 @@ export default function EditAppointmentModal({ appointment, partnerships, onClos
                 setPartnershipId(e.target.value);
                 setExtraFieldValue('');
                 const p = partnerships.find((x) => x.id === Number(e.target.value));
-                if (p && appointment.service.price != null) {
-                  const next = Math.round(Number(appointment.service.price) * (1 - Number(p.percent) / 100) * 100) / 100;
+                if (p && selectedService.price != null) {
+                  const next = Math.round(Number(selectedService.price) * (1 - Number(p.percent) / 100) * 100) / 100;
                   setPrice(String(next));
                 } else {
                   setPrice('');
@@ -142,7 +184,7 @@ export default function EditAppointmentModal({ appointment, partnerships, onClos
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               readOnly={Boolean(partnershipId)}
-              placeholder={`Preço do serviço: ${Number(appointment.service.price).toFixed(2)}€`}
+              placeholder={`Preço do serviço: ${Number(selectedService.price).toFixed(2)}€`}
               className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none disabled:opacity-60"
             />
             <p className="text-text-muted text-xs mt-1">

@@ -3,7 +3,8 @@ const { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear
 const { toZonedTime, fromZonedTime } = require('date-fns-tz');
 const prisma = require('../../config/database');
 const { authenticate } = require('../../middleware/auth');
-const { loadUserStatsContext, canViewTradeStats, TRADE_SLUGS } = require('../../lib/statsAccess');
+const { loadUserStatsContext, canViewTradeStats, TRADE_SLUGS, rootCategorySlug } = require('../../lib/statsAccess');
+const { tradePayout } = require('../../lib/money');
 
 router.use(authenticate);
 
@@ -67,16 +68,23 @@ router.get('/', async (req, res) => {
     // existe, prevalece sobre o preço de catálogo do serviço.
     const priceOf = (a) => Number(a.price ?? a.service.price);
 
-    const totalRevenue = appointments.reduce((sum, a) => sum + priceOf(a), 0);
-    const totalAppointments = appointments.length;
+    const { trade } = req.query;
+    const tradeFilter = TRADE_SLUGS.includes(String(trade)) ? String(trade) : null;
 
     const byCategoryMap = {};
     const byServiceMap = {};
+    let filteredRevenue = 0;
+    let filteredCount = 0;
     for (const a of appointments) {
       const price = priceOf(a);
+      const rootSlug = rootCategorySlug(a.service.category);
+      if (tradeFilter && rootSlug !== tradeFilter) continue;
+
+      filteredRevenue += price;
+      filteredCount += 1;
 
       const cat = a.service.category.slug;
-      if (!byCategoryMap[cat]) byCategoryMap[cat] = { category: a.service.category, revenue: 0, count: 0 };
+      if (!byCategoryMap[cat]) byCategoryMap[cat] = { category: a.service.category, trade: rootSlug, revenue: 0, count: 0 };
       byCategoryMap[cat].revenue += price;
       byCategoryMap[cat].count += 1;
 
@@ -91,10 +99,10 @@ router.get('/', async (req, res) => {
     const mostRequested = [...byService].sort((a, b) => b.count - a.count)[0] || null;
 
     res.json({
-      period, offset: parseInt(offset, 10) || 0,
+      period, offset: parseInt(offset, 10) || 0, trade: tradeFilter,
       range: { start: start.toISOString(), end: end.toISOString() },
-      totalRevenue, totalAppointments,
-      averageTicket: totalAppointments > 0 ? totalRevenue / totalAppointments : 0,
+      totalRevenue: filteredRevenue, totalAppointments: filteredCount,
+      averageTicket: filteredCount > 0 ? filteredRevenue / filteredCount : 0,
       byCategory, byService, mostRequested,
     });
   } catch (err) {
@@ -163,8 +171,8 @@ async function tradeStats(req, res, slug) {
         name: e.name,
         count: 0,
         revenue: 0,
-        materialCostPerUnit: e.materialCost !== null ? Number(e.materialCost) : null,
-        studioPercent: e.studioPercent !== null ? Number(e.studioPercent) : null,
+        materialCostPerUnit: e.materialCost,
+        studioPercent: e.studioPercent,
       };
     }
     byEmployee[e.id].count += 1;
@@ -172,22 +180,13 @@ async function tradeStats(req, res, slug) {
   }
 
   const people = Object.values(byEmployee).map((b) => {
-    const hasConfig = b.materialCostPerUnit !== null && b.studioPercent !== null;
-    const materialCost = b.count * (b.materialCostPerUnit ?? 0);
-    const netRevenue = b.revenue - materialCost;
-    const studioAmount = netRevenue * ((b.studioPercent ?? 0) / 100);
-    const barberAmount = netRevenue - studioAmount;
+    const payout = tradePayout(b);
     return {
       employeeId: b.employeeId,
       name: b.name,
       count: b.count,
       revenue: b.revenue,
-      materialCost,
-      netRevenue,
-      studioPercent: b.studioPercent,
-      studioAmount,
-      barberAmount: hasConfig ? barberAmount : 0,
-      hasConfig,
+      ...payout,
     };
   }).sort((a, b) => b.revenue - a.revenue);
 

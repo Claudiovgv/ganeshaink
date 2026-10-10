@@ -229,12 +229,23 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { status, notes, date, time, clientName, clientEmail, clientPhone, force, price, partnershipId, extraFieldValue } = req.body;
+    const { status, notes, date, time, clientName, clientEmail, clientPhone, force, price, partnershipId, extraFieldValue, serviceId } = req.body;
 
     const existing = await prisma.appointment.findUnique({ where: { id }, include: { service: true } });
     if (!existing) return res.status(404).json({ error: 'Appointment not found' });
 
+    let service = existing.service;
+    if (serviceId !== undefined && Number(serviceId) !== existing.serviceId) {
+      const nextService = await prisma.service.findUnique({ where: { id: parseInt(serviceId, 10) } });
+      if (!nextService) return res.status(404).json({ error: 'Serviço não encontrado' });
+      service = nextService;
+    }
+
     const updateData = {};
+    if (service.id !== existing.serviceId) {
+      updateData.serviceId = service.id;
+      if (price === undefined) updateData.price = null;
+    }
     if (status) updateData.status = status;
     if (notes !== undefined) updateData.notes = notes;
     if (clientName) updateData.clientName = clientName;
@@ -247,7 +258,7 @@ router.put('/:id', async (req, res) => {
         const partner = await resolveBookingPartnership({
           partnershipId: partnershipId === undefined ? existing.partnershipId : partnershipId,
           extraFieldValue: extraFieldValue === undefined ? existing.extraFieldValue : extraFieldValue,
-          servicePrice: existing.service.price,
+          servicePrice: service.price,
           explicitPrice: price,
         });
         updateData.partnershipId = partner.partnershipId;
@@ -261,21 +272,28 @@ router.put('/:id', async (req, res) => {
     }
     if (date && time) {
       updateData.startDatetime = lisboaTimeToUTC(date, time);
-      updateData.endDatetime = addMinutes(updateData.startDatetime, existing.service.durationMin);
+      updateData.endDatetime = addMinutes(updateData.startDatetime, service.durationMin);
+    } else if (updateData.serviceId) {
+      updateData.endDatetime = addMinutes(existing.startDatetime, service.durationMin);
+    }
 
-      if (!force) {
-        const conflict = await findConflict(existing.employeeId, updateData.startDatetime, updateData.endDatetime, id);
-        if (conflict) {
-          return res.status(409).json({
-            error: 'Este artista já tem uma marcação nesse horário',
-            conflict: {
-              clientName: conflict.clientName,
-              startDatetime: conflict.startDatetime,
-              endDatetime: conflict.endDatetime,
-              service: conflict.service.name,
-            },
-          });
-        }
+    if ((updateData.startDatetime || updateData.endDatetime) && !force) {
+      const conflict = await findConflict(
+        existing.employeeId,
+        updateData.startDatetime || existing.startDatetime,
+        updateData.endDatetime || existing.endDatetime,
+        id,
+      );
+      if (conflict) {
+        return res.status(409).json({
+          error: 'Este artista já tem uma marcação nesse horário',
+          conflict: {
+            clientName: conflict.clientName,
+            startDatetime: conflict.startDatetime,
+            endDatetime: conflict.endDatetime,
+            service: conflict.service.name,
+          },
+        });
       }
     }
 

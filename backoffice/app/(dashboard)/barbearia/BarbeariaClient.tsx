@@ -149,10 +149,10 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
                   <td className="px-5 py-2.5 text-text-primary">{b.name}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">{b.count}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">
-                    {b.hasConfig ? money(b.materialCost / b.count) : '—'}
+                    {b.count ? money(b.materialCost / b.count) : '—'}
                   </td>
                   <td className="px-5 py-2.5 text-gold text-right font-medium">
-                    {b.hasConfig ? money(b.materialCost) : '—'}
+                    {money(b.materialCost)}
                   </td>
                 </tr>
               ))}
@@ -175,13 +175,13 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
                   <td className="px-5 py-2.5 text-text-primary">{b.name}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">{money(b.netRevenue)}</td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">
-                    {b.hasConfig ? `${b.studioPercent}%` : '—'}
+                    {b.studioPercent != null ? `${b.studioPercent}%` : '—'}
                   </td>
                   <td className="px-5 py-2.5 text-text-secondary text-right">
-                    {b.hasConfig ? money(b.studioAmount) : '—'}
+                    {b.studioPercent != null ? money(b.studioAmount) : '—'}
                   </td>
                   <td className="px-5 py-2.5 text-gold text-right font-medium">
-                    {b.hasConfig ? money(b.barberAmount) : '—'}
+                    {b.studioPercent != null ? money(b.barberAmount) : '—'}
                   </td>
                 </tr>
               ))}

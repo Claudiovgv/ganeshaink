@@ -84,7 +84,7 @@ export async function createAppointmentAction(data: {
 
 export async function updateAppointmentClientAction(
   id: number,
-  data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null; partnershipId?: number | null; extraFieldValue?: string | null },
+  data: { clientName?: string; clientEmail?: string; clientPhone?: string; price?: number | string | null; partnershipId?: number | null; extraFieldValue?: string | null; serviceId?: number },
 ) {
   return api.appointments.updateClient(id, data);
 }
@@ -367,8 +367,8 @@ export async function updateRolePermissionsAction(role: import('./types').Config
   return api.roles.update(role, permissions);
 }
 
-export async function fetchStatsAction(period: import('./types').StatsPeriod, offset: number) {
-  return api.stats.get(period, offset);
+export async function fetchStatsAction(period: import('./types').StatsPeriod, offset: number, trade?: string | null) {
+  return api.stats.get(period, offset, trade);
 }
 
 export async function fetchBarbershopStatsAction(period: import('./types').StatsPeriod, offset: number) {
