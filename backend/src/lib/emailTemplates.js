@@ -16,7 +16,31 @@ function formatDateTime(date) {
   });
 }
 
-function layout(title, bodyHtml) {
+function publicSiteUrl() {
+  return (process.env.FRONTEND_URL || 'https://ganeshaink.pt').replace(/\/$/, '');
+}
+
+function cancelUrl(appointment) {
+  if (!appointment?.cancelToken) return '';
+  return `${publicSiteUrl()}/cancelar/${encodeURIComponent(appointment.cancelToken)}`;
+}
+
+function cancelButton(appointment) {
+  const url = cancelUrl(appointment);
+  if (!url) return '';
+  return `
+      <p style="margin: 28px 0 8px; text-align: center;">
+        <a href="${url}" style="display: inline-block; background: ${COLORS.gold}; color: ${COLORS.bgPrimary}; text-decoration: none; font-weight: bold; padding: 12px 22px; border-radius: 4px;">Cancelar marcação</a>
+      </p>
+      ${paragraph('Se precisares de cancelar, usa o botão, indica o motivo e confirma.')}
+  `;
+}
+
+function layout(title, bodyHtml, options = {}) {
+  const canCancel = Boolean(options.cancelUrl);
+  const footerNote = canCancel
+    ? 'Para alterar a marcação, contacta-nos. Para cancelar, usa o botão neste email.'
+    : 'Para alterar uma marcação, contacta-nos diretamente.';
   return `<!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -38,7 +62,7 @@ function layout(title, bodyHtml) {
     <div style="padding: 20px 28px 32px; border-top: 1px solid ${COLORS.goldBorder}; font-family: Arial, sans-serif;">
       <p style="margin: 0; font-size: 12px; color: ${COLORS.textSecondary}; line-height: 1.6;">
         Ganesha Ink — Tatuagem, Barbearia &amp; Piercing<br>
-        Para alterar ou cancelar uma marcação, contacta-nos diretamente.
+        ${footerNote}
       </p>
     </div>
   </div>
@@ -62,6 +86,14 @@ function appointmentDetails(appointment) {
   `;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function paragraph(text) {
   return `<p style="color: ${COLORS.textSecondary}; font-size: 14px; line-height: 1.7; margin: 0 0 12px;">${text}</p>`;
 }
@@ -73,8 +105,8 @@ function appointmentConfirmedEmail(appointment) {
       ${paragraph(`Olá <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong>,`)}
       ${paragraph('A tua marcação na Ganesha Ink foi confirmada com sucesso:')}
       ${appointmentDetails(appointment)}
-      ${paragraph('Se precisares de alterar ou cancelar, contacta-nos com antecedência.')}
-    `),
+      ${cancelButton(appointment)}
+    `, { cancelUrl: cancelUrl(appointment) }),
   };
 }
 
@@ -85,7 +117,8 @@ function appointmentReceivedEmail(appointment) {
       ${paragraph(`Olá <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong>,`)}
       ${paragraph('Recebemos o teu pedido de marcação. Fica pendente de confirmação pelo artista — assim que for confirmada, receberás um novo email.')}
       ${appointmentDetails(appointment)}
-    `),
+      ${cancelButton(appointment)}
+    `, { cancelUrl: cancelUrl(appointment) }),
   };
 }
 
@@ -120,8 +153,8 @@ function reminderEmail(appointment) {
       ${paragraph(`Olá <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong>,`)}
       ${paragraph('Este é um lembrete da tua marcação na Ganesha Ink:')}
       ${appointmentDetails(appointment)}
-      ${paragraph('Se precisares de alterar ou cancelar, contacta-nos com antecedência.')}
-    `),
+      ${cancelButton(appointment)}
+    `, { cancelUrl: cancelUrl(appointment) }),
   };
 }
 
@@ -139,11 +172,15 @@ function staffNewAppointmentEmail(appointment) {
 function staffStatusChangedEmail(appointment) {
   const STATUS_LABEL = { confirmed: 'confirmada', cancelled: 'cancelada', completed: 'concluída', pending: 'pendente' };
   const label = STATUS_LABEL[appointment.status] || appointment.status;
+  const reason = appointment.status === 'cancelled' && appointment.notes
+    ? paragraph(escapeHtml(appointment.notes).replace(/\n/g, '<br>'))
+    : '';
   return {
     subject: `Marcação ${label} — ${appointment.clientName}`,
     html: layout(`Marcação ${label}`, `
       ${paragraph(`A marcação de <strong style="color:${COLORS.textPrimary};">${appointment.clientName}</strong> foi ${label}.`)}
       ${appointmentDetails(appointment)}
+      ${reason}
     `),
   };
 }
@@ -173,11 +210,13 @@ function staffReminderEmail(appointment) {
 function sampleAppointment() {
   const start = new Date(Date.now() + 24 * 60 * 60 * 1000);
   return {
+    id: 1,
     clientName: 'Cliente Exemplo',
     clientEmail: 'cliente@exemplo.com',
     clientPhone: '910000000',
     startDatetime: start,
     status: 'confirmed',
+    cancelToken: 'exemplo-token',
     employee: { name: 'Profissional Exemplo' },
     service: { name: 'Corte clássico' },
   };

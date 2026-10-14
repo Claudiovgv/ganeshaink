@@ -11,6 +11,7 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -18,6 +19,8 @@
     color: #F5F5F5;
     font-family: var(--font-inter), sans-serif;
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
   }
 
   ::selection {
@@ -52,4 +55,279 @@
   .section-padding {
     padding: 5rem 1.5rem;
   }
+}
+
+@keyframes gate-smoke-a {
+  0%,
+  100% {
+    transform: translate3d(-8%, 10%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12%, -14%, 0) scale(1.2);
+  }
+}
+
+@keyframes gate-smoke-b {
+  0%,
+  100% {
+    transform: translate3d(10%, -6%, 0) scale(1.15);
+  }
+  50% {
+    transform: translate3d(-14%, 12%, 0) scale(1);
+  }
+}
+
+@keyframes gate-smoke-c {
+  0%,
+  100% {
+    transform: translate3d(-4%, 4%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(8%, -8%, 0) scale(1.25);
+  }
+}
+
+@keyframes gate-rise {
+  0% {
+    transform: translate3d(0, 30%, 0) scaleX(0.8);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.28;
+  }
+  100% {
+    transform: translate3d(8%, -90%, 0) scaleX(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes gate-ember {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translate3d(0, 8px, 0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate3d(4px, -14px, 0);
+  }
+}
+
+.gate-smoke {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.gate-smoke-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(64px);
+  mix-blend-mode: screen;
+}
+
+.gate-smoke-blob-a {
+  width: 55vw;
+  height: 45vw;
+  left: -8%;
+  bottom: -10%;
+  background: radial-gradient(circle, rgba(210, 210, 210, 0.38), transparent 68%);
+  animation: gate-smoke-a 22s ease-in-out infinite;
+}
+
+.gate-smoke-blob-b {
+  width: 48vw;
+  height: 40vw;
+  right: -6%;
+  top: 8%;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.22), transparent 70%);
+  animation: gate-smoke-b 26s ease-in-out infinite;
+}
+
+.gate-smoke-blob-c {
+  width: 42vw;
+  height: 36vw;
+  left: 30%;
+  bottom: 5%;
+  background: radial-gradient(circle, rgba(230, 230, 230, 0.3), transparent 65%);
+  animation: gate-smoke-c 19s ease-in-out infinite;
+}
+
+.gate-smoke-blob-d {
+  width: 36vw;
+  height: 30vw;
+  right: 18%;
+  bottom: -8%;
+  background: radial-gradient(circle, rgba(190, 190, 190, 0.28), transparent 70%);
+  animation: gate-smoke-a 28s ease-in-out infinite reverse;
+}
+
+.gate-wisp {
+  position: absolute;
+  width: 8rem;
+  height: 22rem;
+  border-radius: 9999px;
+  filter: blur(28px);
+  background: linear-gradient(to top, transparent, rgba(220, 220, 220, 0.2), transparent);
+  mix-blend-mode: screen;
+  animation: gate-rise 14s ease-in-out infinite;
+}
+
+.gate-wisp-1 {
+  left: 12%;
+  bottom: 0;
+  animation-delay: 0s;
+}
+.gate-wisp-2 {
+  left: 38%;
+  bottom: -10%;
+  animation-delay: -4s;
+  animation-duration: 16s;
+}
+.gate-wisp-3 {
+  left: 62%;
+  bottom: 0;
+  animation-delay: -7s;
+  animation-duration: 18s;
+}
+.gate-wisp-4 {
+  left: 84%;
+  bottom: -6%;
+  animation-delay: -2s;
+}
+
+.gate-ember {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: #e8c96a;
+  box-shadow: 0 0 10px #c9a84c;
+  animation: gate-ember 5.5s ease-in-out infinite;
+}
+
+.gate-ember-1 {
+  left: 18%;
+  bottom: 28%;
+}
+.gate-ember-2 {
+  left: 46%;
+  bottom: 22%;
+  animation-delay: -1.4s;
+}
+.gate-ember-3 {
+  left: 71%;
+  bottom: 32%;
+  animation-delay: -2.8s;
+}
+.gate-ember-4 {
+  left: 33%;
+  bottom: 40%;
+  animation-delay: -0.6s;
+}
+.gate-ember-5 {
+  left: 88%;
+  bottom: 26%;
+  animation-delay: -3.2s;
+}
+
+@keyframes stencil-draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  62% {
+    stroke-dashoffset: 0;
+  }
+  78% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+  }
+}
+
+.stencil-draw {
+  overflow: visible;
+}
+
+.stencil-draw .stencil-stroke path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: stencil-draw var(--draw-duration, 14s) ease-in-out infinite;
+  animation-delay: var(--draw-delay, 0s);
+}
+
+.stencil-static .stencil-stroke path {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  animation: none;
+}
+
+.stencil-floater {
+  position: absolute;
+  animation: stencil-drift var(--drift, 14s) ease-in-out infinite;
+}
+
+@media (max-width: 767px) {
+  .stencil-floater {
+    max-width: 7.5rem !important;
+  }
+}
+
+.stencil-floater-inline {
+  animation: stencil-drift 16s ease-in-out infinite;
+}
+
+@keyframes stencil-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--rot, 0deg));
+  }
+  50% {
+    transform: translate3d(10px, -14px, 0) rotate(var(--rot, 0deg));
+  }
+}
+
+.stencil-piece {
+  opacity: 0.5;
+  mix-blend-mode: screen;
+}
+
+.stencil-piece-dark {
+  filter: brightness(0.95) saturate(0.9);
+}
+
+.stencil-piece-light {
+  filter: brightness(1.42) saturate(1.06);
+}
+
+.stencil-scroll-hint {
+  animation: stencil-scroll-hint 1.8s ease-in-out infinite;
+}
+
+@keyframes stencil-scroll-hint {
+  0% {
+    transform: translateY(0);
+    opacity: 0.25;
+  }
+  45% {
+    transform: translateY(14px);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(28px);
+    opacity: 0;
+  }
+}
+
+.gate-grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

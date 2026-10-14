@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Playfair_Display, Inter, Cinzel } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import ClientErrorReporter from '@/components/ClientErrorReporter';
 import AdSenseLoader from '@/components/AdSenseLoader';
+import HideOnGate from '@/components/HideOnGate';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -18,7 +19,25 @@ const inter = Inter({
   display: 'swap',
 });
 
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-cinzel',
+  display: 'swap',
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#0D0D0D',
+};
+
 export const metadata: Metadata = {
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Ganesha Ink',
+  },
   title: {
     template: '%s | Ganesha Ink',
     default: 'Ganesha Ink — Tatuagem, Barbearia & Piercing em Vale de Cambra',
@@ -41,13 +60,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col">
-        <Header />
+    <html lang="pt" className={`${playfair.variable} ${inter.variable} ${cinzel.variable}`}>
+      <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col antialiased">
+        <HideOnGate>
+          <Header />
+        </HideOnGate>
         <ClientErrorReporter />
         <AdSenseLoader />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+        <HideOnGate>
+          <Footer />
+        </HideOnGate>
       </body>
     </html>
   );

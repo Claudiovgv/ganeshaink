@@ -27,8 +27,10 @@ export default function Step3Employee({ serviceId, onSelect, onBack }: Props) {
 
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold mb-2">Escolhe o Artista</h2>
-      <p className="text-text-secondary text-sm mb-8">Quem queres que te atenda?</p>
+      <div className="text-center mb-8">
+        <h2 className="font-display text-2xl font-bold mb-2">Escolhe o Artista</h2>
+        <p className="text-text-secondary text-sm">Quem queres que te atenda?</p>
+      </div>
 
       {loading && <LoadingSpinner />}
       {error && <p className="text-red-400 text-sm">{error}</p>}
@@ -38,7 +40,7 @@ export default function Step3Employee({ serviceId, onSelect, onBack }: Props) {
       )}
 
       {!loading && !error && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div className={`mx-auto mb-8 grid gap-4 ${employees.length === 1 ? 'max-w-md grid-cols-1' : 'max-w-2xl grid-cols-1 sm:grid-cols-2'}`}>
           {employees.map((emp) => (
             <button
               key={emp.id}

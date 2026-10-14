@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { marcarHrefForPath } from '@/lib/booking';
 
 const NAV_LINKS = [
   { href: '/servicos', label: 'Serviços' },
@@ -13,23 +14,33 @@ const NAV_LINKS = [
   { href: '/contacto', label: 'Contacto' },
 ];
 
+function headerTitle(pathname: string) {
+  if (pathname.startsWith('/tattoo')) return 'Tattoostudio';
+  if (pathname.startsWith('/barbearia')) return 'Barbearia';
+  if (pathname.startsWith('/nails')) return 'Beauty';
+  return 'Ganesha Ink';
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const title = headerTitle(pathname);
+  const marcarHref = marcarHrefForPath(pathname);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-gold-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-gold-border pt-[env(safe-area-inset-top)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 md:h-24">
+        <Link href="/" className="flex items-center gap-2.5 md:gap-3 min-w-0">
           <Image
-              src="/images/logo/ganesha-icon.webp"
+            src="/images/logo/ganesha-logo-gold-white.webp"
             alt="Ganesha Ink"
-            width={36}
-            height={36}
-            className="object-contain"
+            width={220}
+            height={100}
+            className="h-10 w-auto object-contain md:h-[4.5rem]"
+            priority
           />
-          <span className="font-display text-lg font-semibold text-gold tracking-wide hidden sm:block">
-            Ganesha Ink
+          <span className="font-gate text-[0.7rem] md:text-base font-semibold uppercase tracking-[0.18em] md:tracking-[0.22em] text-gold truncate">
+            {title}
           </span>
         </Link>
 
@@ -38,7 +49,7 @@ export default function Header() {
             <Link
               key={href}
               href={href}
-              className={`text-sm tracking-wide transition-colors ${
+              className={`font-gate text-xs uppercase tracking-[0.18em] transition-colors ${
                 pathname === href
                   ? 'text-gold'
                   : 'text-text-secondary hover:text-text-primary'
@@ -51,7 +62,13 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/marcar"
+            href="/"
+            className="hidden md:inline-flex items-center px-4 py-2 border border-gold/70 text-gold font-gate text-xs font-semibold uppercase tracking-[0.18em] rounded hover:bg-gold/10 transition-colors"
+          >
+            Voltar
+          </Link>
+          <Link
+            href={marcarHref}
             className="hidden md:inline-flex items-center px-4 py-2 bg-gold text-bg-primary text-sm font-semibold rounded hover:bg-gold-light transition-colors"
           >
             Marcar
@@ -80,21 +97,38 @@ export default function Header() {
             <Link
               key={href}
               href={href}
-              className="text-text-secondary hover:text-gold transition-colors py-1"
+              className="font-gate text-sm uppercase tracking-[0.18em] text-text-secondary hover:text-gold transition-colors py-1"
               onClick={() => setMobileOpen(false)}
             >
               {label}
             </Link>
           ))}
           <Link
-            href="/marcar"
-            className="mt-2 inline-flex items-center justify-center px-4 py-2 bg-gold text-bg-primary text-sm font-semibold rounded"
+            href={marcarHref}
+            className="mt-2 inline-flex items-center justify-center px-4 py-3 bg-gold text-bg-primary text-sm font-semibold rounded"
             onClick={() => setMobileOpen(false)}
           >
             Marcar
           </Link>
         </div>
       )}
+
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-gold-border bg-bg-primary/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
+        <div className="mx-4 my-2.5 grid grid-cols-2 gap-2.5">
+          <Link
+            href="/"
+            className="flex items-center justify-center py-3 border border-gold/70 text-gold font-gate text-xs font-semibold uppercase tracking-[0.2em] rounded"
+          >
+            Voltar
+          </Link>
+          <Link
+            href={marcarHref}
+            className="flex items-center justify-center py-3 bg-gold text-bg-primary font-gate text-xs font-semibold uppercase tracking-[0.2em] rounded"
+          >
+            Marcar
+          </Link>
+        </div>
+      </div>
     </header>
   );
 }

@@ -153,6 +153,14 @@ export const api = {
         body: JSON.stringify(data),
         cache: 'no-store',
       }),
+    getByCancelToken: (token: string) =>
+      apiFetch<Appointment>(`/appointments/cancel/${encodeURIComponent(token)}`, { cache: 'no-store' }),
+    cancelByToken: (token: string, reason: string) =>
+      apiFetch<Appointment>(`/appointments/cancel/${encodeURIComponent(token)}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ reason }),
+        cache: 'no-store',
+      }),
   },
   consultations: {
     create: (data: {

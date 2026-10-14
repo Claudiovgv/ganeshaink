@@ -93,6 +93,71 @@ router.post('/', publicLimiter, async (req, res) => {
   }
 });
 
+function publicAppointment(appointment) {
+  return {
+    id: appointment.id,
+    clientName: appointment.clientName,
+    startDatetime: appointment.startDatetime,
+    endDatetime: appointment.endDatetime,
+    status: appointment.status,
+    employee: appointment.employee,
+    service: appointment.service
+      ? { id: appointment.service.id, name: appointment.service.name, durationMin: appointment.service.durationMin }
+      : null,
+  };
+}
+
+function appendCancelReason(existing, reason) {
+  const line = `Cancelamento (cliente): ${reason}`;
+  return existing ? `${existing}\n${line}` : line;
+}
+
+router.get('/cancel/:token', publicLimiter, async (req, res) => {
+  try {
+    const appointment = await prisma.appointment.findUnique({
+      where: { cancelToken: req.params.token },
+      include: {
+        employee: { select: { id: true, name: true } },
+        service: { select: { id: true, name: true, durationMin: true } },
+      },
+    });
+    if (!appointment) return res.status(404).json({ error: 'Marcação não encontrada' });
+    res.json(publicAppointment(appointment));
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.delete('/cancel/:token', publicLimiter, async (req, res) => {
+  try {
+    const reason = typeof req.body.reason === 'string' ? req.body.reason.trim() : '';
+    if (!reason) return res.status(400).json({ error: 'Indica o motivo do cancelamento.' });
+
+    const appointment = await prisma.appointment.findUnique({
+      where: { cancelToken: req.params.token },
+    });
+    if (!appointment) return res.status(404).json({ error: 'Marcação não encontrada' });
+    if (appointment.status === 'cancelled') {
+      return res.status(400).json({ error: 'Esta marcação já está cancelada.' });
+    }
+    if (appointment.status === 'completed') {
+      return res.status(400).json({ error: 'Esta marcação já foi concluída.' });
+    }
+
+    const updated = await prisma.appointment.update({
+      where: { id: appointment.id },
+      data: { status: 'cancelled', notes: appendCancelReason(appointment.notes, reason) },
+      include: APPOINTMENT_INCLUDE,
+    });
+
+    notifyAppointmentStatusChanged(updated, appointment.status);
+    res.json(publicAppointment(updated));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 router.get('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);

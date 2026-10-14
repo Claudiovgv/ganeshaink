@@ -20,17 +20,17 @@
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/158-d0d1e383e00eb761.js",
-      "static/chunks/app/login/page-6d2e68537061707f.js"
+      "static/chunks/158-fec90c593e4b8648.js",
+      "static/chunks/app/login/page-2dd26ddcd602a5d6.js"
     ],
     "/repor-senha/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/158-d0d1e383e00eb761.js",
-      "static/chunks/648-09f132b998fb7831.js",
-      "static/chunks/app/repor-senha/page-2beb4a8dc0e03f5a.js"
+      "static/chunks/158-fec90c593e4b8648.js",
+      "static/chunks/648-95dd114f71beb69e.js",
+      "static/chunks/app/repor-senha/page-183919a514712aee.js"
     ],
     "/(dashboard)/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
@@ -38,25 +38,16 @@
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
       "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/page-07617c806b97eebb.js"
+      "static/chunks/app/(dashboard)/page-a23e23b9034d6167.js"
     ],
     "/(dashboard)/layout": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/158-d0d1e383e00eb761.js",
-      "static/chunks/648-09f132b998fb7831.js",
-      "static/chunks/app/(dashboard)/layout-a515e742072fcd16.js"
-    ],
-    "/(dashboard)/barbearia/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/648-09f132b998fb7831.js",
-      "static/chunks/app/(dashboard)/barbearia/page-8e634707df6e18db.js"
+      "static/chunks/158-fec90c593e4b8648.js",
+      "static/chunks/648-95dd114f71beb69e.js",
+      "static/chunks/app/(dashboard)/layout-52e80526a6bda0da.js"
     ],
     "/(dashboard)/blog/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
@@ -64,23 +55,21 @@
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
       "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/blog/page-b1222f2a59ba09ec.js"
+      "static/chunks/app/(dashboard)/blog/page-2c0da4f705a7cca7.js"
     ],
-    "/(dashboard)/consultas/page": [
+    "/(dashboard)/clientes/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/702-4990853b54cd9f94.js",
-      "static/chunks/app/(dashboard)/consultas/page-af3a5e967bbf12f4.js"
+      "static/chunks/app/(dashboard)/clientes/page-8cb46fc9da643165.js"
     ],
-    "/(dashboard)/definicoes/logs/page": [
+    "/(dashboard)/categorias/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/definicoes/logs/page-060557727e1142bc.js"
+      "static/chunks/app/(dashboard)/categorias/page-06d7dc0884dba810.js"
     ],
     "/(dashboard)/bloqueios-equipa/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
@@ -88,36 +77,7 @@
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
       "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/bloqueios-equipa/page-1c1e124db3b4e1e1.js"
-    ],
-    "/(dashboard)/definicoes/anuncios/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/definicoes/anuncios/page-963c7134cc15db86.js"
-    ],
-    "/(dashboard)/definicoes/smtp/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/definicoes/smtp/page-94cd49d4b19c93a0.js"
-    ],
-    "/(dashboard)/estatisticas/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/estatisticas/page-9a8b586579cdb761.js"
-    ],
-    "/(dashboard)/categorias/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/categorias/page-26d868521bb5f12a.js"
+      "static/chunks/app/(dashboard)/bloqueios-equipa/page-ff4f2147e6c727e7.js"
     ],
     "/(dashboard)/bloqueios/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
@@ -125,53 +85,22 @@
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
       "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/bloqueios/page-02333ca0f065a7d3.js"
+      "static/chunks/app/(dashboard)/bloqueios/page-eeb8d36d05eea8b9.js"
     ],
-    "/(dashboard)/copia-marcacoes/page": [
+    "/(dashboard)/definicoes/anuncios/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/copia-marcacoes/page-4c06cf755dfcd28b.js"
+      "static/chunks/app/(dashboard)/definicoes/anuncios/page-3cc9e58fb82e7596.js"
     ],
-    "/(dashboard)/marcacoes/page": [
+    "/(dashboard)/consultas/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/app/(dashboard)/marcacoes/page-356cd0c8b909e626.js"
-    ],
-    "/(dashboard)/nails/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/333-95f2adb07106e583.js",
-      "static/chunks/app/(dashboard)/nails/page-498f04124802abff.js"
-    ],
-    "/(dashboard)/definicoes/contas-barbearia/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/definicoes/contas-barbearia/page-ea28213e108c0798.js"
-    ],
-    "/(dashboard)/horario/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/220-f7df29ed24d804e1.js",
-      "static/chunks/app/(dashboard)/horario/page-2dc483119a0e333f.js"
-    ],
-    "/(dashboard)/clientes/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/clientes/page-2767d5ac9e6cba3a.js"
+      "static/chunks/702-65e28ec00f303209.js",
+      "static/chunks/app/(dashboard)/consultas/page-af3a5e967bbf12f4.js"
     ],
     "/(dashboard)/definicoes/tecnologia/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
@@ -180,27 +109,82 @@
       "static/chunks/main-app-ef67c29cb6206140.js",
       "static/chunks/app/(dashboard)/definicoes/tecnologia/page-4ecc5c5d7ff3798e.js"
     ],
-    "/(dashboard)/papeis/page": [
+    "/(dashboard)/copia-marcacoes/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/papeis/page-657a8a67fb07cf40.js"
+      "static/chunks/app/(dashboard)/copia-marcacoes/page-d99a2db523fc5967.js"
+    ],
+    "/(dashboard)/definicoes/smtp/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/app/(dashboard)/definicoes/smtp/page-9e5cfe6b50731d64.js"
+    ],
+    "/(dashboard)/estatisticas/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/844-89e73bf735896746.js",
+      "static/chunks/app/(dashboard)/estatisticas/page-42ef26d683cc319b.js"
     ],
     "/(dashboard)/horarios/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/220-f7df29ed24d804e1.js",
-      "static/chunks/app/(dashboard)/horarios/page-eddd4f27a6e0235b.js"
+      "static/chunks/220-1d98800f26995447.js",
+      "static/chunks/app/(dashboard)/horarios/page-39638b061184e4c0.js"
+    ],
+    "/(dashboard)/funcionarios/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/41-9bf2bc6d23f265e0.js",
+      "static/chunks/app/(dashboard)/funcionarios/page-62dd2da9294c3269.js"
+    ],
+    "/(dashboard)/nails/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/844-89e73bf735896746.js",
+      "static/chunks/333-0dc1d8985d0b2584.js",
+      "static/chunks/app/(dashboard)/nails/page-498f04124802abff.js"
+    ],
+    "/(dashboard)/papeis/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/app/(dashboard)/papeis/page-7875406070d0a5f4.js"
+    ],
+    "/(dashboard)/definicoes/logs/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/844-89e73bf735896746.js",
+      "static/chunks/app/(dashboard)/definicoes/logs/page-4815424cc4367f2e.js"
+    ],
+    "/(dashboard)/marcacoes/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/844-89e73bf735896746.js",
+      "static/chunks/app/(dashboard)/marcacoes/page-cdbeb1848ae5df5b.js"
     ],
     "/(dashboard)/parcerias/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/parcerias/page-f8806c3c3b7c4137.js"
+      "static/chunks/app/(dashboard)/parcerias/page-5fc8abc41f6c94e3.js"
     ],
     "/(dashboard)/tatuagens/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
@@ -208,54 +192,70 @@
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
       "static/chunks/844-89e73bf735896746.js",
-      "static/chunks/333-95f2adb07106e583.js",
+      "static/chunks/333-0dc1d8985d0b2584.js",
       "static/chunks/app/(dashboard)/tatuagens/page-515c34efc5922867.js"
-    ],
-    "/(dashboard)/utilizadores/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/utilizadores/page-e07eefe6e6d29796.js"
-    ],
-    "/(dashboard)/funcionarios/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/41-035258ce1c1f34ef.js",
-      "static/chunks/app/(dashboard)/funcionarios/page-14de62e11d17d43b.js"
     ],
     "/(dashboard)/seguranca/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/158-d0d1e383e00eb761.js",
-      "static/chunks/app/(dashboard)/seguranca/page-a850c5a1e7f882a5.js"
-    ],
-    "/(dashboard)/servicos/page": [
-      "static/chunks/webpack-dd50052d5c906f8d.js",
-      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
-      "static/chunks/117-986ef71f745695b3.js",
-      "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/41-035258ce1c1f34ef.js",
-      "static/chunks/app/(dashboard)/servicos/page-d4d7592a2bfa9012.js"
+      "static/chunks/158-fec90c593e4b8648.js",
+      "static/chunks/app/(dashboard)/seguranca/page-991c46ed8d98c836.js"
     ],
     "/(dashboard)/piercings/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/702-4990853b54cd9f94.js",
+      "static/chunks/702-65e28ec00f303209.js",
       "static/chunks/app/(dashboard)/piercings/page-3040d2c27353dd20.js"
+    ],
+    "/(dashboard)/horario/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/220-1d98800f26995447.js",
+      "static/chunks/app/(dashboard)/horario/page-2dc483119a0e333f.js"
+    ],
+    "/(dashboard)/utilizadores/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/app/(dashboard)/utilizadores/page-0fad392c31ebd1af.js"
+    ],
+    "/(dashboard)/definicoes/contas-barbearia/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/app/(dashboard)/definicoes/contas-barbearia/page-38291a00de788fb3.js"
     ],
     "/(dashboard)/perfil/page": [
       "static/chunks/webpack-dd50052d5c906f8d.js",
       "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
       "static/chunks/117-986ef71f745695b3.js",
       "static/chunks/main-app-ef67c29cb6206140.js",
-      "static/chunks/app/(dashboard)/perfil/page-86cd48449440acd6.js"
+      "static/chunks/app/(dashboard)/perfil/page-0eb4560410fb6843.js"
+    ],
+    "/(dashboard)/servicos/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/41-9bf2bc6d23f265e0.js",
+      "static/chunks/app/(dashboard)/servicos/page-41fc9af402f866df.js"
+    ],
+    "/(dashboard)/barbearia/page": [
+      "static/chunks/webpack-dd50052d5c906f8d.js",
+      "static/chunks/fd9d1056-6978bc33ac64a8f4.js",
+      "static/chunks/117-986ef71f745695b3.js",
+      "static/chunks/main-app-ef67c29cb6206140.js",
+      "static/chunks/844-89e73bf735896746.js",
+      "static/chunks/648-95dd114f71beb69e.js",
+      "static/chunks/app/(dashboard)/barbearia/page-481dd9ad75b3d125.js"
     ]
   }
 }

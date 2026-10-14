@@ -22,6 +22,7 @@ const config: Config = {
       fontFamily: {
         display: ['var(--font-playfair)', 'serif'],
         body: ['var(--font-inter)', 'sans-serif'],
+        gate: ['var(--font-cinzel)', 'serif'],
       },
       backgroundImage: {
         'gold-gradient': 'linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #C9A84C 100%)',

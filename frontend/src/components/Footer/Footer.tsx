@@ -3,38 +3,45 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-bg-card border-t border-gold-border mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
-
-        {/* Sobre */}
+    <footer className="bg-bg-primary/95 backdrop-blur-sm border-t border-gold-border mt-auto pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 py-10 md:py-12 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-10">
         <div className="md:col-span-2">
-          <Link href="/" className="inline-block mb-4">
+          <Link href="/" className="flex items-center gap-3 mb-4">
             <Image
-              src="/images/logo/ganesha-logo-gold.webp"
+              src="/images/logo/ganesha-logo-gold-white.webp"
               alt="Ganesha Ink"
-              width={140}
-              height={50}
-              className="object-contain"
+              width={220}
+              height={100}
+              className="h-16 w-auto object-contain"
             />
+            <span className="font-gate text-sm md:text-base font-semibold uppercase tracking-[0.22em] text-gold">
+              Ganesha Ink
+            </span>
           </Link>
-          <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
-            14 anos a transformar estilo em expressão. Na Ganesha Ink, tatuagens, barbearia e unhas convivem com arte e atitude.
+          <p className="font-gate text-xs uppercase tracking-[0.14em] text-text-secondary leading-relaxed max-w-sm">
+            14 anos a transformar estilo em expressão. Na Ganesha Ink, tatuagens, barbearia e unhas
+            convivem com arte e atitude.
           </p>
         </div>
 
-        {/* Links Rápidos */}
         <div>
-          <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">
+          <h3 className="font-gate text-xs uppercase tracking-[0.18em] text-gold mb-4">
             Links Rápidos
           </h3>
-          <ul className="space-y-2 text-sm text-text-secondary">
+          <ul className="space-y-3">
             <li>
-              <Link href="/politica-de-privacidade" className="hover:text-gold transition-colors">
+              <Link
+                href="/politica-de-privacidade"
+                className="font-gate text-xs uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary transition-colors"
+              >
                 Política de Privacidade
               </Link>
             </li>
             <li>
-              <Link href="/politica-de-cookies" className="hover:text-gold transition-colors">
+              <Link
+                href="/politica-de-cookies"
+                className="font-gate text-xs uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary transition-colors"
+              >
                 Política de Cookies
               </Link>
             </li>
@@ -43,7 +50,7 @@ export default function Footer() {
                 href="https://www.livroreclamacoes.pt/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-gold transition-colors"
+                className="font-gate text-xs uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary transition-colors"
               >
                 Livro de Reclamações
               </a>
@@ -51,30 +58,36 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contacto */}
         <div>
-          <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">
+          <h3 className="font-gate text-xs uppercase tracking-[0.18em] text-gold mb-4">
             Contacto
           </h3>
-          <address className="not-italic text-sm text-text-secondary space-y-3">
+          <address className="not-italic space-y-3">
             <a
               href="https://maps.google.com/?q=R.+Eng.+Duarte+Pacheco+33,+3730-254+Vale+de+Cambra"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gold transition-colors block"
+              className="font-gate text-xs uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary transition-colors block leading-relaxed"
             >
-              R. Eng. Duarte Pacheco n.º 33<br />
+              R. Eng. Duarte Pacheco n.º 33
+              <br />
               3730-254 Vale de Cambra
             </a>
             <div>
-              <a href="tel:+351913570454" className="hover:text-gold transition-colors block">
+              <a
+                href="tel:+351913570454"
+                className="font-gate text-xs uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary transition-colors block"
+              >
                 +351 913 570 454
               </a>
-              <p className="text-xs text-text-muted mt-0.5">
+              <p className="font-gate text-[0.65rem] uppercase tracking-[0.14em] text-text-secondary/70 mt-1">
                 Custo de uma chamada para a rede fixa nacional.
               </p>
             </div>
-            <a href="mailto:ricardo.vieira@ganeshaink.pt" className="hover:text-gold transition-colors block">
+            <a
+              href="mailto:ricardo.vieira@ganeshaink.pt"
+              className="font-gate text-xs uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary transition-colors block"
+            >
               ricardo.vieira@ganeshaink.pt
             </a>
           </address>
@@ -95,7 +108,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-gold-border py-4 text-center text-xs text-text-secondary">
+      <div className="border-t border-gold-border py-4 text-center font-gate text-xs uppercase tracking-[0.18em] text-text-secondary">
         © {new Date().getFullYear()} Ganesha Ink · Todos os direitos reservados
       </div>
     </footer>

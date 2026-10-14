@@ -64,9 +64,11 @@ export default function Step5PersonalData({ service, employee, date, time, categ
   }
 
   return (
-    <div>
-      <h2 className="font-display text-2xl font-bold mb-2">Os Teus Dados</h2>
-      <p className="text-text-secondary text-sm mb-6">Último passo!</p>
+    <div className="mx-auto max-w-lg">
+      <div className="text-center mb-6">
+        <h2 className="font-display text-2xl font-bold mb-2">Os Teus Dados</h2>
+        <p className="text-text-secondary text-sm">Último passo!</p>
+      </div>
 
       <div className="bg-bg-card border border-gold-border rounded-lg p-5 mb-8 space-y-2 text-sm">
         <div className="flex justify-between">

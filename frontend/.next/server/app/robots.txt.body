@@ -1,4 +1,5 @@
 User-Agent: *
 Allow: /
+Disallow: /cancelar
 
 Sitemap: https://ganeshaink.pt/sitemap.xml

@@ -101,6 +101,13 @@ export async function updateClientNicknameAction(email: string, nickname: string
   return api.clients.updateNickname(email, nickname);
 }
 
+export async function updateClientAction(
+  currentEmail: string,
+  data: { name: string; email: string; phone: string; nickname?: string | null },
+) {
+  return api.clients.update(currentEmail, data);
+}
+
 export async function createEmployeeAction(data: object) {
   return api.employees.create(data);
 }

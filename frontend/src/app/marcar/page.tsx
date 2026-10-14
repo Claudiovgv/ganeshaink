@@ -4,13 +4,13 @@ import { api, Service } from '@/lib/api';
 
 export const metadata: Metadata = {
   title: 'Marcar',
-  description: 'Marca o teu serviço online — barbearia, piercing ou unhas em poucos passos.',
+  description: 'Marca barbearia ou Beauty online. Para tatuagens, fala com o tatuador.',
 };
 
 export const dynamic = 'force-dynamic';
 
 interface Props {
-  searchParams: { category?: string; service?: string };
+  searchParams: { category?: string; service?: string; area?: string };
 }
 
 export default async function MarcarPage({ searchParams }: Props) {
@@ -21,17 +21,12 @@ export default async function MarcarPage({ searchParams }: Props) {
   ]);
   return (
     <div className="pt-20 min-h-screen">
-      <section className="bg-bg-section py-12 px-4 text-center">
-        <h1 className="font-display text-4xl font-bold mb-3">
-          Marcar <span className="text-gold-gradient">Serviço</span>
-        </h1>
-        <p className="text-text-secondary">Escolhe o serviço, artista, data e hora.</p>
-      </section>
       <BookingWizard
         services={services}
         categories={categories}
         initialCategory={searchParams.category}
         initialServiceId={serviceId}
+        initialArea={searchParams.area}
       />
     </div>
   );

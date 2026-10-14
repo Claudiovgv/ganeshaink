@@ -181,6 +181,11 @@ export const api = {
   },
   clients: {
     list: () => apiFetch<Client[]>('/admin/clients'),
+    update: (currentEmail: string, data: { name: string; email: string; phone: string; nickname?: string | null }) =>
+      apiFetch<Pick<Client, 'name' | 'email' | 'phone' | 'nickname'>>(`/admin/clients/${encodeURIComponent(currentEmail)}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
     updateNickname: (email: string, nickname: string) =>
       apiFetch<{ email: string; nickname: string | null }>(`/admin/clients/${encodeURIComponent(email)}/nickname`, {
         method: 'PUT',

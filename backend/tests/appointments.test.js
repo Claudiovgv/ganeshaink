@@ -229,4 +229,56 @@ describe('Appointments (public)', () => {
       expect(res.status).toBe(403);
     });
   });
+
+  describe('GET/DELETE /v1/appointments/cancel/:token', () => {
+    let tokenApt;
+    beforeAll(async () => {
+      tokenApt = await prisma.appointment.create({
+        data: {
+          clientName: 'Cancel Link',
+          clientEmail: 'cancel-link@test.com',
+          clientPhone: '933333333',
+          employeeId: employee.id,
+          serviceId: service.id,
+          startDatetime: new Date('2026-07-01T09:00:00Z'),
+          endDatetime: new Date('2026-07-01T09:30:00Z'),
+          status: 'confirmed',
+          cancelToken: 'public-cancel-token-aaa',
+        },
+      });
+    });
+
+    it('returns the appointment for a valid token without exposing the token', async () => {
+      const res = await request(app).get('/v1/appointments/cancel/public-cancel-token-aaa');
+      expect(res.status).toBe(200);
+      expect(res.body.clientName).toBe('Cancel Link');
+      expect(res.body.service.name).toBe('Test Cut');
+      expect(res.body).not.toHaveProperty('cancelToken');
+    });
+
+    it('returns 404 for an unknown token', async () => {
+      const res = await request(app).get('/v1/appointments/cancel/does-not-exist');
+      expect(res.status).toBe(404);
+    });
+
+    it('requires a reason to cancel', async () => {
+      const res = await request(app)
+        .delete('/v1/appointments/cancel/public-cancel-token-aaa')
+        .send({ reason: '' });
+      expect(res.status).toBe(400);
+    });
+
+    it('cancels with a reason and stores it in notes', async () => {
+      const res = await request(app)
+        .delete('/v1/appointments/cancel/public-cancel-token-aaa')
+        .send({ reason: 'Não posso ir nesse dia' });
+      expect(res.status).toBe(200);
+      expect(res.body.status).toBe('cancelled');
+      expect(res.body).not.toHaveProperty('cancelToken');
+
+      const stored = await prisma.appointment.findUnique({ where: { id: tokenApt.id } });
+      expect(stored.status).toBe('cancelled');
+      expect(stored.notes).toContain('Não posso ir nesse dia');
+    });
+  });
 });
