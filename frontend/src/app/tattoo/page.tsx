@@ -6,6 +6,7 @@ import InstagramFeed from '@/components/Tattoo/InstagramFeed';
 import StencilField from '@/components/Tattoo/StencilField';
 import MobileHeroStencils from '@/components/Tattoo/MobileHeroStencils';
 import StencilScrollHint from '@/components/Tattoo/StencilScrollHint';
+import DesktopOnly from '@/components/DesktopOnly';
 
 export const metadata: Metadata = {
   title: 'Tatuagem em Vale de Cambra — Tattoostudio',
@@ -41,21 +42,22 @@ export default function TattooPage() {
             className="h-auto w-full object-contain drop-shadow-[0_0_32px_rgba(201,168,76,0.28)]"
           />
         </div>
-        <div
-          className="stencil-floater-inline pointer-events-none absolute left-1/2 top-1/2 z-[1] mt-[calc(min(18vw,9rem)+3.5rem)] hidden w-[min(36vw,15rem)] -translate-x-1/2 md:block"
-          aria-hidden
-        >
-          <div className="stencil-piece stencil-piece-light w-full">
-            <Image
-              src="/images/stencils/stencil-viking-woman.png"
-              alt=""
-              width={420}
-              height={560}
-              unoptimized
-              className="h-auto w-full"
-            />
+        <DesktopOnly>
+          <div
+            className="stencil-floater-inline pointer-events-none absolute left-1/2 top-1/2 z-[1] mt-[calc(min(18vw,9rem)+3.5rem)] w-[min(36vw,15rem)] -translate-x-1/2"
+            aria-hidden
+          >
+            <div className="stencil-piece stencil-piece-light w-full">
+              <Image
+                src="/images/stencils/stencil-viking-woman.webp"
+                alt=""
+                width={420}
+                height={560}
+                className="h-auto w-full"
+              />
+            </div>
           </div>
-        </div>
+        </DesktopOnly>
         <StencilScrollHint />
       </section>
 

@@ -3,31 +3,35 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
-const VIDEO_SRC = '/videos/beauty-vera.mp4?v=2';
+const FRAME_COUNT = 22;
+const FRAMES = Array.from(
+  { length: FRAME_COUNT },
+  (_, i) => `/videos/beauty-vera/f${String(i + 1).padStart(2, '0')}.webp`,
+);
 
 export default function BeautyHero() {
   const trackRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<HTMLImageElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [hasVideo, setHasVideo] = useState(true);
+
+  useEffect(() => {
+    FRAMES.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReduceMotion(media.matches);
     if (media.matches) return;
 
-    const video = videoRef.current;
     let raf = 0;
     let shown = 0;
-    let seeking = false;
-
-    const onSeeked = () => {
-      seeking = false;
-    };
-    video?.addEventListener('seeked', onSeeked);
+    let lastIndex = 0;
 
     const applyChrome = (progress: number) => {
       const logoOpacity = Math.max(0, 1 - progress / 0.1);
@@ -46,16 +50,14 @@ export default function BeautyHero() {
       if (track) {
         const total = track.offsetHeight - window.innerHeight;
         const raw = total <= 0 ? 1 : Math.min(1, Math.max(0, -track.getBoundingClientRect().top / total));
-        shown += (raw - shown) * 0.16;
+        shown += (raw - shown) * 0.18;
         if (Math.abs(raw - shown) < 0.0008) shown = raw;
         applyChrome(shown);
 
-        if (video && Number.isFinite(video.duration) && video.duration > 0 && !seeking) {
-          const target = shown * video.duration * 0.985;
-          if (Math.abs(video.currentTime - target) > 1 / 45) {
-            seeking = true;
-            video.currentTime = target;
-          }
+        const index = Math.min(FRAME_COUNT - 1, Math.round(shown * (FRAME_COUNT - 1)));
+        if (frameRef.current && index !== lastIndex) {
+          lastIndex = index;
+          frameRef.current.src = FRAMES[index];
         }
       }
       raf = requestAnimationFrame(tick);
@@ -63,13 +65,10 @@ export default function BeautyHero() {
 
     applyChrome(0);
     raf = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(raf);
-      video?.removeEventListener('seeked', onSeeked);
-    };
+    return () => cancelAnimationFrame(raf);
   }, [reduceMotion]);
 
-  const logoOpacity = reduceMotion ? 1 : 1;
+  const logoOpacity = 1;
   const hintOpacity = reduceMotion ? 0.7 : 1;
   const veil = reduceMotion ? 0.28 : 0.7;
 
@@ -78,28 +77,16 @@ export default function BeautyHero() {
       <section className="sticky top-0 h-[100dvh] overflow-hidden bg-black">
         <h1 className="sr-only">Beauty</h1>
         <div className="absolute inset-0">
-          {hasVideo && (
-            <video
-              ref={videoRef}
-              src={VIDEO_SRC}
-              poster="/videos/beauty-vera-poster.jpg"
-              muted
-              playsInline
-              preload="auto"
-              onError={() => setHasVideo(false)}
-              className="h-full w-full object-cover"
-            />
-          )}
-          {!hasVideo && (
-            <Image
-              src="/images/employees/vera-ferreira.webp"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={frameRef}
+            src={FRAMES[0]}
+            alt=""
+            width={540}
+            height={960}
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
           <div ref={veilRef} className="absolute inset-0 bg-black" style={{ opacity: veil }} />
         </div>
         <div

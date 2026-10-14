@@ -39,7 +39,8 @@ export default async function InstagramFeed() {
                 src={post.src}
                 alt="Publicação Ganesha Ink no Instagram"
                 fill
-                unoptimized
+                loading="lazy"
+                sizes="(max-width: 768px) 50vw, 20vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <span className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />

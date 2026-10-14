@@ -10,16 +10,16 @@ const GRAPH = 'https://graph.instagram.com';
 export const INSTAGRAM_PROFILE = PROFILE;
 
 export const FALLBACK_INSTAGRAM_POSTS: InstagramPost[] = [
-  { id: '01', src: '/images/instagram/01.jpg', href: `${PROFILE}reel/DYKEnfqCTKE/` },
-  { id: '02', src: '/images/instagram/02.jpg', href: `${PROFILE}reel/DYrUBNqI59u/` },
-  { id: '03', src: '/images/instagram/03.jpg', href: `${PROFILE}reel/DeFYTwkIW5T/` },
-  { id: '04', src: '/images/instagram/04.jpg', href: `${PROFILE}reel/DeEQ2ijhqOW/` },
-  { id: '05', src: '/images/instagram/05.jpg', href: `${PROFILE}reel/Dd4K-pAoqE4/` },
-  { id: '06', src: '/images/instagram/06.jpg', href: `${PROFILE}reel/Ddi9K8-oE9P/` },
-  { id: '07', src: '/images/instagram/07.jpg', href: `${PROFILE}reel/DdUdyeVoiQK/` },
-  { id: '08', src: '/images/instagram/08.jpg', href: `${PROFILE}reel/DdBc7rmoqRv/` },
-  { id: '09', src: '/images/instagram/09.jpg', href: `${PROFILE}reel/Dcx8SnOIlr3/` },
-  { id: '10', src: '/images/instagram/10.jpg', href: `${PROFILE}reel/DcoKrCUIalj/` },
+  { id: '01', src: '/images/instagram/01.webp', href: `${PROFILE}reel/DYKEnfqCTKE/` },
+  { id: '02', src: '/images/instagram/02.webp', href: `${PROFILE}reel/DYrUBNqI59u/` },
+  { id: '03', src: '/images/instagram/03.webp', href: `${PROFILE}reel/DeFYTwkIW5T/` },
+  { id: '04', src: '/images/instagram/04.webp', href: `${PROFILE}reel/DeEQ2ijhqOW/` },
+  { id: '05', src: '/images/instagram/05.webp', href: `${PROFILE}reel/Dd4K-pAoqE4/` },
+  { id: '06', src: '/images/instagram/06.webp', href: `${PROFILE}reel/Ddi9K8-oE9P/` },
+  { id: '07', src: '/images/instagram/07.webp', href: `${PROFILE}reel/DdUdyeVoiQK/` },
+  { id: '08', src: '/images/instagram/08.webp', href: `${PROFILE}reel/DdBc7rmoqRv/` },
+  { id: '09', src: '/images/instagram/09.webp', href: `${PROFILE}reel/Dcx8SnOIlr3/` },
+  { id: '10', src: '/images/instagram/10.webp', href: `${PROFILE}reel/DcoKrCUIalj/` },
 ];
 
 type GraphMedia = {

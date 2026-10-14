@@ -6,11 +6,11 @@ export default function TattooArtist() {
       <div className="mx-auto w-full max-w-7xl px-5 md:px-12 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
         <div className="relative w-full max-w-lg mx-auto md:mx-0 overflow-visible">
           <Image
-            src="/images/employees/ricardo-vieira.png"
+            src="/images/employees/ricardo-vieira.webp"
             alt="Ricardo Vieira, tatuador da Ganesha Ink"
             width={768}
             height={1024}
-            unoptimized
+            loading="lazy"
             className="h-auto w-full object-contain object-center"
           />
         </div>
