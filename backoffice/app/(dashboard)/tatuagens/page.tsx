@@ -16,7 +16,7 @@ export default async function TatuagensPage() {
   return (
     <div>
       <TopBar title="Tatuagens" />
-      <div className="p-6">
+      <div className="p-6 space-y-6">
         {initial
           ? <TradeStatsClient slug="tattoo" personLabel="Tatuador" initial={initial} />
           : <p className="text-text-secondary">Não foi possível carregar as estatísticas.</p>

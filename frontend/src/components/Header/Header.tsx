@@ -28,6 +28,7 @@ export default function Header() {
   const marcarHref = marcarHrefForPath(pathname);
 
   return (
+    <>
     <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-gold-border pt-[env(safe-area-inset-top)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 md:h-24">
         <Link href="/" className="flex items-center gap-2.5 md:gap-3 min-w-0">
@@ -113,22 +114,23 @@ export default function Header() {
         </div>
       )}
 
-      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-gold-border bg-bg-primary/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
-        <div className="mx-4 my-2.5 grid grid-cols-2 gap-2.5">
-          <Link
-            href="/"
-            className="flex items-center justify-center py-3 border border-gold/70 text-gold font-gate text-xs font-semibold uppercase tracking-[0.2em] rounded"
-          >
-            Voltar
-          </Link>
-          <Link
-            href={marcarHref}
-            className="flex items-center justify-center py-3 bg-gold text-bg-primary font-gate text-xs font-semibold uppercase tracking-[0.2em] rounded"
-          >
-            Marcar
-          </Link>
-        </div>
-      </div>
     </header>
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-gold-border bg-bg-primary/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-4 my-2.5 grid grid-cols-2 gap-2.5">
+        <Link
+          href="/"
+          className="flex items-center justify-center py-3 border border-gold/70 text-gold font-gate text-xs font-semibold uppercase tracking-[0.2em] rounded"
+        >
+          Voltar
+        </Link>
+        <Link
+          href={marcarHref}
+          className="flex items-center justify-center py-3 bg-gold text-bg-primary font-gate text-xs font-semibold uppercase tracking-[0.2em] rounded"
+        >
+          Marcar
+        </Link>
+      </div>
+    </div>
+    </>
   );
 }

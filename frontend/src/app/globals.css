@@ -322,6 +322,167 @@
   }
 }
 
+.flash-party {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-top: 5.75rem;
+}
+
+@media (max-width: 1023px) {
+  .flash-party {
+    align-items: flex-start;
+    min-height: auto;
+    padding-top: 6rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.flash-copy > * {
+  animation: flash-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.flash-copy > :nth-child(1) { animation-delay: 0.05s; }
+.flash-copy > :nth-child(2) { animation-delay: 0.14s; }
+.flash-copy > :nth-child(3) { animation-delay: 0.24s; }
+.flash-copy > :nth-child(4) { animation-delay: 0.34s; }
+.flash-copy > :nth-child(5) { animation-delay: 0.42s; }
+.flash-copy > :nth-child(6) { animation-delay: 0.5s; }
+.flash-copy > :nth-child(7) { animation-delay: 0.58s; }
+.flash-copy > :nth-child(8) { animation-delay: 0.64s; }
+
+.flash-cell {
+  animation: flash-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.18s + var(--i, 0) * 70ms);
+}
+
+.flash-stroke path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.flash-stroke-static path {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flash-stroke path {
+    stroke-dashoffset: 1;
+    animation: flash-draw 2.2s ease forwards;
+    animation-delay: var(--draw-delay, 0ms);
+  }
+}
+
+.flash-float {
+  animation: flash-drift 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.25));
+}
+
+.flash-float-orange {
+  filter: drop-shadow(0 0 12px rgba(255, 92, 0, 0.55));
+}
+
+.flash-cta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 0;
+}
+
+.flash-cta::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-repeat: no-repeat;
+  background-size: 50% 50%;
+  background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+  background-image:
+    linear-gradient(#FF5C00, #FF5C00),
+    linear-gradient(#FFB347, #FFB347),
+    linear-gradient(#FF5C00, #FF5C00),
+    linear-gradient(#FFB347, #FFB347);
+  animation: flash-cta-spin 4s linear infinite;
+  z-index: -2;
+}
+
+.flash-cta::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: #000;
+  z-index: -1;
+}
+
+.flash-float-slow {
+  animation: flash-drift 8s ease-in-out infinite;
+}
+
+.flash-float-alt {
+  animation: flash-drift-alt 7s ease-in-out infinite;
+}
+
+@keyframes flash-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flash-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes flash-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-8deg);
+  }
+  50% {
+    transform: translate3d(18px, -22px, 0) rotate(10deg);
+  }
+}
+
+@keyframes flash-drift-alt {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(8deg);
+  }
+  50% {
+    transform: translate3d(-16px, 18px, 0) rotate(-10deg);
+  }
+}
+
+@keyframes flash-cta-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-copy > *,
+  .flash-cell,
+  .flash-stroke path,
+  .flash-float,
+  .flash-float-slow,
+  .flash-float-alt,
+  .flash-cta::before {
+    animation: none !important;
+  }
+
+  .flash-stroke path {
+    stroke-dashoffset: 0;
+  }
+}
+
 .gate-grain {
   pointer-events: none;
   position: absolute;

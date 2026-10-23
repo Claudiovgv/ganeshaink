@@ -7,6 +7,7 @@ import StencilField from '@/components/Tattoo/StencilField';
 import MobileHeroStencils from '@/components/Tattoo/MobileHeroStencils';
 import StencilScrollHint from '@/components/Tattoo/StencilScrollHint';
 import DesktopOnly from '@/components/DesktopOnly';
+import HalloweenFlashParty from '@/components/Tattoo/HalloweenFlashParty';
 
 export const metadata: Metadata = {
   title: 'Tatuagem em Vale de Cambra — Tattoostudio',
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
 export default function TattooPage() {
   return (
     <div className="relative overflow-x-hidden bg-black">
+      <HalloweenFlashParty />
       <StencilField />
 
       <section className="relative z-10 min-h-[100dvh]">

@@ -330,4 +330,23 @@ export const api = {
     getTrade: (slug: string, period: StatsPeriod, offset: number) =>
       apiFetch<BarbershopStatsResponse>(`/admin/stats/trade/${slug}?period=${period}&offset=${offset}`),
   },
+  campaigns: {
+    halloweenFlash: () =>
+      apiFetch<{
+        clicks: number;
+        total: number;
+        byFlash: { id: string; label: string; count: number }[];
+        rsvps: {
+          id: string;
+          firstName: string;
+          lastName: string;
+          flashId: string;
+          flashIds?: string[];
+          flashLabel: string;
+          quantity?: number;
+          price?: number;
+          createdAt: string;
+        }[];
+      }>('/admin/campaigns/halloween-flash'),
+  },
 };

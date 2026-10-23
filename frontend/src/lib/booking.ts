@@ -47,11 +47,13 @@ export function servicesForTrade(
   return services.filter((service) => bookingRootSlug(service, categories) === trade);
 }
 
-export function tattooWhatsAppUrl(intent: 'talk' | 'call'): string {
+export function tattooWhatsAppUrl(intent: 'talk' | 'call' | 'flash-party'): string {
   const text =
     intent === 'call'
       ? 'Olá, queria agendar uma chamada para falar de uma tatuagem na Ganesha Ink.'
-      : 'Olá, queria falar sobre uma tatuagem na Ganesha Ink.';
+      : intent === 'flash-party'
+        ? 'Olá, queria uma flash da Halloween Flash Party do dia 31 de outubro.'
+        : 'Olá, queria falar sobre uma tatuagem na Ganesha Ink.';
   return `https://wa.me/${STUDIO_WHATSAPP}?text=${encodeURIComponent(text)}`;
 }
 

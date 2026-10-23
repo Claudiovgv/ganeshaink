@@ -24,7 +24,9 @@ const adminCategoriesRoutes = require('./routes/admin/categories');
 const adminBlogRoutes = require('./routes/admin/blog');
 const adminClientsRoutes = require('./routes/admin/clients');
 const adsenseRoutes = require('./routes/adsense');
+const campaignsRoutes = require('./routes/campaigns');
 const adminSettingsRoutes = require('./routes/admin/settings');
+const adminCampaignsRoutes = require('./routes/admin/campaigns');
 const adminLogsRoutes = require('./routes/admin/logs');
 const adminUsersRoutes = require('./routes/admin/users');
 const adminRolesRoutes = require('./routes/admin/roles');
@@ -95,6 +97,7 @@ app.use(`${API_BASE}/v1/consultations`, consultationsRoutes);
 app.use(`${API_BASE}/v1/blog`, blogRoutes);
 app.use(`${API_BASE}/v1/client-errors`, clientErrorsRoutes);
 app.use(`${API_BASE}/v1/adsense`, adsenseRoutes);
+app.use(`${API_BASE}/v1/campaigns`, campaignsRoutes);
 
 // Admin routes
 app.use(`${API_BASE}/v1/admin/appointments`, adminAppointmentsRoutes);
@@ -112,6 +115,7 @@ app.use(`${API_BASE}/v1/admin/stats`, adminStatsRoutes);
 app.use(`${API_BASE}/v1/admin/schedules`, adminSchedulesRoutes);
 app.use(`${API_BASE}/v1/admin/blocks`, adminBlocksRoutes);
 app.use(`${API_BASE}/v1/admin/partnerships`, adminPartnershipsRoutes);
+app.use(`${API_BASE}/v1/admin/campaigns`, adminCampaignsRoutes);
 
 // Employee routes
 app.use(`${API_BASE}/v1/employee/appointments`, employeeAppointmentsRoutes);

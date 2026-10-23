@@ -30,6 +30,11 @@ const Icons: Record<string, JSX.Element> = {
       <path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0c0-4.5-7-13-7-13z"/>
     </svg>
   ),
+  'Flash Party': (
+    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
+    </svg>
+  ),
   Nails: (
     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
@@ -180,6 +185,7 @@ const ADMIN_NAV_ALL = [
       { href: '/estatisticas', label: 'Estatísticas', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/barbearia', label: 'Barbearia', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/tatuagens', label: 'Tatuagens', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/flash-party', label: 'Flash Party', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/nails', label: 'Estética', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/piercings', label: 'Piercings', perm: 'manage_appointments' as AdminPermissionKey | null },
     ],
@@ -233,13 +239,17 @@ function rebuildAnalise(user: ReturnType<typeof useAuth>) {
       { href: '/estatisticas', label: 'Estatísticas' },
       { href: '/barbearia', label: 'Barbearia' },
       { href: '/tatuagens', label: 'Tatuagens' },
+      { href: '/flash-party', label: 'Flash Party' },
       { href: '/nails', label: 'Estética' },
       { href: '/piercings', label: 'Piercings' },
     );
     return [{ section: 'Análise', items }];
   }
   if (user.statsCategories?.includes('barbershop')) items.push({ href: '/barbearia', label: 'Barbearia' });
-  if (user.statsCategories?.includes('tattoo')) items.push({ href: '/tatuagens', label: 'Tatuagens' });
+  if (user.statsCategories?.includes('tattoo')) {
+    items.push({ href: '/tatuagens', label: 'Tatuagens' });
+    items.push({ href: '/flash-party', label: 'Flash Party' });
+  }
   if (user.statsCategories?.includes('nails')) items.push({ href: '/nails', label: 'Estética' });
   return items.length ? [{ section: 'Análise', items }] : [];
 }
@@ -283,6 +293,7 @@ const SUPERADMIN_NAV = [
       { href: '/estatisticas', label: 'Estatísticas' },
       { href: '/barbearia', label: 'Barbearia' },
       { href: '/tatuagens', label: 'Tatuagens' },
+      { href: '/flash-party', label: 'Flash Party' },
       { href: '/nails', label: 'Estética' },
       { href: '/piercings', label: 'Piercings' },
     ],

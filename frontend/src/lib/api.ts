@@ -182,4 +182,17 @@ export const api = {
     list: () => apiFetch<BlogPost[]>('/blog', { next: { revalidate: 600 } } as RequestInit),
     get: (slug: string) => apiFetch<BlogPost>(`/blog/${slug}`, { next: { revalidate: 600 } } as RequestInit),
   },
+  campaigns: {
+    halloweenFlashClick: () =>
+      apiFetch<{ clicks: number }>('/campaigns/halloween-flash/click', {
+        method: 'POST',
+        cache: 'no-store',
+      }),
+    halloweenFlashRsvp: (data: { firstName: string; lastName: string; flashId: string }) =>
+      apiFetch<{ total: number }>('/campaigns/halloween-flash/rsvp', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      }),
+  },
 };
