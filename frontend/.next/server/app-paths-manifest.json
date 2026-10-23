@@ -7,17 +7,17 @@
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
   "/robots.txt/route": "app/robots.txt/route.js",
   "/barbearia/page": "app/barbearia/page.js",
-  "/cancelar/[token]/page": "app/cancelar/[token]/page.js",
   "/artistas/page": "app/artistas/page.js",
-  "/blog/page": "app/blog/page.js",
+  "/cancelar/[token]/page": "app/cancelar/[token]/page.js",
   "/consulta/page": "app/consulta/page.js",
+  "/nails/page": "app/nails/page.js",
+  "/blog/page": "app/blog/page.js",
   "/galeria/page": "app/galeria/page.js",
   "/page": "app/page.js",
   "/contacto/page": "app/contacto/page.js",
-  "/tattoo/page": "app/tattoo/page.js",
   "/marcar/page": "app/marcar/page.js",
   "/servicos/page": "app/servicos/page.js",
   "/politica-de-cookies/page": "app/politica-de-cookies/page.js",
-  "/nails/page": "app/nails/page.js",
-  "/politica-de-privacidade/page": "app/politica-de-privacidade/page.js"
+  "/politica-de-privacidade/page": "app/politica-de-privacidade/page.js",
+  "/tattoo/page": "app/tattoo/page.js"
 }

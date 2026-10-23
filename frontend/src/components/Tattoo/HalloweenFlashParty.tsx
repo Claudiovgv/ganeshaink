@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { BatFlash, GhostFlash, PumpkinFlash } from './HalloweenFlashes';
 import { FLASH_DIALOG, FLASH_OVERLAY, FlashSheetDialog, FlashSheetView } from './HalloweenFlashSheet';
 import {
@@ -69,9 +69,10 @@ export default function HalloweenFlashParty() {
   }, []);
 
   useEffect(() => {
+    if (open || gallery || sheet) return;
     const id = window.setInterval(() => setTick((value) => value + 1), 2600);
     return () => window.clearInterval(id);
-  }, []);
+  }, [open, gallery, sheet]);
 
   const openModal = (flashId?: string | string[]) => {
     if (confirmed) return;
@@ -92,7 +93,11 @@ export default function HalloweenFlashParty() {
     });
   };
 
-  const onReserved = () => {
+  const closeModal = useCallback(() => setOpen(false), []);
+  const closeGallery = useCallback(() => setGallery(false), []);
+  const closeSheet = useCallback(() => setSheet(false), []);
+
+  const onReserved = useCallback(() => {
     try {
       sessionStorage.setItem(RSVP_KEY, '1');
     } catch {
@@ -102,7 +107,7 @@ export default function HalloweenFlashParty() {
     setOpen(false);
     setGallery(false);
     setSheet(false);
-  };
+  }, []);
 
   return (
     <section className="flash-party relative z-20 overflow-hidden bg-black px-5 pt-24 pb-28 md:px-12 md:pt-28 md:pb-16">
@@ -213,7 +218,7 @@ export default function HalloweenFlashParty() {
 
       {gallery && (
         <FlashGallery
-          onClose={() => setGallery(false)}
+          onClose={closeGallery}
           onAdvance={(ids) => openModal(ids)}
           onSheet={() => {
             setGallery(false);
@@ -223,13 +228,13 @@ export default function HalloweenFlashParty() {
       )}
       {sheet && (
         <FlashSheetDialog
-          onClose={() => setSheet(false)}
+          onClose={closeSheet}
           onPick={(id) => openModal(id)}
         />
       )}
       {open && (
         <HalloweenFlashModal
-          onClose={() => setOpen(false)}
+          onClose={closeModal}
           onReserved={onReserved}
           preselect={preselect}
         />
@@ -248,19 +253,21 @@ function FlashGallery({
   onSheet: () => void;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') onCloseRef.current();
     };
     document.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = previous;
       document.removeEventListener('keydown', onKey);
     };
-  }, [onClose]);
+  }, []);
 
   const toggle = (id: string) => {
     setSelected((current) => {
@@ -365,19 +372,22 @@ function HalloweenFlashModal({
   const [sheetOpen, setSheetOpen] = useState(false);
   const focused = own ? null : selected[selected.length - 1] ?? null;
 
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     firstRef.current?.focus();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') onCloseRef.current();
     };
     document.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = previous;
       document.removeEventListener('keydown', onKey);
     };
-  }, [onClose]);
+  }, []);
 
   const toggleFlash = (id: string) => {
     setOwn(false);
@@ -448,12 +458,14 @@ function HalloweenFlashModal({
         </p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <label className="block text-left">
+          <label className="block text-left" htmlFor="flash-first-name">
             <span className="font-gate text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
               Primeiro nome
             </span>
             <input
               ref={firstRef}
+              id="flash-first-name"
+              name="given-name"
               value={firstName}
               onChange={(event) => setFirstName(event.target.value)}
               autoComplete="given-name"
@@ -461,11 +473,13 @@ function HalloweenFlashModal({
               className="mt-1 w-full border border-white/25 bg-black px-3 py-2.5 text-sm text-white outline-none focus:border-[#FF5C00]"
             />
           </label>
-          <label className="block text-left">
+          <label className="block text-left" htmlFor="flash-last-name">
             <span className="font-gate text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
               Último nome
             </span>
             <input
+              id="flash-last-name"
+              name="family-name"
               value={lastName}
               onChange={(event) => setLastName(event.target.value)}
               autoComplete="family-name"
