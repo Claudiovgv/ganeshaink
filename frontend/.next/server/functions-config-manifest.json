@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/consulta":{},"/cancelar/[token]":{},"/galeria":{},"/contacto":{},"/nails":{},"/blog":{},"/marcar":{},"/":{},"/politica-de-cookies":{},"/tattoo":{},"/servicos":{},"/barbearia":{},"/artistas":{},"/politica-de-privacidade":{}}}
+{"version":1,"functions":{"/_not-found":{},"/artistas":{},"/cancelar/[token]":{},"/blog":{},"/barbearia":{},"/consulta":{},"/galeria":{},"/":{},"/politica-de-cookies":{},"/servicos":{},"/contacto":{},"/tattoo":{},"/politica-de-privacidade":{},"/marcar":{},"/beauty":{}}}

@@ -44,7 +44,7 @@ export default function BarberHero() {
   return (
     <div ref={trackRef} className="relative h-[240vh]">
       <section className="sticky top-0 h-[100dvh] overflow-hidden bg-black">
-        <h1 className="sr-only">Barbearia</h1>
+        <h1 className="sr-only">Barbearia Ganesha Ink em Vale de Cambra</h1>
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-[5] flex h-full justify-center"
           aria-hidden

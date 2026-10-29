@@ -4,10 +4,13 @@ import Link from 'next/link';
 import { api, BlogPost } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 
-export const metadata: Metadata = {
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
   title: 'Blog',
-  description: 'Artigos sobre tatuagem, barbearia, cuidados e tendências do Ganesha Ink.',
-};
+  description: 'Artigos da Ganesha Ink em Vale de Cambra sobre tatuagem, barbearia e beauty.',
+  path: PATHS.blog,
+});
 
 function PostCard({ post }: { post: BlogPost }) {
   return (

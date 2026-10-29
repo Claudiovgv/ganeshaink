@@ -5,10 +5,13 @@ import { api, Employee } from '@/lib/api';
 import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
 import { resolvePhotoUrl } from '@/lib/media';
 
-export const metadata: Metadata = {
-  title: 'Artistas',
-  description: 'Conheça os artistas e especialistas do Ganesha Ink.',
-};
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Artistas em Vale de Cambra',
+  description: 'Artistas da Ganesha Ink em Vale de Cambra — tatuagem, barbearia e beauty.',
+  path: PATHS.artistas,
+});
 
 function ArtistCard({ employee }: { employee: Employee }) {
   const categories = Array.from(new Map(employee.services.map((s) => [s.category.id, s.category])).values());

@@ -7,6 +7,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'api.ganeshaink.pt', pathname: '/uploads/**' },
     ],
   },
+  async redirects() {
+    return [
+      { source: '/nails', destination: '/beauty', permanent: true },
+      { source: '/nails/:path*', destination: '/beauty/:path*', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

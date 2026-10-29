@@ -6,6 +6,7 @@ import { api } from '@/lib/api';
 import { formatPrice, formatDuration } from '@/lib/utils';
 import { MOCK_EMPLOYEES } from '@/lib/mock-employees';
 import { resolvePhotoUrl } from '@/lib/media';
+import { pageMetadata } from '@/lib/site';
 
 interface Props {
   params: { id: string };
@@ -18,11 +19,12 @@ async function getEmployee(id: number) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const emp = await getEmployee(Number(params.id));
-  if (!emp) return { title: 'Artista não encontrado' };
-  return {
+  if (!emp) return { title: 'Artista não encontrado', robots: { index: false, follow: true } };
+  return pageMetadata({
     title: emp.name,
-    description: emp.bio || `Perfil do artista ${emp.name} no Ganesha Ink.`,
-  };
+    description: emp.bio || `Artista ${emp.name} na Ganesha Ink em Vale de Cambra.`,
+    path: `/artistas/${emp.id}`,
+  });
 }
 
 export default async function ArtistProfilePage({ params }: Props) {

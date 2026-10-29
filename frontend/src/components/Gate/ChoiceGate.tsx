@@ -9,7 +9,7 @@ const WORLDS = [
   {
     href: '/tattoo',
     name: 'Tattoostudio',
-    line: 'Arte permanente',
+    line: 'Estúdio de tatuagem',
     image: '/images/gallery/tattoo-1.webp',
     imageAlt: 'Tatuagem no estúdio Ganesha Ink',
   },
@@ -21,7 +21,7 @@ const WORLDS = [
     imageAlt: 'Barbearia Ganesha Ink',
   },
   {
-    href: '/nails',
+    href: '/beauty',
     name: 'Beauty',
     line: 'Estética de unhas',
     image: '/images/gallery/nails-1.webp',
@@ -116,8 +116,8 @@ export default function ChoiceGate() {
 
       <div className="pointer-events-none relative z-20 flex shrink-0 items-center justify-center gap-2 border-t border-gold/25 bg-black/90 px-4 py-2.5 md:hidden pb-[max(0.65rem,env(safe-area-inset-bottom))]">
         <Image
-          src="/images/logo/ganesha-icon.webp"
-          alt=""
+          src="/images/logo/ganesha-logo-gold-white.webp"
+          alt="Ganesha Ink"
           width={28}
           height={28}
           className="h-7 w-7 object-contain"

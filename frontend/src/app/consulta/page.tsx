@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import ConsultaForm from './ConsultaForm';
 
-export const metadata: Metadata = {
-  title: 'Pedido de Consulta',
-  description: 'Pede uma consulta para tatuagem ou body piercing no Ganesha Ink.',
-};
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Consulta de tatuagem em Vale de Cambra',
+  description: 'Pede uma consulta para tatuagem ou body piercing no estúdio Ganesha Ink em Vale de Cambra.',
+  path: PATHS.consulta,
+});
 
 export default function ConsultaPage({ searchParams }: { searchParams: { tipo?: string } }) {
   const tipo = searchParams.tipo === 'piercing' || searchParams.tipo === 'tattoo'

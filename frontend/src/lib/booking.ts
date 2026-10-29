@@ -34,6 +34,7 @@ export function isTattooLikeSlug(slug?: string | null, parentSlug?: string | nul
 }
 
 export function parseBookingArea(value?: string | null): BookingArea | null {
+  if (value === 'beauty') return 'nails';
   if (isBookableTrade(value)) return value;
   if (value === 'tattoo' || value === 'piercing') return 'tattoo';
   return null;
@@ -60,6 +61,6 @@ export function tattooWhatsAppUrl(intent: 'talk' | 'call' | 'flash-party'): stri
 export function marcarHrefForPath(pathname: string): string {
   if (pathname.startsWith('/tattoo')) return '/marcar?area=tattoo';
   if (pathname.startsWith('/barbearia')) return '/marcar?area=barbershop';
-  if (pathname.startsWith('/nails')) return '/marcar?area=nails';
+  if (pathname.startsWith('/beauty') || pathname.startsWith('/nails')) return '/marcar?area=nails';
   return '/marcar';
 }

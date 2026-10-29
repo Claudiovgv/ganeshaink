@@ -1,41 +1,12 @@
 import Link from 'next/link';
+import JsonLd from '@/components/seo/JsonLd';
 import ScrollReveal from '@/components/Barbearia/ScrollReveal';
-
-const JSON_LD = {
-  '@context': 'https://schema.org',
-  '@type': 'NailSalon',
-  name: 'Ganesha Ink Beauty',
-  description: 'Estética de unhas Ganesha Ink em Vale de Cambra.',
-  url: 'https://ganeshaink.pt/nails',
-  image: 'https://ganeshaink.pt/images/logo/ganesha-logo-gold-white.webp',
-  telephone: '+351913570454',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Rua Eng. Duarte Pacheco n.º 33',
-    addressLocality: 'Vale de Cambra',
-    addressRegion: 'Aveiro',
-    postalCode: '3730-254',
-    addressCountry: 'PT',
-  },
-  areaServed: ['Vale de Cambra', 'Oliveira de Azeméis', 'São João da Madeira', 'Arouca', 'Distrito de Aveiro'],
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-      opens: '09:30',
-      closes: '18:00',
-    },
-  ],
-  sameAs: ['https://www.instagram.com/ganeshaink'],
-};
+import { nailSalonJsonLd } from '@/lib/site';
 
 export default function BeautyStory() {
   return (
     <section className="relative z-10 overflow-visible bg-black py-12 md:py-24">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
-      />
+      <JsonLd data={nailSalonJsonLd()} />
 
       <article className="relative mx-auto w-full max-w-7xl px-5 md:px-12 lg:px-16">
         <ScrollReveal className="mb-10 md:mb-16">

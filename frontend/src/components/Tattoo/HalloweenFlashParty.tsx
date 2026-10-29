@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { BatFlash, GhostFlash, PumpkinFlash } from './HalloweenFlashes';
-import { FLASH_DIALOG, FLASH_OVERLAY, FlashSheetDialog, FlashSheetView } from './HalloweenFlashSheet';
+import { FLASH_DIALOG, FlashOverlay, FlashSheetDialog, FlashSheetView } from './HalloweenFlashSheet';
 import {
   FLASH_PRICES,
   OWN_FLASH_ID,
@@ -278,7 +278,7 @@ function FlashGallery({
   };
 
   return (
-    <div className={FLASH_OVERLAY} onClick={onClose}>
+    <FlashOverlay onClose={onClose}>
       <div
         role="dialog"
         aria-modal="true"
@@ -290,11 +290,11 @@ function FlashGallery({
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute right-4 top-3 text-2xl leading-none text-white/55 hover:text-white"
+          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center text-3xl leading-none text-white/55 hover:text-white"
         >
           ×
         </button>
-        <p className="pr-8 font-gate text-xl font-semibold uppercase tracking-[0.18em] text-[#FF5C00] sm:text-2xl">
+        <p className="pr-12 font-gate text-xl font-semibold uppercase tracking-[0.18em] text-[#FF5C00] sm:text-2xl">
           Escolhe a tua
         </p>
         <p className="mt-2 font-gate text-sm uppercase tracking-[0.14em] text-[#FFB347] sm:text-base">
@@ -303,34 +303,36 @@ function FlashGallery({
         <button
           type="button"
           onClick={onSheet}
-          className="mt-4 w-full border-2 border-[#FF5C00] bg-[#FF5C00]/15 px-5 py-3 font-gate text-[0.82rem] uppercase tracking-[0.2em] text-[#FF5C00] hover:bg-[#FF5C00]/25"
+          className="mt-4 min-h-12 w-full border-2 border-[#FF5C00] bg-[#FF5C00]/15 px-5 py-3 font-gate text-[0.82rem] uppercase tracking-[0.2em] text-[#FF5C00] hover:bg-[#FF5C00]/25"
         >
           Ver folha das flashes
         </button>
-        <div className="mt-5 grid grid-cols-3 gap-px border border-white/20 bg-white/20 sm:grid-cols-4 md:grid-cols-6">
-          {SHEET_FLASHES.map((flash) => {
-            const picked = selected.includes(flash.id);
-            return (
-              <button
-                key={flash.id}
-                type="button"
-                onClick={() => toggle(flash.id)}
-                aria-pressed={picked}
-                className={`relative aspect-square bg-black p-[10%] ${
-                  picked ? 'ring-2 ring-inset ring-[#FF5C00]' : ''
-                }`}
-              >
-                <img src={flash.src} alt={flash.label} className="h-full w-full object-contain" />
-                {picked && (
-                  <span className="absolute inset-x-1 bottom-1 font-gate text-[0.52rem] uppercase tracking-[0.1em] text-[#FF5C00]">
-                    Escolho esta
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        <div className="mt-5 min-h-0 flex-1 overflow-y-auto">
+          <div className="grid grid-cols-3 gap-px border border-white/20 bg-white/20 sm:grid-cols-4 md:grid-cols-6">
+            {SHEET_FLASHES.map((flash) => {
+              const picked = selected.includes(flash.id);
+              return (
+                <button
+                  key={flash.id}
+                  type="button"
+                  onClick={() => toggle(flash.id)}
+                  aria-pressed={picked}
+                  className={`relative aspect-square bg-black p-[10%] ${
+                    picked ? 'ring-2 ring-inset ring-[#FF5C00]' : ''
+                  }`}
+                >
+                  <img src={flash.src} alt={flash.label} className="h-full w-full object-contain" />
+                  {picked && (
+                    <span className="absolute inset-x-1 bottom-1 font-gate text-[0.52rem] uppercase tracking-[0.1em] text-[#FF5C00]">
+                      Escolho esta
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <div className="sticky bottom-0 -mx-4 mt-5 border-t border-[#FF5C00]/40 bg-black px-4 pt-3 sm:-mx-7 sm:px-7">
+        <div className="shrink-0 border-t border-[#FF5C00]/40 bg-black pt-3">
           <p className="mb-3 text-center font-gate text-[0.68rem] uppercase tracking-[0.16em] text-white/60">
             {selected.length === 0
               ? 'Escolhe 1 ou mais para avançar.'
@@ -340,13 +342,13 @@ function FlashGallery({
             type="button"
             disabled={selected.length === 0}
             onClick={() => onAdvance(selected)}
-            className="flash-cta mb-1 inline-flex w-full items-center justify-center px-7 py-3.5 font-gate text-[0.82rem] uppercase tracking-[0.28em] text-[#FF5C00] disabled:opacity-40"
+            className="flash-cta inline-flex min-h-12 w-full items-center justify-center px-7 py-3.5 font-gate text-[0.82rem] uppercase tracking-[0.28em] text-[#FF5C00] disabled:opacity-40"
           >
             Avançar
           </button>
         </div>
       </div>
-    </div>
+    </FlashOverlay>
   );
 }
 
@@ -360,6 +362,7 @@ function HalloweenFlashModal({
   preselect: string[];
 }) {
   const firstRef = useRef<HTMLInputElement>(null);
+  const [step, setStep] = useState<'choose' | 'name'>('choose');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [quantity, setQuantity] = useState<FlashQuantity>(
@@ -371,6 +374,7 @@ function HalloweenFlashModal({
   const [saving, setSaving] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const focused = own ? null : selected[selected.length - 1] ?? null;
+  const canAdvance = own || selected.length === quantity;
 
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
@@ -378,7 +382,6 @@ function HalloweenFlashModal({
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    firstRef.current?.focus();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onCloseRef.current();
     };
@@ -388,6 +391,10 @@ function HalloweenFlashModal({
       document.removeEventListener('keydown', onKey);
     };
   }, []);
+
+  useEffect(() => {
+    if (step === 'name') firstRef.current?.focus();
+  }, [step]);
 
   const toggleFlash = (id: string) => {
     setOwn(false);
@@ -430,7 +437,7 @@ function HalloweenFlashModal({
   };
 
   return (
-    <div className={FLASH_OVERLAY} onClick={onClose}>
+    <FlashOverlay onClose={onClose}>
       <form
         role="dialog"
         aria-modal="true"
@@ -443,132 +450,172 @@ function HalloweenFlashModal({
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute right-4 top-3 text-2xl leading-none text-white/55 hover:text-white"
+          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center text-3xl leading-none text-white/55 hover:text-white"
         >
           ×
         </button>
         <p
           id="flash-modal-title"
-          className="font-gate text-2xl font-semibold uppercase tracking-[0.18em] text-[#FF5C00] sm:text-3xl"
+          className="pr-12 font-gate text-2xl font-semibold uppercase tracking-[0.18em] text-[#FF5C00] sm:text-3xl"
         >
           Levo uma flash
         </p>
-        <p className="mt-4 font-gate text-sm font-semibold uppercase leading-relaxed tracking-[0.14em] text-[#FFB347] sm:text-base">
+        <p className="mt-3 font-gate text-sm font-semibold uppercase leading-relaxed tracking-[0.14em] text-[#FFB347] sm:text-base">
           3 × 3 · Minimalista · Preto e branco
         </p>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <label className="block text-left" htmlFor="flash-first-name">
-            <span className="font-gate text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
-              Primeiro nome
-            </span>
-            <input
-              ref={firstRef}
-              id="flash-first-name"
-              name="given-name"
-              value={firstName}
-              onChange={(event) => setFirstName(event.target.value)}
-              autoComplete="given-name"
-              required
-              className="mt-1 w-full border border-white/25 bg-black px-3 py-2.5 text-sm text-white outline-none focus:border-[#FF5C00]"
-            />
-          </label>
-          <label className="block text-left" htmlFor="flash-last-name">
-            <span className="font-gate text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
-              Último nome
-            </span>
-            <input
-              id="flash-last-name"
-              name="family-name"
-              value={lastName}
-              onChange={(event) => setLastName(event.target.value)}
-              autoComplete="family-name"
-              required
-              className="mt-1 w-full border border-white/25 bg-black px-3 py-2.5 text-sm text-white outline-none focus:border-[#FF5C00]"
-            />
-          </label>
-        </div>
+        {step === 'choose' ? (
+          <div className="mt-5 flex min-h-0 flex-1 flex-col">
+            <p className="font-gate text-[0.68rem] uppercase tracking-[0.2em] text-white/55">
+              Quantas flashes
+            </p>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {([1, 2, 3] as FlashQuantity[]).map((qty) => (
+                <button
+                  key={qty}
+                  type="button"
+                  onClick={() => {
+                    setQuantity(qty);
+                    setSelected((current) => current.slice(0, qty));
+                    setError('');
+                  }}
+                  className={`min-h-14 border px-1 py-2 font-gate text-[0.72rem] uppercase tracking-[0.08em] ${
+                    quantity === qty
+                      ? 'border-[#FF5C00] text-[#FF5C00]'
+                      : 'border-white/25 text-white/80'
+                  }`}
+                >
+                  <span className="block">{qty} flash</span>
+                  <span className="mt-0.5 block">{FLASH_PRICES[qty]} €</span>
+                </button>
+              ))}
+            </div>
 
-        <p className="mt-6 font-gate text-[0.68rem] uppercase tracking-[0.2em] text-white/55">
-          Quantas flashes
-        </p>
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          {([1, 2, 3] as FlashQuantity[]).map((qty) => (
-            <button
-              key={qty}
-              type="button"
-              onClick={() => {
-                setQuantity(qty);
-                setSelected((current) => current.slice(0, qty));
-              }}
-              className={`border px-2 py-3 font-gate text-[0.68rem] uppercase tracking-[0.12em] ${
-                quantity === qty
-                  ? 'border-[#FF5C00] text-[#FF5C00]'
-                  : 'border-white/25 text-white/80'
-              }`}
-            >
-              {qty} · {FLASH_PRICES[qty]} €
-            </button>
-          ))}
-        </div>
-
-        <p className="mt-6 font-gate text-[0.68rem] uppercase tracking-[0.2em] text-white/55">
-          Escolhe da folha ou leva a tua
-        </p>
-        {focused && (
-          <FlashSheetView focusId={focused} className="mt-3 border border-[#FF5C00]/40" />
-        )}
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={chooseOwn}
-            className={`flex-1 border px-4 py-3 font-gate text-[0.72rem] uppercase tracking-[0.16em] ${
-              own ? 'border-[#FF5C00] text-[#FF5C00]' : 'border-white/25 text-white'
-            }`}
-          >
-            {own ? 'Escolho esta — levo a minha' : 'Levo a minha'}
-          </button>
-          <button
-            type="button"
-            onClick={() => setSheetOpen(true)}
-            className="border border-[#FF5C00]/70 px-4 py-3 font-gate text-[0.72rem] uppercase tracking-[0.16em] text-[#FF5C00]"
-          >
-            Ver folha
-          </button>
-        </div>
-        <div className="mt-3 grid max-h-64 grid-cols-3 gap-px overflow-y-auto border border-white/25 bg-white/25 sm:grid-cols-4">
-          {SHEET_FLASHES.map((flash) => {
-            const picked = selected.includes(flash.id);
-            return (
+            <p className="mt-5 font-gate text-[0.68rem] uppercase tracking-[0.2em] text-white/55">
+              Escolhe da folha ou leva a tua
+            </p>
+            {focused && (
+              <FlashSheetView
+                focusId={focused}
+                className="mt-3 hidden border border-[#FF5C00]/40 sm:block"
+              />
+            )}
+            <div className="mt-3 flex gap-2">
               <button
-                key={flash.id}
                 type="button"
-                onClick={() => toggleFlash(flash.id)}
-                aria-pressed={picked}
-                className={`relative aspect-square bg-black p-[10%] ${
-                  picked ? 'ring-2 ring-inset ring-[#FF5C00]' : ''
+                onClick={chooseOwn}
+                className={`min-h-12 flex-1 border px-3 py-3 font-gate text-[0.72rem] uppercase tracking-[0.12em] ${
+                  own ? 'border-[#FF5C00] text-[#FF5C00]' : 'border-white/25 text-white'
                 }`}
               >
-                <img src={flash.src} alt={flash.label} className="h-full w-full object-contain" />
-                {picked && (
-                  <span className="absolute inset-x-1 bottom-1 font-gate text-[0.52rem] uppercase tracking-[0.1em] text-[#FF5C00]">
-                    Escolho esta
-                  </span>
-                )}
+                {own ? 'Levo a minha' : 'Levo a minha'}
               </button>
-            );
-          })}
-        </div>
-
-        {error && <p className="mt-4 text-sm text-[#FF5C00]">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={saving}
-          className="flash-cta mt-6 inline-flex w-full items-center justify-center px-7 py-3.5 font-gate text-[0.82rem] uppercase tracking-[0.28em] text-[#FF5C00] disabled:opacity-60"
-        >
-          {saving ? 'A gravar…' : `Vou · ${FLASH_PRICES[quantity]} €`}
-        </button>
+              <button
+                type="button"
+                onClick={() => setSheetOpen(true)}
+                className="min-h-12 border border-[#FF5C00]/70 px-3 py-3 font-gate text-[0.72rem] uppercase tracking-[0.12em] text-[#FF5C00]"
+              >
+                Ver folha
+              </button>
+            </div>
+            <div className="mt-3 min-h-0 flex-1 overflow-y-auto border border-white/25 bg-white/25">
+              <div className="grid grid-cols-3 gap-px sm:grid-cols-4">
+                {SHEET_FLASHES.map((flash) => {
+                  const picked = selected.includes(flash.id);
+                  return (
+                    <button
+                      key={flash.id}
+                      type="button"
+                      onClick={() => toggleFlash(flash.id)}
+                      aria-pressed={picked}
+                      className={`relative aspect-square bg-black p-[10%] ${
+                        picked ? 'ring-2 ring-inset ring-[#FF5C00]' : ''
+                      }`}
+                    >
+                      <img src={flash.src} alt={flash.label} className="h-full w-full object-contain" />
+                      {picked && (
+                        <span className="absolute inset-x-1 bottom-1 font-gate text-[0.52rem] uppercase tracking-[0.1em] text-[#FF5C00]">
+                          Escolho esta
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            {error && <p className="mt-3 text-sm text-[#FF5C00]">{error}</p>}
+            <button
+              type="button"
+              onClick={() => {
+                if (!canAdvance) {
+                  setError(
+                    `Escolhe ${quantity} flash${quantity > 1 ? 'es' : ''} da folha, ou «Levo a minha».`
+                  );
+                  return;
+                }
+                setError('');
+                setStep('name');
+              }}
+              className="flash-cta mt-4 inline-flex min-h-12 w-full items-center justify-center px-7 py-3.5 font-gate text-[0.82rem] uppercase tracking-[0.28em] text-[#FF5C00]"
+            >
+              Avançar · {FLASH_PRICES[quantity]} €
+            </button>
+          </div>
+        ) : (
+          <div className="mt-5 flex min-h-0 flex-1 flex-col">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block text-left" htmlFor="flash-first-name">
+                <span className="font-gate text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
+                  Primeiro nome
+                </span>
+                <input
+                  ref={firstRef}
+                  id="flash-first-name"
+                  name="given-name"
+                  value={firstName}
+                  onChange={(event) => setFirstName(event.target.value)}
+                  autoComplete="given-name"
+                  required
+                  className="mt-1 min-h-12 w-full border border-white/25 bg-black px-3 py-2.5 text-sm text-white outline-none focus:border-[#FF5C00]"
+                />
+              </label>
+              <label className="block text-left" htmlFor="flash-last-name">
+                <span className="font-gate text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
+                  Último nome
+                </span>
+                <input
+                  id="flash-last-name"
+                  name="family-name"
+                  value={lastName}
+                  onChange={(event) => setLastName(event.target.value)}
+                  autoComplete="family-name"
+                  required
+                  className="mt-1 min-h-12 w-full border border-white/25 bg-black px-3 py-2.5 text-sm text-white outline-none focus:border-[#FF5C00]"
+                />
+              </label>
+            </div>
+            {error && <p className="mt-4 text-sm text-[#FF5C00]">{error}</p>}
+            <div className="mt-auto grid grid-cols-2 gap-2 pt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setError('');
+                  setStep('choose');
+                }}
+                className="min-h-12 border border-white/30 px-4 py-3 font-gate text-[0.72rem] uppercase tracking-[0.16em] text-white"
+              >
+                Voltar
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="flash-cta inline-flex min-h-12 items-center justify-center px-4 py-3 font-gate text-[0.82rem] uppercase tracking-[0.2em] text-[#FF5C00] disabled:opacity-60"
+              >
+                {saving ? 'A gravar…' : `Vou · ${FLASH_PRICES[quantity]} €`}
+              </button>
+            </div>
+          </div>
+        )}
       </form>
       {sheetOpen && (
         <FlashSheetDialog
@@ -581,6 +628,6 @@ function HalloweenFlashModal({
           }}
         />
       )}
-    </div>
+    </FlashOverlay>
   );
 }

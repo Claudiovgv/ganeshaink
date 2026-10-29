@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import { api, Service } from '@/lib/api';
 import ServicosGrid from './ServicosGrid';
+import { pageMetadata, PATHS } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: 'Serviços',
-  description: 'Catálogo completo de serviços Ganesha Ink — barbearia, tatuagem, piercing e unhas com preços e durações.',
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Serviços de tatuagem, barbearia e beauty',
+  description:
+    'Catálogo Ganesha Ink em Vale de Cambra — tatuagem, barbearia, piercing e beauty, com preços e durações.',
+  path: PATHS.servicos,
+});
 
 export const dynamic = 'force-dynamic';
 

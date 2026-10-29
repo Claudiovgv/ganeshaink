@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import GaleriaClient from './GaleriaClient';
 
-export const metadata: Metadata = {
-  title: 'Galeria',
-  description: 'Galeria de trabalhos do Ganesha Ink — tatuagem, barbearia e piercing.',
-};
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Galeria de tatuagem, barbearia e beauty',
+  description: 'Galeria Ganesha Ink em Vale de Cambra — tatuagem, barbearia e beauty.',
+  path: PATHS.galeria,
+});
 
 const GALLERY_ITEMS = [
   { category: 'Tatuagem', src: '/images/gallery/tattoo-1.webp', alt: 'Trabalho de tatuagem Ganesha Ink' },
@@ -18,13 +21,13 @@ const GALLERY_ITEMS = [
   { category: 'Barbearia', src: '/images/gallery/barber-3.webp', alt: 'Corte de cabelo Ganesha Ink' },
   { category: 'Barbearia', src: '/images/gallery/barber-4.webp', alt: 'Corte de cabelo Ganesha Ink' },
   { category: 'Barbearia', src: '/images/gallery/barber-5.webp', alt: 'Corte de cabelo Ganesha Ink' },
-  { category: 'Unhas', src: '/images/gallery/nails-1.webp', alt: 'Trabalho de unhas Ganesha Ink' },
-  { category: 'Unhas', src: '/images/gallery/nails-2.webp', alt: 'Trabalho de unhas Ganesha Ink' },
-  { category: 'Unhas', src: '/images/gallery/nails-3.webp', alt: 'Trabalho de unhas Ganesha Ink' },
-  { category: 'Unhas', src: '/images/gallery/nails-4.webp', alt: 'Trabalho de unhas Ganesha Ink' },
+  { category: 'Beauty', src: '/images/gallery/nails-1.webp', alt: 'Trabalho de beauty Ganesha Ink' },
+  { category: 'Beauty', src: '/images/gallery/nails-2.webp', alt: 'Trabalho de beauty Ganesha Ink' },
+  { category: 'Beauty', src: '/images/gallery/nails-3.webp', alt: 'Trabalho de beauty Ganesha Ink' },
+  { category: 'Beauty', src: '/images/gallery/nails-4.webp', alt: 'Trabalho de beauty Ganesha Ink' },
 ];
 
-const CATEGORIES = ['Todos', 'Tatuagem', 'Barbearia', 'Piercing', 'Unhas'];
+const CATEGORIES = ['Todos', 'Tatuagem', 'Barbearia', 'Piercing', 'Beauty'];
 
 export default function GaleriaPage() {
   return (

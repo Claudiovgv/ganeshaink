@@ -6,6 +6,7 @@ import Footer from '@/components/Footer/Footer';
 import ClientErrorReporter from '@/components/ClientErrorReporter';
 import AdSenseLoader from '@/components/AdSenseLoader';
 import HideOnGate from '@/components/HideOnGate';
+import { SITE_LOGO, SITE_NAME, SITE_ORIGIN } from '@/lib/site';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -33,25 +34,37 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_ORIGIN),
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Ganesha Ink',
+    title: SITE_NAME,
   },
   title: {
     template: '%s | Ganesha Ink',
-    default: 'Ganesha Ink — Tatuagem, Barbearia & Piercing em Vale de Cambra',
+    default: 'Ganesha Ink — Estúdio de Tatuagem, Barbearia e Beauty em Vale de Cambra',
   },
   description:
-    'Studio premium de tatuagem, barbearia, body piercing e estética de unhas em Vale de Cambra. Marcações online disponíveis.',
+    'Estúdio de tatuagem, barbearia e salão de beauty em Vale de Cambra. Tatuagens personalizadas, cortes e estética de unhas. Marcações online para barbearia e Beauty.',
+  robots: { index: true, follow: true },
   icons: {
-    icon: '/images/logo/ganesha-icon.webp',
-    apple: '/images/logo/ganesha-icon.png',
+    icon: [
+      { url: '/images/logo/ganesha-icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/logo/ganesha-icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/images/logo/ganesha-icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '48x48' },
+    ],
+    apple: [{ url: '/images/logo/ganesha-apple-icon.png', sizes: '180x180' }],
   },
   openGraph: {
-    siteName: 'Ganesha Ink',
+    siteName: SITE_NAME,
     locale: 'pt_PT',
     type: 'website',
+    images: [{ url: SITE_LOGO, width: 640, height: 640, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: [SITE_LOGO],
   },
   other: {
     'google-adsense-account': 'ca-pub-9938976891580683',
@@ -60,7 +73,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt" className={`${playfair.variable} ${inter.variable} ${cinzel.variable}`}>
+    <html lang="pt-PT" className={`${playfair.variable} ${inter.variable} ${cinzel.variable}`}>
       <body className="bg-bg-primary text-text-primary font-body min-h-screen flex flex-col antialiased">
         <HideOnGate>
           <Header />

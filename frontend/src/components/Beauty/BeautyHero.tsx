@@ -75,7 +75,7 @@ export default function BeautyHero() {
   return (
     <div ref={trackRef} className="relative h-[320vh]">
       <section className="sticky top-0 h-[100dvh] overflow-hidden bg-black">
-        <h1 className="sr-only">Beauty</h1>
+        <h1 className="sr-only">Salão de beauty e estética de unhas Ganesha Ink em Vale de Cambra</h1>
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: 'Contacto',
-  description: 'Contacta a Ganesha Ink — morada, horários e contactos em Vale de Cambra.',
-};
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Contacto em Vale de Cambra',
+  description:
+    'Morada, horário e contactos da Ganesha Ink em Vale de Cambra — estúdio de tatuagem, barbearia e beauty.',
+  path: PATHS.contacto,
+});
 
 const HORARIO = [
   { dia: 'Segunda-feira',  horas: 'Encerrado' },

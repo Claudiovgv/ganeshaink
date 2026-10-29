@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
   title: 'Política de Cookies',
   description: 'Política de Cookies da Ganesha Ink — como utilizamos cookies no nosso website.',
-};
+  path: PATHS.cookies,
+});
 
 export default function PoliticaCookiesPage() {
   const updated = '14 de maio de 2026';

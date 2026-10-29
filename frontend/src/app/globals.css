@@ -396,6 +396,7 @@
   inset: -50%;
   width: 200%;
   height: 200%;
+  pointer-events: none;
   background-repeat: no-repeat;
   background-size: 50% 50%;
   background-position: 0 0, 100% 0, 100% 100%, 0 100%;
@@ -412,6 +413,7 @@
   content: '';
   position: absolute;
   inset: 3px;
+  pointer-events: none;
   background: #000;
   z-index: -1;
 }

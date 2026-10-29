@@ -1,12 +1,30 @@
 'use client';
 
+import { type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { FLASH_BOXES, FLASH_SHEET } from '@/lib/halloweenFlashBoxes';
 
 export const FLASH_OVERLAY =
-  'fixed inset-0 z-[90] flex items-center justify-center bg-black/85 px-4 pt-[calc(6.5rem+env(safe-area-inset-top))] pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:px-6 md:pt-[calc(8rem+env(safe-area-inset-top))] md:pb-10';
+  'fixed inset-0 z-[100] flex items-end justify-center bg-black/92 px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:items-center sm:px-6 sm:py-8';
 
 export const FLASH_DIALOG =
-  'relative max-h-full w-full overflow-y-auto border border-[#FF5C00]/50 bg-black px-4 py-6 sm:px-7 sm:py-8';
+  'relative flex h-full max-h-full w-full flex-col overflow-hidden border border-[#FF5C00]/50 bg-black px-4 py-5 sm:h-auto sm:max-h-[min(52rem,100%)] sm:px-7 sm:py-8';
+
+export function FlashOverlay({
+  children,
+  onClose,
+}: {
+  children: ReactNode;
+  onClose: () => void;
+}) {
+  if (typeof document === 'undefined') return null;
+  return createPortal(
+    <div className={FLASH_OVERLAY} onClick={onClose}>
+      {children}
+    </div>,
+    document.body
+  );
+}
 
 export function FlashSheetView({
   focusId,
@@ -84,19 +102,19 @@ export function FlashSheetDialog({
   onPick?: (id: string) => void;
 }) {
   return (
-    <div className={FLASH_OVERLAY} onClick={onClose}>
+    <FlashOverlay onClose={onClose}>
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Folha de flash tattoos"
         onClick={(event) => event.stopPropagation()}
-        className={`${FLASH_DIALOG} max-w-2xl`}
+        className={`${FLASH_DIALOG} max-w-2xl overflow-y-auto`}
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute right-4 top-3 text-2xl leading-none text-white/55 hover:text-white"
+          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center text-3xl leading-none text-white/55 hover:text-white"
         >
           ×
         </button>
@@ -110,6 +128,6 @@ export function FlashSheetDialog({
         </p>
         <FlashSheetView focusId={focusId} onPick={onPick} className="mt-4 border border-white/15" />
       </div>
-    </div>
+    </FlashOverlay>
   );
 }

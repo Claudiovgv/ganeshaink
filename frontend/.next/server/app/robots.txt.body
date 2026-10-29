@@ -2,4 +2,5 @@ User-Agent: *
 Allow: /
 Disallow: /cancelar
 
+Host: https://ganeshaink.pt
 Sitemap: https://ganeshaink.pt/sitemap.xml

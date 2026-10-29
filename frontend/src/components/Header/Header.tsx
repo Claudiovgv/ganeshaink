@@ -7,17 +7,23 @@ import { usePathname } from 'next/navigation';
 import { marcarHrefForPath } from '@/lib/booking';
 
 const NAV_LINKS = [
+  { href: '/tattoo', label: 'Tattoostudio' },
+  { href: '/barbearia', label: 'Barbearia' },
+  { href: '/beauty', label: 'Beauty' },
   { href: '/servicos', label: 'Serviços' },
+  { href: '/contacto', label: 'Contacto' },
+];
+
+const MORE_NAV_LINKS = [
   { href: '/artistas', label: 'Artistas' },
   { href: '/galeria', label: 'Galeria' },
   { href: '/blog', label: 'Blog' },
-  { href: '/contacto', label: 'Contacto' },
 ];
 
 function headerTitle(pathname: string) {
   if (pathname.startsWith('/tattoo')) return 'Tattoostudio';
   if (pathname.startsWith('/barbearia')) return 'Barbearia';
-  if (pathname.startsWith('/nails')) return 'Beauty';
+  if (pathname.startsWith('/beauty') || pathname.startsWith('/nails')) return 'Beauty';
   return 'Ganesha Ink';
 }
 
@@ -45,7 +51,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-5 lg:gap-6">
           {NAV_LINKS.map(({ href, label }) => (
             <Link
               key={href}
@@ -94,7 +100,7 @@ export default function Header() {
 
       {mobileOpen && (
         <div className="md:hidden bg-bg-card border-t border-gold-border px-4 py-4 flex flex-col gap-4">
-          {NAV_LINKS.map(({ href, label }) => (
+          {[...NAV_LINKS, ...MORE_NAV_LINKS].map(({ href, label }) => (
             <Link
               key={href}
               href={href}

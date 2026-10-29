@@ -2,10 +2,13 @@ import type { Metadata } from 'next';
 import BookingWizard from '@/components/BookingWizard/BookingWizard';
 import { api, Service } from '@/lib/api';
 
-export const metadata: Metadata = {
-  title: 'Marcar',
-  description: 'Marca barbearia ou Beauty online. Para tatuagens, fala com o tatuador.',
-};
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Marcar barbearia ou Beauty',
+  description: 'Marca barbearia ou Beauty online na Ganesha Ink em Vale de Cambra. Para tatuagens, fala com o tatuador.',
+  path: PATHS.marcar,
+});
 
 export const dynamic = 'force-dynamic';
 

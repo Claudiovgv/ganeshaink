@@ -8,32 +8,26 @@ import MobileHeroStencils from '@/components/Tattoo/MobileHeroStencils';
 import StencilScrollHint from '@/components/Tattoo/StencilScrollHint';
 import DesktopOnly from '@/components/DesktopOnly';
 import HalloweenFlashParty from '@/components/Tattoo/HalloweenFlashParty';
+import { pageMetadata, PATHS } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: 'Tatuagem em Vale de Cambra — Tattoostudio',
+export const revalidate = 86400;
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Estúdio de tatuagem em Vale de Cambra',
   description:
     'Estúdio de tatuagem Ganesha Ink em Vale de Cambra. Tatuagens personalizadas, body piercing e consulta no Tattoostudio.',
-  alternates: {
-    canonical: 'https://ganeshaink.pt/tattoo',
-  },
-  openGraph: {
-    title: 'Tatuagem em Vale de Cambra — Ganesha Ink',
-    description:
-      'Tattoostudio Ganesha Ink: tatuagem personalizada e body piercing em Vale de Cambra.',
-    url: 'https://ganeshaink.pt/tattoo',
-    locale: 'pt_PT',
-    type: 'website',
-  },
-};
+  path: PATHS.tattoo,
+  ogTitle: 'Estúdio de tatuagem em Vale de Cambra — Ganesha Ink',
+});
 
 export default function TattooPage() {
   return (
     <div className="relative overflow-x-hidden bg-black">
+      <h1 className="sr-only">Estúdio de tatuagem Ganesha Ink em Vale de Cambra</h1>
       <HalloweenFlashParty />
       <StencilField />
 
       <section className="relative z-10 min-h-[100dvh]">
-        <h1 className="sr-only">Tattoostudio</h1>
         <MobileHeroStencils />
         <div className="absolute left-1/2 top-1/2 z-10 w-[min(90vw,36rem)] -translate-x-1/2 -translate-y-1/2">
           <Image

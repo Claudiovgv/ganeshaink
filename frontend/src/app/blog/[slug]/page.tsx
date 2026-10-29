@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import { api } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
+import { pageMetadata } from '@/lib/site';
 
 interface Props {
   params: { slug: string };
@@ -12,14 +13,17 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await api.blog.get(params.slug).catch(() => null);
-  if (!post) return { title: 'Artigo não encontrado' };
-  return {
+  if (!post) return { title: 'Artigo não encontrado', robots: { index: false, follow: true } };
+  const description = post.seoDescription || post.excerpt || `Artigo da Ganesha Ink: ${post.title}`;
+  const metadata = pageMetadata({
     title: post.seoTitle || post.title,
-    description: post.seoDescription || post.excerpt || undefined,
-    openGraph: post.coverImageUrl
-      ? { images: [{ url: post.coverImageUrl }] }
-      : undefined,
-  };
+    description,
+    path: `/blog/${post.slug}`,
+  });
+  if (post.coverImageUrl && metadata.openGraph) {
+    metadata.openGraph = { ...metadata.openGraph, images: [{ url: post.coverImageUrl }] };
+  }
+  return metadata;
 }
 
 export default async function BlogPostPage({ params }: Props) {

@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
+import { pageMetadata, PATHS } from '@/lib/site';
+
+export const metadata: Metadata = pageMetadata({
   title: 'Política de Privacidade',
   description: 'Política de Privacidade da Ganesha Ink — como tratamos os seus dados pessoais.',
-};
+  path: PATHS.privacidade,
+});
 
 export default function PoliticaPrivacidadePage() {
   const updated = '14 de maio de 2026';
