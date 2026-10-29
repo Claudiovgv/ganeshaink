@@ -47,6 +47,9 @@ export const metadata: Metadata = {
   description:
     'Estúdio de tatuagem, barbearia e salão de beauty em Vale de Cambra. Tatuagens personalizadas, cortes e estética de unhas. Marcações online para barbearia e Beauty.',
   robots: { index: true, follow: true },
+  verification: {
+    google: '-W_2zYRw2dCNXSE8l_gHSExUkgwTMZvg-MpnhXwPT2M',
+  },
   icons: {
     icon: [
       { url: '/images/logo/ganesha-icon-32.png', sizes: '32x32', type: 'image/png' },
