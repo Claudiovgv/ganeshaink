@@ -5,24 +5,22 @@ export default function BeautyHero() {
     <section className="relative h-[100dvh] overflow-hidden bg-black">
       <h1 className="sr-only">Beauty — salão de unhas Ganesha Ink em Vale de Cambra</h1>
       <Image
-        src="/images/employees/vera-ferreira.webp"
-        alt="Vera Ferreira, nail artist da Ganesha Ink"
+        src="/images/hero/beauty-hero-portrait.webp"
+        alt="Cores e vernizes de unhas no Beauty da Ganesha Ink"
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[center_20%]"
+        className="object-cover object-center md:hidden"
       />
-      <div className="absolute inset-0 bg-black/45" />
-      <div className="absolute left-1/2 top-1/2 z-10 w-[min(86vw,32rem)] -translate-x-1/2 -translate-y-1/2">
-        <Image
-          src="/images/logo/ganesha-logo-gold-white.webp"
-          alt="Ganesha Ink"
-          width={720}
-          height={360}
-          priority
-          className="h-auto w-full object-contain drop-shadow-[0_0_24px_rgba(201,168,76,0.24)]"
-        />
-      </div>
+      <Image
+        src="/images/hero/beauty-hero.webp"
+        alt="Cores e vernizes de unhas no Beauty da Ganesha Ink"
+        fill
+        priority
+        sizes="100vw"
+        className="hidden object-cover object-[center_40%] md:block"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/25" />
     </section>
   );
 }

@@ -10,8 +10,8 @@ export default function BarberArtist() {
           <Image
             src="/images/employees/eduardo-gomes.webp"
             alt="Eduardo Gomes, barbeiro da Ganesha Ink"
-            width={768}
-            height={1024}
+            width={1500}
+            height={2000}
             className="h-auto w-full object-contain object-center"
           />
         </ScrollReveal>

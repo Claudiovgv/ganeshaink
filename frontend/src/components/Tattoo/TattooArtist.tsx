@@ -8,8 +8,8 @@ export default function TattooArtist() {
           <Image
             src="/images/employees/ricardo-vieira.webp"
             alt="Ricardo Vieira, tatuador da Ganesha Ink"
-            width={768}
-            height={1024}
+            width={1500}
+            height={2000}
             loading="lazy"
             className="h-auto w-full object-contain object-center"
           />
