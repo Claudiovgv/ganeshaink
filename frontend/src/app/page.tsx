@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import ChoiceGate from '@/components/Gate/ChoiceGate';
 import JsonLd from '@/components/seo/JsonLd';
-import { localBusinessJsonLd, pageMetadata, PATHS, websiteJsonLd } from '@/lib/site';
+import { localBusinessJsonLd, pageMetadata, PATHS, siteNavigationJsonLd, websiteJsonLd } from '@/lib/site';
 
 export const revalidate = 86400;
 
@@ -23,6 +23,7 @@ export default function GatePage() {
     <>
       <JsonLd data={websiteJsonLd()} />
       <JsonLd data={localBusinessJsonLd()} />
+      <JsonLd data={siteNavigationJsonLd()} />
       <h1 className="sr-only">
         Ganesha Ink — estúdio de tatuagem, barbearia e salão de beauty em Vale de Cambra
       </h1>

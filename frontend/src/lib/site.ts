@@ -8,6 +8,11 @@ export const SITE_LOGO_PATH = '/images/logo/ganesha-logo-gold-white.webp';
 export const SITE_LOGO = `${SITE_ORIGIN}${SITE_LOGO_PATH}`;
 export const SITE_MAPS =
   'https://maps.google.com/?q=R.+Eng.+Duarte+Pacheco+33,+3730-254+Vale+de+Cambra';
+export const SITE_GEO = {
+  '@type': 'GeoCoordinates' as const,
+  latitude: 40.850424,
+  longitude: -8.39353,
+};
 
 export const SITE_ADDRESS = {
   '@type': 'PostalAddress' as const,
@@ -85,8 +90,6 @@ export const SITEMAP_STATIC_ROUTES: Array<{
   { path: PATHS.marcar, changeFrequency: 'monthly', priority: 0.85 },
   { path: PATHS.consulta, changeFrequency: 'monthly', priority: 0.7 },
   { path: PATHS.contacto, changeFrequency: 'monthly', priority: 0.7 },
-  { path: PATHS.privacidade, changeFrequency: 'monthly', priority: 0.2 },
-  { path: PATHS.cookies, changeFrequency: 'monthly', priority: 0.2 },
 ];
 
 export function absoluteUrl(path = '/'): string {
@@ -138,6 +141,7 @@ const nap = {
   telephone: SITE_PHONE,
   email: SITE_EMAIL,
   address: SITE_ADDRESS,
+  geo: SITE_GEO,
   hasMap: SITE_MAPS,
   areaServed: SITE_AREA_SERVED,
   openingHoursSpecification: SITE_OPENING_HOURS,
@@ -153,6 +157,26 @@ export function websiteJsonLd() {
     name: SITE_NAME,
     inLanguage: 'pt-PT',
     publisher: { '@id': `${SITE_ORIGIN}/#business` },
+    hasPart: STUDIO_NAV.map((item) => ({
+      '@type': 'WebPage',
+      name: item.label,
+      url: absoluteUrl(item.href),
+    })),
+  };
+}
+
+export function siteNavigationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Menu Ganesha Ink',
+    numberOfItems: STUDIO_NAV.length,
+    itemListElement: STUDIO_NAV.map((item, index) => ({
+      '@type': 'SiteNavigationElement',
+      position: index + 1,
+      name: item.label,
+      url: absoluteUrl(item.href),
+    })),
   };
 }
 
@@ -194,7 +218,7 @@ export function tattooParlorJsonLd() {
     name: SITE_NAME,
     alternateName: 'Ganesha Ink Tattoostudio',
     description:
-      'Estúdio de tatuagem e body piercing em Vale de Cambra. Tatuagens personalizadas, consulta e higiene profissional.',
+      'Estúdio de tatuagem em Vale de Cambra. Tatuagens personalizadas, body piercing, consulta e higiene profissional no Tattoostudio Ganesha Ink.',
     url: absoluteUrl(PATHS.tattoo),
     ...nap,
     parentOrganization: { '@id': `${SITE_ORIGIN}/#business` },

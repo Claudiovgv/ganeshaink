@@ -84,7 +84,7 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
       <p className="text-text-muted text-xs -mt-2">Baseado em marcações concluídas (ou confirmadas já passadas) da Barbearia.</p>
 
       {/* Resumo */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-bg-card border border-gold-border rounded-lg p-4">
           <p className="text-text-muted text-xs uppercase tracking-wider mb-1">Receita</p>
           <p className="text-2xl font-display font-bold text-gold">{money(data.totals.revenue)}</p>
@@ -96,6 +96,11 @@ export default function BarbeariaClient({ initial }: { initial: BarbershopStatsR
         <div className="bg-bg-card border border-gold-border rounded-lg p-4">
           <p className="text-text-muted text-xs uppercase tracking-wider mb-1">Material</p>
           <p className="text-2xl font-display font-bold text-text-primary">{money(data.totals.materialCost)}</p>
+        </div>
+        <div className="bg-bg-card border border-gold rounded-lg p-4 md:col-span-1 col-span-2">
+          <p className="text-text-muted text-xs uppercase tracking-wider mb-1">Fica para a loja</p>
+          <p className="text-2xl font-display font-bold text-gold">{money(data.totals.studioAmount)}</p>
+          <p className="text-text-muted text-xs mt-1">% do estúdio sobre o serviço, já sem material.</p>
         </div>
         <div className="bg-bg-card border border-gold-border rounded-lg p-4">
           <p className="text-text-muted text-xs uppercase tracking-wider mb-1">Total barbeiros</p>

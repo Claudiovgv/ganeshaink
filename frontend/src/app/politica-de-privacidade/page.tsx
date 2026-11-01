@@ -6,6 +6,7 @@ export const metadata: Metadata = pageMetadata({
   title: 'Política de Privacidade',
   description: 'Política de Privacidade da Ganesha Ink — como tratamos os seus dados pessoais.',
   path: PATHS.privacidade,
+  index: false,
 });
 
 export default function PoliticaPrivacidadePage() {

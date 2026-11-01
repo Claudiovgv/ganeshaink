@@ -176,6 +176,14 @@ const IconMais = (
 
 type AdminPermissionKey = 'manage_appointments' | 'manage_employees' | 'manage_services' | 'manage_clients' | 'manage_blog' | 'manage_settings' | 'view_stats';
 type EmployeePermissionKey = 'view_services' | 'manage_schedule' | 'manage_blocks' | 'edit_profile';
+type NavChild = { href: string; label: string };
+type NavItem = { href: string; label: string; children?: NavChild[] };
+
+function navLinkActive(pathname: string, href: string) {
+  if (href === '/') return pathname === '/';
+  if (href === '/barbearia') return pathname === '/barbearia';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 const ADMIN_NAV_ALL = [
   { section: 'Agenda', items: [{ href: '/', label: 'Dashboard', perm: null as AdminPermissionKey | null }] },
@@ -183,9 +191,8 @@ const ADMIN_NAV_ALL = [
     section: 'Análise',
     items: [
       { href: '/estatisticas', label: 'Estatísticas', perm: 'view_stats' as AdminPermissionKey | null },
-      { href: '/barbearia', label: 'Barbearia', perm: 'view_stats' as AdminPermissionKey | null },
+      { href: '/barbearia', label: 'Barbearia', perm: 'view_stats' as AdminPermissionKey | null, children: [{ href: '/barbearia/clientes', label: 'Clientes' }] },
       { href: '/tatuagens', label: 'Tatuagens', perm: 'view_stats' as AdminPermissionKey | null },
-      { href: '/flash-party', label: 'Flash Party', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/nails', label: 'Estética', perm: 'view_stats' as AdminPermissionKey | null },
       { href: '/piercings', label: 'Piercings', perm: 'manage_appointments' as AdminPermissionKey | null },
     ],
@@ -233,30 +240,30 @@ function getAdminNav(permissions: Partial<Record<AdminPermissionKey, boolean>> |
 }
 
 function rebuildAnalise(user: ReturnType<typeof useAuth>) {
-  const items: { href: string; label: string }[] = [];
+  const items: NavItem[] = [];
   if (user.canViewGeneralStats) {
     items.push(
       { href: '/estatisticas', label: 'Estatísticas' },
-      { href: '/barbearia', label: 'Barbearia' },
+      { href: '/barbearia', label: 'Barbearia', children: [{ href: '/barbearia/clientes', label: 'Clientes' }] },
       { href: '/tatuagens', label: 'Tatuagens' },
-      { href: '/flash-party', label: 'Flash Party' },
       { href: '/nails', label: 'Estética' },
       { href: '/piercings', label: 'Piercings' },
     );
     return [{ section: 'Análise', items }];
   }
-  if (user.statsCategories?.includes('barbershop')) items.push({ href: '/barbearia', label: 'Barbearia' });
+  if (user.statsCategories?.includes('barbershop')) {
+    items.push({ href: '/barbearia', label: 'Barbearia', children: [{ href: '/barbearia/clientes', label: 'Clientes' }] });
+  }
   if (user.statsCategories?.includes('tattoo')) {
     items.push({ href: '/tatuagens', label: 'Tatuagens' });
-    items.push({ href: '/flash-party', label: 'Flash Party' });
   }
   if (user.statsCategories?.includes('nails')) items.push({ href: '/nails', label: 'Estética' });
   return items.length ? [{ section: 'Análise', items }] : [];
 }
 
-function applyStatsNav<T extends { section: string; items: { href: string; label: string }[] }>(user: ReturnType<typeof useAuth>, nav: T[]): T[] {
+function applyStatsNav(user: ReturnType<typeof useAuth>, nav: { section: string; items: NavItem[] }[]) {
   const without = nav.filter((g) => g.section !== 'Análise');
-  const analise = rebuildAnalise(user) as T[];
+  const analise = rebuildAnalise(user);
   if (!analise.length) return without;
   return [...without.slice(0, 1), ...analise, ...without.slice(1)];
 }
@@ -291,9 +298,8 @@ const SUPERADMIN_NAV = [
     section: 'Análise',
     items: [
       { href: '/estatisticas', label: 'Estatísticas' },
-      { href: '/barbearia', label: 'Barbearia' },
+      { href: '/barbearia', label: 'Barbearia', children: [{ href: '/barbearia/clientes', label: 'Clientes' }] },
       { href: '/tatuagens', label: 'Tatuagens' },
-      { href: '/flash-party', label: 'Flash Party' },
       { href: '/nails', label: 'Estética' },
       { href: '/piercings', label: 'Piercings' },
     ],
@@ -350,25 +356,24 @@ export default function Sidebar() {
 
   const nav = applyStatsNav(
     user,
-    user.role === 'superadmin' ? SUPERADMIN_NAV : user.role === 'admin' ? getAdminNav(user.permissions) : getEmployeeNav(user.permissions),
+    (user.role === 'superadmin' ? SUPERADMIN_NAV : user.role === 'admin' ? getAdminNav(user.permissions) : getEmployeeNav(user.permissions)) as { section: string; items: NavItem[] }[],
   );
   const mainLabels = user.role === 'superadmin' || user.role === 'admin' ? ADMIN_BOTTOM_MAIN : EMPLOYEE_BOTTOM_MAIN;
   const allItems = nav.flatMap((g) => g.items);
   const mainItems = mainLabels
     .map((label) => allItems.find((i) => i.label === label))
-    .filter(Boolean) as { href: string; label: string }[];
-  const moreItems = allItems
-    .filter((i) => !mainLabels.includes(i.label))
-    .sort((a, b) => {
+    .filter(Boolean) as NavItem[];
+  const moreItems = [
+    ...allItems.filter((i) => !mainLabels.includes(i.label)),
+    ...allItems.flatMap((i) => i.children ?? []),
+  ].sort((a, b) => {
       if (a.label === 'Estatísticas') return -1;
       if (b.label === 'Estatísticas') return 1;
       return 0;
     });
 
   // Saber se algum item do "Mais" está ativo
-  const moreActive = moreItems.some((i) =>
-    i.href === '/' ? pathname === '/' : pathname.startsWith(i.href)
-  );
+  const moreActive = moreItems.some((i) => navLinkActive(pathname, i.href));
 
   return (
     <>
@@ -384,19 +389,35 @@ export default function Sidebar() {
               {group.section && (
                 <p className="text-text-muted text-[10px] uppercase tracking-widest px-2 mb-1">{group.section}</p>
               )}
-              {group.items.map(({ href, label }) => {
-                const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+              {group.items.map(({ href, label, children }) => {
+                const active = navLinkActive(pathname, href);
+                const childActive = children?.some((child) => navLinkActive(pathname, child.href));
                 return (
-                  <Link
-                    key={href}
-                    href={href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded text-sm transition-colors mb-0.5 ${
-                      active ? 'bg-gold-muted text-gold font-medium' : 'text-text-secondary hover:text-text-primary hover:bg-bg-card'
-                    }`}
-                  >
-                    <span className="opacity-60">{Icons[label]}</span>
-                    {label}
-                  </Link>
+                  <div key={href} className="mb-0.5">
+                    <Link
+                      href={href}
+                      className={`flex items-center gap-2 px-3 py-2 rounded text-sm transition-colors ${
+                        active || childActive ? 'bg-gold-muted text-gold font-medium' : 'text-text-secondary hover:text-text-primary hover:bg-bg-card'
+                      }`}
+                    >
+                      <span className="opacity-60">{Icons[label]}</span>
+                      {label}
+                    </Link>
+                    {children?.map((child) => {
+                      const open = navLinkActive(pathname, child.href);
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className={`flex items-center gap-2 pl-9 pr-3 py-1.5 rounded text-xs transition-colors ${
+                            open ? 'text-gold font-medium' : 'text-text-muted hover:text-text-primary'
+                          }`}
+                        >
+                          {child.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 );
               })}
             </div>
@@ -423,7 +444,7 @@ export default function Sidebar() {
       {/* ── Mobile bottom nav ── */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-bg-sidebar border-t border-gold-border/20 flex items-center z-30">
         {mainItems.map(({ href, label }) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const active = navLinkActive(pathname, href);
           return (
             <Link
               key={href}
@@ -465,7 +486,7 @@ export default function Sidebar() {
 
             <div className="px-4 space-y-1 overflow-y-auto overscroll-contain flex-1 min-h-0 pb-2">
               {moreItems.map(({ href, label }) => {
-                const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+                const active = navLinkActive(pathname, href);
                 return (
                   <Link
                     key={href}

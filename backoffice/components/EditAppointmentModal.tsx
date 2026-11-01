@@ -51,8 +51,8 @@ export default function EditAppointmentModal({ appointment, partnerships, employ
       try {
         const result = await updateAppointmentClientAction(appointment.id, {
           clientName,
-          clientEmail: clientEmail || undefined,
-          clientPhone: clientPhone || undefined,
+          clientEmail: clientEmail.trim(),
+          clientPhone: clientPhone.trim(),
           serviceId: Number(serviceId),
           ...(partnershipId ? {} : { price: price === '' ? null : price }),
           partnershipId: partnershipId ? Number(partnershipId) : null,
@@ -76,7 +76,7 @@ export default function EditAppointmentModal({ appointment, partnerships, employ
           {formatLisbon(appointment.startDatetime, 'dd/MM/yyyy')} às {formatLisbon(appointment.startDatetime, 'HH:mm')}
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
             <label className="block text-sm font-medium mb-1">Serviço</label>
             <select
@@ -118,12 +118,14 @@ export default function EditAppointmentModal({ appointment, partnerships, employ
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label className="block text-sm font-medium mb-1">Email (opcional)</label>
               <input
-                type="email"
+                type="text"
+                inputMode="email"
+                autoComplete="email"
                 value={clientEmail}
                 onChange={(e) => setClientEmail(e.target.value)}
-                placeholder="Sem contacto"
+                placeholder="Opcional"
                 className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none"
               />
             </div>

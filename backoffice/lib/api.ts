@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import type {
-  AdminPermissionKey, Appointment, BlogPost, BarbershopStatsResponse, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
+  AdminPermissionKey, Appointment, BlogPost, BarbershopClientsResponse, BarbershopStatsResponse, Category, Client, ConfigurableRole, ConsultationRequest, CreateAppointmentResult,
   Employee, EmployeePermissionKey, EmployeeSchedules, Service, SmtpSettings, AdsenseSettings, NotificationMatrix, Partnership, StatsPeriod, StatsResponse, SystemLogEntry,
   TimeBlock, TimeBlockConflict, TimeBlockInput, User, WeeklyScheduleDay, AppointmentExportRow,
   EmployeeSchedulePayload, SchedulePrefs,
@@ -327,6 +327,8 @@ export const api = {
       apiFetch<StatsResponse>(`/admin/stats?period=${period}&offset=${offset}${trade ? `&trade=${trade}` : ''}`),
     getBarbershop: (period: StatsPeriod, offset: number) =>
       apiFetch<BarbershopStatsResponse>(`/admin/stats/barbershop?period=${period}&offset=${offset}`),
+    getBarbershopClients: () =>
+      apiFetch<BarbershopClientsResponse>('/admin/stats/barbershop/clients'),
     getTrade: (slug: string, period: StatsPeriod, offset: number) =>
       apiFetch<BarbershopStatsResponse>(`/admin/stats/trade/${slug}?period=${period}&offset=${offset}`),
   },

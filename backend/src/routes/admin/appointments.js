@@ -249,8 +249,14 @@ router.put('/:id', async (req, res) => {
     if (status) updateData.status = status;
     if (notes !== undefined) updateData.notes = notes;
     if (clientName) updateData.clientName = clientName;
-    if (clientEmail) updateData.clientEmail = clientEmail;
-    if (clientPhone) updateData.clientPhone = clientPhone;
+    if (clientEmail !== undefined) {
+      const trimmed = typeof clientEmail === 'string' ? clientEmail.trim() : '';
+      updateData.clientEmail = trimmed || placeholderContact().email;
+    }
+    if (clientPhone !== undefined) {
+      const trimmed = typeof clientPhone === 'string' ? clientPhone.trim() : '';
+      updateData.clientPhone = trimmed || 'Sem contacto';
+    }
     // price: string vazia ou null limpa o valor específico (volta a usar o preço do serviço).
     if (price !== undefined) updateData.price = price === '' || price === null ? null : price;
     if (partnershipId !== undefined || extraFieldValue !== undefined) {

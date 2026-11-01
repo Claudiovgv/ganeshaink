@@ -6,6 +6,7 @@ import {
   hairSalonJsonLd,
   localBusinessJsonLd,
   nailSalonJsonLd,
+  siteNavigationJsonLd,
   tattooParlorJsonLd,
 } from '@/lib/site';
 import { marcarHrefForPath, parseBookingArea } from '@/lib/booking';
@@ -15,6 +16,16 @@ describe('SEO local e rotas públicas', () => {
     const paths = SITEMAP_STATIC_ROUTES.map((route) => route.path);
     expect(paths).toEqual(expect.arrayContaining(['/', '/tattoo', '/barbearia', '/beauty']));
     expect(paths).not.toContain('/nails');
+    expect(paths).not.toContain('/politica-de-privacidade');
+    expect(paths).not.toContain('/politica-de-cookies');
+  });
+
+  test('menu estruturado aponta para Tattoostudio, Barbearia e Beauty', () => {
+    expect(siteNavigationJsonLd().itemListElement.map((item) => item.name)).toEqual([
+      'Tattoostudio',
+      'Barbearia',
+      'Beauty',
+    ]);
   });
 
   test('horário JSON-LD tem intervalo de almoço igual ao de /contacto', () => {
@@ -31,6 +42,14 @@ describe('SEO local e rotas públicas', () => {
     expect(tattooParlorJsonLd().url).toBe('https://ganeshaink.pt/tattoo');
     expect(hairSalonJsonLd().url).toBe('https://ganeshaink.pt/barbearia');
     expect(nailSalonJsonLd().url).toBe('https://ganeshaink.pt/beauty');
+  });
+
+  test('LocalBusiness tem coordenadas em Vale de Cambra', () => {
+    expect(localBusinessJsonLd().geo).toEqual({
+      '@type': 'GeoCoordinates',
+      latitude: 40.850424,
+      longitude: -8.39353,
+    });
   });
 
   test('homepage LocalBusiness liga as três actividades', () => {

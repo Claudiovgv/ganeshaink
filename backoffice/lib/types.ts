@@ -294,3 +294,16 @@ export interface BarbershopStatsResponse {
   people?: BarberStats[];
   totals: { count: number; revenue: number; materialCost: number; netRevenue: number; studioAmount: number; barberAmount: number };
 }
+
+export interface BarbershopClientStat {
+  name: string;
+  email: string;
+  phone: string;
+  cuts: number;
+  spent: number;
+}
+
+export interface BarbershopClientsResponse {
+  clients: BarbershopClientStat[];
+  totals: { clients: number; cuts: number; spent: number };
+}

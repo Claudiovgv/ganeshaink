@@ -123,6 +123,17 @@ describe('PUT /v1/admin/appointments/:id', () => {
     expect(res.body.clientPhone).toBe('933333333');
   });
 
+  it('admin can edit a booking without an email', async () => {
+    const res = await request(app)
+      .put(`/v1/admin/appointments/${apt.id}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ clientName: 'Sem Email', clientEmail: '', clientPhone: '933333333' });
+    expect(res.status).toBe(200);
+    expect(res.body.clientName).toBe('Sem Email');
+    expect(res.body.clientEmail).toMatch(/^sem-contacto\+/);
+    expect(res.body.clientPhone).toBe('933333333');
+  });
+
   it('admin can set a custom price, overriding the service catalog price', async () => {
     const res = await request(app)
       .put(`/v1/admin/appointments/${apt.id}`)

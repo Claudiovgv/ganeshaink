@@ -5,6 +5,7 @@ const prisma = require('../../config/database');
 const { authenticate } = require('../../middleware/auth');
 const { loadUserStatsContext, canViewTradeStats, TRADE_SLUGS, rootCategorySlug } = require('../../lib/statsAccess');
 const { tradePayout } = require('../../lib/money');
+const { mergeBarbershopClients } = require('../../lib/barbershopClients');
 
 router.use(authenticate);
 
@@ -211,6 +212,55 @@ async function tradeStats(req, res, slug) {
 router.get('/barbershop', async (req, res) => {
   try {
     return await tradeStats(req, res, 'barbershop');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/barbershop/clients', async (req, res) => {
+  try {
+    const ctx = await loadUserStatsContext(req.user.id);
+    if (!canViewTradeStats(ctx, 'barbershop')) {
+      return res.status(403).json({ error: 'A tua conta não tem permissão para estas estatísticas' });
+    }
+
+    const root = await prisma.category.findUnique({
+      where: { slug: 'barbershop' },
+      include: { children: { select: { id: true } } },
+    });
+    if (!root) return res.json({ clients: [], totals: { clients: 0, cuts: 0, spent: 0 } });
+
+    const categoryIds = root.children.length > 0 ? root.children.map((c) => c.id) : [root.id];
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        ...(ctx.canViewGeneralStats ? {} : { employeeId: ctx.employeeId }),
+        service: { categoryId: { in: categoryIds } },
+        OR: [
+          { status: 'completed' },
+          { status: 'confirmed', endDatetime: { lt: new Date() } },
+        ],
+      },
+      select: {
+        clientName: true,
+        clientEmail: true,
+        clientPhone: true,
+        price: true,
+        service: { select: { price: true } },
+      },
+    });
+
+    const priceOf = (a) => Number(a.price ?? a.service.price);
+    const clients = mergeBarbershopClients(appointments, priceOf);
+    const totals = clients.reduce(
+      (acc, row) => ({
+        clients: acc.clients + 1,
+        cuts: acc.cuts + row.cuts,
+        spent: acc.spent + row.spent,
+      }),
+      { clients: 0, cuts: 0, spent: 0 },
+    );
+    return res.json({ clients, totals });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

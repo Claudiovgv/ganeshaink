@@ -7,11 +7,11 @@ import { pageMetadata, PATHS } from '@/lib/site';
 export const revalidate = 86400;
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Salão de Beauty e unhas em Vale de Cambra',
+  title: 'Beauty',
   description:
     'Salão de beauty Ganesha Ink em Vale de Cambra — manicure, pedicure e nail art. Marca a hora com a Vera.',
   path: PATHS.beauty,
-  ogTitle: 'Beauty em Vale de Cambra — Ganesha Ink',
+  ogTitle: 'Beauty — Ganesha Ink em Vale de Cambra',
 });
 
 export default function BeautyPage() {

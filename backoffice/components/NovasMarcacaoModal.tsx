@@ -206,7 +206,9 @@ export default function NovaMarcacaoModal({ employees, services, clients, partne
                   className="w-full bg-bg-primary border border-gold-border rounded px-3 py-2 text-sm focus:border-gold focus:outline-none"
                 />
                 <input
-                  type="email"
+                  type="text"
+                  inputMode="email"
+                  autoComplete="email"
                   placeholder="Email (opcional — dá para adicionar depois)"
                   value={newClient.email}
                   onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}

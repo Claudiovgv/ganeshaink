@@ -6,6 +6,7 @@ export const metadata: Metadata = pageMetadata({
   title: 'Política de Cookies',
   description: 'Política de Cookies da Ganesha Ink — como utilizamos cookies no nosso website.',
   path: PATHS.cookies,
+  index: false,
 });
 
 export default function PoliticaCookiesPage() {

@@ -8,11 +8,11 @@ import { pageMetadata, PATHS } from '@/lib/site';
 export const revalidate = 86400;
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Barbearia em Vale de Cambra',
+  title: 'Barbearia',
   description:
     'Barbearia Ganesha Ink em Vale de Cambra — cortes, barba e degradê. Marca a hora com o Eduardo.',
   path: PATHS.barbearia,
-  ogTitle: 'Barbearia em Vale de Cambra — Ganesha Ink',
+  ogTitle: 'Barbearia — Ganesha Ink em Vale de Cambra',
 });
 
 export default function BarbeariaPage() {

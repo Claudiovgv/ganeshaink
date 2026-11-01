@@ -7,7 +7,6 @@ import StencilField from '@/components/Tattoo/StencilField';
 import MobileHeroStencils from '@/components/Tattoo/MobileHeroStencils';
 import StencilScrollHint from '@/components/Tattoo/StencilScrollHint';
 import DesktopOnly from '@/components/DesktopOnly';
-import HalloweenFlashParty from '@/components/Tattoo/HalloweenFlashParty';
 import { pageMetadata, PATHS } from '@/lib/site';
 
 export const revalidate = 86400;
@@ -15,7 +14,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = pageMetadata({
   title: 'Estúdio de tatuagem em Vale de Cambra',
   description:
-    'Estúdio de tatuagem Ganesha Ink em Vale de Cambra. Tatuagens personalizadas, body piercing e consulta no Tattoostudio.',
+    'Estúdio de tatuagem em Vale de Cambra — Ganesha Ink. Tatuagens personalizadas, body piercing e consulta no Tattoostudio.',
   path: PATHS.tattoo,
   ogTitle: 'Estúdio de tatuagem em Vale de Cambra — Ganesha Ink',
 });
@@ -24,7 +23,6 @@ export default function TattooPage() {
   return (
     <div className="relative overflow-x-hidden bg-black">
       <h1 className="sr-only">Estúdio de tatuagem Ganesha Ink em Vale de Cambra</h1>
-      <HalloweenFlashParty />
       <StencilField />
 
       <section className="relative z-10 min-h-[100dvh]">
